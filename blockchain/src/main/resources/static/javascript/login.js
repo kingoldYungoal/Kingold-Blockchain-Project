@@ -44,16 +44,15 @@ $(function () {
         }
         // 验证码是否正确判断
         $.ajax({
-            type: 'GET',
-            url: 'api/login',
+            type: 'get',
+            url: 'home/loginauth',
             contentType: 'application/json;charset=utf-8',
             data: { phonenumber: phonenumber, role: role },
             dataType: 'json',
             success: function (data) {
-                alert("333");
                 if (data){
                     if(role == 1){
-                        window.location.href = "studentinfoandcerts.html?phonenumber=" + phonenumber;
+                        window.location.href = "api/studentinfo?phonenumber=" + phonenumber + "&role=" + role;
                     }else{
                         window.location.href = "#";
                     }
