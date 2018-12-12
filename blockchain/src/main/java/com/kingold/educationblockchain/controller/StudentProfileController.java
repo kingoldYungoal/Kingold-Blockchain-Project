@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/api")
 public class StudentProfileController {
     @Autowired
@@ -32,6 +33,7 @@ public class StudentProfileController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @ResponseBody
     public String UserLoginAuth(@RequestParam(value = "phonenumber", required = true)String phonenumber, @RequestParam(value = "role", required = true)int role){
         gson = new Gson();
         boolean flag = false;

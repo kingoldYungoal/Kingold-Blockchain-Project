@@ -44,9 +44,13 @@ $(function () {
         }
         // 验证码是否正确判断
         $.ajax({
-            url: "http://localhost:8088/api/login",
+            type: 'GET',
+            url: 'api/login',
+            contentType: 'application/json;charset=utf-8',
             data: { phonenumber: phonenumber, role: role },
+            dataType: 'json',
             success: function (data) {
+                alert("333");
                 if (data){
                     if(role == 1){
                         window.location.href = "studentinfoandcerts.html?phonenumber=" + phonenumber;

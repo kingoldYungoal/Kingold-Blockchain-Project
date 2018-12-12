@@ -1,6 +1,5 @@
 package com.kingold.educationblockchain.dao;
 
-
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import org.apache.ibatis.annotations.*;
 
