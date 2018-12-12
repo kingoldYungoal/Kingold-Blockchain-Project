@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +40,7 @@ public class AuthCodeController{
 
         // 将四位数字的验证码保存到Session中。
         HttpSession session = request.getSession();
-        session.session.setMaxInactiveInterval(15*60);
+        session.setMaxInactiveInterval(15*60);
         session.setAttribute("authcode", codeMap.get("code").toString());
     }
 
