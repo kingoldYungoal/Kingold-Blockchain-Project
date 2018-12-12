@@ -3,9 +3,6 @@ package com.kingold.educationblockchain.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.util.Map;
 
@@ -19,9 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.caissa.paygateway.common.util.CodeUtil;
-import com.caissa.paygateway.web.action.BaseAction;
 
 @Controller
 @RequestMapping("/authcode")
@@ -43,7 +37,7 @@ public class AuthCodeController{
     public void getCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         // 调用工具类生成的验证码
-        Map<String, Object> codeMap = CodeUtil.generateCodeAndPic();
+        Map<String, Object> codeMap = GenerateAuthCode.generateCodeAndPic();
 
         // 将四位数字的验证码保存到Session中。
         HttpSession session = request.getSession();
