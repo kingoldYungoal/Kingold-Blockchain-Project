@@ -31,6 +31,25 @@ public class StudentProfileController {
         return gson.toJson(studentProfile);
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String UserLoginAuth(@RequestParam(value = "phonenumber", required = true)String phonenumber, @RequestParam(value = "role", required = true)int role){
+        gson = new Gson();
+        boolean flag = false;
+        //role 為1，代表家長，為2，代表教師
+        if (role == 1) {
+            ParentInformation parentInformation = mParentInfomationService.FindParentInformationByPhone(phonenumber);
+            if (parentInformation != null) {
+                flag = true;
+            }
+        }else{
+            TeacherInformation teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(phonenumber);
+            if (teacherInformation != null) {
+                flag = true;
+            }
+        }
+        return gson.toJson(flag);
+    }
+
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
     public String GetStudentProfile(@RequestParam(value = "phonenumber", required = true)String phonenumber, @RequestParam(value = "role", required = true)int role) {
         gson = new Gson();
@@ -41,7 +60,6 @@ public class StudentProfileController {
             if (parentInformation == null) {
                 return gson.toJson(new StudentProfile());
             } else {
-                System.out.println(parentInformation.getKg_parentinformationid());
                 List<StudentParent> studentParents = mStudentParentService.FindStudentParentByParentId(parentInformation.getKg_parentinformationid());
                 if (studentParents == null || studentParents.size() <= 0) {
                     return gson.toJson(new StudentProfile());

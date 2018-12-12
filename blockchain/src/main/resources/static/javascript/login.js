@@ -7,6 +7,7 @@ $(function () {
     $("#loginbtn").click(function () {
         var phonenumber = $("#phonenumber").val();
         var authcode = $("#authcode").val();
+        var role = $('input[name="role"]:checked').val();
         var re = /^(13[0-9]|15[0|3|6|7|8|9]|17[0-9]|18[1|8|9|5|6|0])\d{8}$/;
         if ($.trim(phonenumber) == "") {
             if(M.dialog13){
@@ -43,19 +44,23 @@ $(function () {
         }
         // 验证码是否正确判断
         $.ajax({
-            url: "localhost",
-            data: { Access: "Login", Username: username, Password: password },
+            url: "http://localhost:8088/api/login",
+            data: { phonenumber: phonenumber, role: role },
             success: function (data) {
-                var arr = eval("(" + data + ")");
-                if (arr.flag) {
-                    $("#ErrLogMessager").html(arr.messager);
-                    //为APP端传送登录信息
-                    var nm = arr.data.user.NickName == "" || arr.data.user.NickName == null ? arr.data.user.UserName : arr.data.user.NickName;
-                    //判断该账号是不是移动办公的账号
-                    AuthUserIsYdbg(username, arr.data.guid,nm);
-
-                } else {
-                    $("#ErrMessager").html(arr.messager);
+                if (data){
+                    if(role == 1){
+                        window.location.href = "studentinfoandcerts.html?phonenumber=" + phonenumber;
+                    }else{
+                        window.location.href = "#";
+                    }
+                } else{
+                    M.dialog13 = jqueryAlert({
+                        'icon'    : '../images/alertimgs/warning.png',
+                        'content' : '登录失败',
+                        'closeTime' : 2000,
+                    })
+                    M.dialog13.show();
+                    return false;
                 }
             }
         });
