@@ -59,3 +59,23 @@
     height: 119px;
     margin-left:5.4%;
 }
+
+#stuimg{
+    width: 119px;
+    height: 119px;
+    margin-left:5.4%;
+}
+.certinfo{
+    font-size: 18px;
+    line-height: 40px;
+    background-color:#F7F9FD;
+    border-radius: 5px 0 0 5px;
+    padding: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
+}
+.search-img{
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+}

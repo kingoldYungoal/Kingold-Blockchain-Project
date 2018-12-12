@@ -1,0 +1,82 @@
+<!DOCTYPE html >
+<html  lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title th:text="${title}">侨鑫教育平台</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/studentinfo.css">
+    <script type="text/javascript" src="../javascript/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div class="pagewrap">
+    <div id="header">
+        <div id="imgbox">
+            <img id="headimg" src="../images/logo.png">
+            <div th:text="${json}">侨鑫教育平台</div>
+        </div>
+        <input type="button" id="headbtn" value="返回" />
+    </div>
+    <div id="maindiv">
+        <div class="container" id="infodiv">
+            <div class="row">
+            <div  class="card row" id="stuimgbox">
+                <img id="stuimg" src="../images/stuimg.png">
+            </div> </div>
+
+            <div class="row">
+            <div class="card col">
+                <ul class="row certinfo">
+                    <li class="col-md-2 float-left">2018/11/27</li>
+                    <li class="col-md-3 float-left">
+                        <ul class="row"><li class="col-12">证书名称</li><li class="col-12">办发机构</li></ul>
+                    </li>
+                    <li class="col-md-3 float-left">
+                        <ul class="row"><li class="col-md-12">证件类别</li><li class="col-md-12">颁证日期</li></ul>
+                    </li>
+                    <li class="col-md-2 float-left">
+                        <ul class="row"><li class="col-md-12">标签</li></ul>
+                    </li>
+                    <li class="col-md-2 float-left"><ul class="row"><li class="col-md-12">
+                        <a  class="row text-center" href="">
+                            <div class="col-12">
+                                <img class ="search-img" src="../images/detail.png">
+                            </div>
+                            <div class="text-center">点击查看大图 </div>
+                        </a>
+                    </li></ul>
+                    </li>
+                    <li></li>
+                </ul>
+                <ul class="row certinfo">
+                    <li class="col-md-2 float-left">2018/11/27</li>
+                    <li class="col-md-3 float-left">
+                        <ul class="row"><li class="col-md-12">证书名称</li><li class="col-md-12">办发机构</li></ul>
+                    </li>
+                    <li class="col-md-3 float-left">
+                        <ul class="row"><li class="col-md-12">证件类别</li><li class="col-md-12">颁证日期</li></ul>
+                    </li>
+                    <li class="col-md-2 float-left">
+                        <ul class="row"><li class="col-md-12">标签</li></ul>
+                    </li>
+                    <li class="col-md-2 float-left">
+                        <ul class="row"><li class="col-md-12">
+                            <a  class="row text-center" href="">
+                            <div class="col-12">
+                                <img class ="search-img" src="../images/detail.png">
+                            </div>
+                            <div class="text-center">点击查看大图 </div>
+                            </a>
+                        </li></ul>
+                    </li>
+                    <li></li>
+                </ul>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
