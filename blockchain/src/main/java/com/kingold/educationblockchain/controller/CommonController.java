@@ -1,15 +1,23 @@
 package com.kingold.educationblockchain.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
+import com.kingold.educationblockchain.bean.CertInfo;
+import com.kingold.educationblockchain.bean.EventInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -25,9 +33,6 @@ public class CommonController {
     @Autowired
     private StudentTeacherService mStudentTeacherService;
     private Gson gson;
-
-    @Autowired
-    private Environment environment;
 
 //    private Logger logger = Logger.getLogger(CommonController.class);
 
@@ -52,8 +57,6 @@ public class CommonController {
     @RequestMapping(value = "/Delete", method = RequestMethod.GET)
     public String Delete(@RequestParam(value = "id", required = true)int id, @RequestParam(value = "tablename", required = true)String tablename) {
         gson = new Gson();
-        System.out.println("hosturl=" + environment.getProperty("chainCode.hostUrl"));
-        System.out.println("authorizationKey=" + environment.getProperty("chainCode.authorizationKey"));
         if(tablename.trim().length() == 0 || id <= 0){
             return gson.toJson(false);
         }
@@ -206,5 +209,117 @@ public class CommonController {
                 break;
         }
         return flag;
+    }
+
+    //blockchain api
+
+    /*
+    证书信息上链
+     */
+    public String InsertCertinfo(CertInfo certInfo,String channelName) {
+        try {
+            gson = new Gson();
+            String certJson = gson.toJson(certInfo);
+            return getPayload("insertCertinfo",'"'+certJson+'"',channelName).toString();
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+
+    /*
+    证书信息上链
+     */
+    public String InsertEventinfo(EventInfo eventInfo,String channelName) {
+        try {
+            gson = new Gson();
+            String eventJson = gson.toJson(eventInfo);
+            return getPayload("insertEventInfo",'"'+eventJson+'"',channelName).toString();
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+
+    /*
+    通过crmid查询学生所有证书
+     */
+    public List<CertInfo> QueryCertByCRMId(String CrmId,String channelName) {
+        try {
+            JsonArray jsonArray=getPayload("queryCertByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
+            Iterator<JsonElement> it =jsonArray.iterator();
+            gson = new Gson();
+            List<CertInfo> certInfoList=new ArrayList<CertInfo>();
+            while(it.hasNext())
+            {
+                String str =  it.next().getAsJsonObject().get("valueJson").getAsString();
+                gson.fromJson(str, CertInfo.class);
+                CertInfo obj= gson.fromJson(str, CertInfo.class);
+                certInfoList.add(obj);
+            }
+            return certInfoList;
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+
+    /*
+    通过crmid查询学生所有事件
+     */
+    public List<EventInfo> QueryEventByCRMId(String CrmId, String channelName) {
+        try {
+
+            JsonArray jsonArray= getPayload("queryEventByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
+            Iterator<JsonElement> it =jsonArray.iterator();
+            gson = new Gson();
+            List<EventInfo> eventInfoList=new ArrayList<EventInfo>();
+            while(it.hasNext())
+            {
+                String str =  it.next().getAsJsonObject().get("valueJson").getAsString();
+                gson.fromJson(str, CertInfo.class);
+                EventInfo obj= gson.fromJson(str, EventInfo.class);
+                eventInfoList.add(obj);
+            }
+            return eventInfoList;
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+
+    /*
+    通过证书id查询证书详细信息
+     */
+    public String QueryCertById(String certId, String channelName) {
+        try {
+
+            JsonArray jsonArray= getPayload("queryCertById",'"'+certId+'"',channelName).getAsJsonArray();
+            gson = new Gson();
+            return gson.toJson(jsonArray.get(0));
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+
+    /*
+    获取返回结果
+     */
+    private JsonElement getPayload(String functionName,String argJson,String  channelName)
+    {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        String requestStr = String.format("{\"channel\":\"%s\",\"chaincode\":\"%s\",\"method\":\"%s\",\"args\":[%s],\"chaincodeVer\":\"%s\"}",
+                channelName,
+                ChainCodeConfig.getProperty("chainCode.chainCodeName"),
+                functionName,
+                argJson,
+                ChainCodeConfig.getProperty("chainCode.chainCodeVer"));
+        headers.add("Content-Type", "application/json");
+        headers.add("Connection", "keep-alive");
+        headers.add("Authorization", ChainCodeConfig.getProperty("chainCode.authorizationKey"));
+
+        HttpEntity<String> request1 = new HttpEntity<String>(requestStr, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
+        JsonParser parse= new JsonParser();
+        JsonObject jsonObject= (JsonObject) parse.parse(response.getBody());
+        String payload=jsonObject.getAsJsonObject("result").get("payload").getAsString();
+        return parse.parse(payload);
     }
 }
