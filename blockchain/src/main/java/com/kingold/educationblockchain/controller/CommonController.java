@@ -1,12 +1,22 @@
 package com.kingold.educationblockchain.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
+import com.kingold.educationblockchain.util.CertInfo;
+import com.kingold.educationblockchain.util.EventInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -23,8 +33,7 @@ public class CommonController {
     @Autowired
     private StudentTeacherService mStudentTeacherService;
     private Gson gson;
-
-    private Logger logger = Logger.getLogger(CommonController.class);
+//    private Logger logger = Logger.getLogger(CommonController.class);
 
     @RequestMapping(value = "/Insert", method = RequestMethod.POST)
     public String Insert(@RequestBody String jsonParam, @RequestParam(value = "tablename", required = true)String tablename,@RequestParam(value = "synctype", required = true)String synctype) {
@@ -200,5 +209,65 @@ public class CommonController {
                 break;
         }
         return flag;
+    }
+
+    //blockchain api
+    public List<CertInfo> QueryCertByCRMId(String CrmId,String channelName) {
+        try {
+            JsonArray jsonArray=getPayload("queryCertByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
+            Iterator<JsonElement> it =jsonArray.iterator();
+            Gson  gson=new Gson();
+            List<CertInfo> certInfoList=new ArrayList<CertInfo>();
+            while(it.hasNext())
+            {
+                String str =  it.next().getAsJsonObject().get("valueJson").getAsString();
+                gson.fromJson(str, CertInfo.class);
+                CertInfo obj= gson.fromJson(str, CertInfo.class);
+                certInfoList.add(obj);
+            }
+            return certInfoList;
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+    public List<EventInfo> QueryEventByCRMId(String CrmId, String channelName) {
+        try {
+
+            JsonArray jsonArray= getPayload("queryEventByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
+            Iterator<JsonElement> it =jsonArray.iterator();
+            Gson  gson=new Gson();
+            List<EventInfo> eventInfoList=new ArrayList<EventInfo>();
+            while(it.hasNext())
+            {
+                String str =  it.next().getAsJsonObject().get("valueJson").getAsString();
+                gson.fromJson(str, CertInfo.class);
+                EventInfo obj= gson.fromJson(str, EventInfo.class);
+                eventInfoList.add(obj);
+            }
+            return eventInfoList;
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+    private JsonElement getPayload(String functionName,String argJson,String  channelName)
+    {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        String requestStr = String.format("{\"channel\":\"%s\",\"chaincode\":\"%s\",\"method\":\"%s\",\"args\":[%s],\"chaincodeVer\":\"%s\"}",
+                channelName,
+                ChainCodeConfig.getProperty("chainCode.chainCodeName"),
+                functionName,
+                argJson,
+                ChainCodeConfig.getProperty("chainCode.chainCodeVer"));
+        headers.add("Content-Type", "application/json");
+        headers.add("Connection", "keep-alive");
+        headers.add("Authorization", ChainCodeConfig.getProperty("chainCode.authorizationKey"));
+
+        HttpEntity<String> request1 = new HttpEntity<String>(requestStr, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
+        JsonParser parse= new JsonParser();
+        JsonObject jsonObject= (JsonObject) parse.parse(response.getBody());
+        String payload=jsonObject.getAsJsonObject("result").get("payload").getAsString();
+        return parse.parse(payload);
     }
 }
