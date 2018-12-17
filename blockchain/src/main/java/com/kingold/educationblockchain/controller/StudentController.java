@@ -42,12 +42,12 @@ public class StudentController {
             map.addAttribute("studentInfo", mStudentProfileService.GetStudentProfileById(id));
 
             String urlStr="https://yungoal-kingoldcloud.blockchain.ocp.oraclecloud.com:443/restproxy1/bcsgw/rest/v1/transaction/invocation";
-            RestTemplate restTemplate=new RestTemplate();
+            RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             String requestStr="{\"channel\":\"channel1\",\"chaincode\":\"kingold\",\"method\":\"queryEventByEducationNo\",\"args\":[\"edu1\"],\"chaincodeVer\":\"v7\"}";
             headers.add("Content-Type","application/json");
             headers.add("Connection", "keep-alive");
-            headers.add("Authorization","Basic aGVsaXgubGl1QG9yYWNsZS5jb206QWJjZDEyMzQ=");
+            headers.add("Authorization",authCode);
             HttpEntity<String> request1=new HttpEntity<String>(requestStr,headers);
             ResponseEntity<String> respose = restTemplate.postForEntity(urlStr, request1,String.class);
 
@@ -85,36 +85,8 @@ public class StudentController {
         // 不分页
         List<StudentTeacher> studentTeachers = mStudentTeacherService.FindStudentTeacherByTeacherId(teacherInformation.getKg_teacherinformationid());
         //跳转到学生列表页面
-        return GetStudentList(studentTeachers);
+        return "";
     }
 
-    public String GetStudentList(List<StudentTeacher> list){
-        gson = new Gson();
-        if (list == null || list.size() <= 0) {
-            return gson.toJson(new StudentProfile());
-        } else {
-            List<StudentInfo> StudentInfoList = new ArrayList<>();
-            for (StudentTeacher st : list) {
-                StudentProfile profile = mStudentProfileService.GetStudentProfileById(st.getKg_studentprofileid());
-                StudentInfo info = new StudentInfo();
-                if(profile != null){
-                    info.setKg_studentprofileid(profile.getKg_studentprofileid());
-                    info.setKg_classname(profile.getKg_classname());
-                    info.setKg_fullname(profile.getKg_fullname());
-                    info.setKg_educationnumber(profile.getKg_educationnumber());
-                    info.setKg_sex(profile.getKg_sex());
-                }
-                List<StudentParent> parents = mStudentParentService.FindStudentParentByStudentId(st.getKg_studentprofileid());
-                if(parents != null && parents.size() > 0){
-                    ParentInformation parentInformation = mParentInfomationService.FindParentInformationById(parents.get(0).getKg_parentinformationid());
-                    if(parentInformation != null){
-                        info.setKg_parentName(parentInformation.getKg_name());
-                        info.setKg_parentPhoneNumber(parentInformation.getKg_phonenumber());
-                    }
-                }
-                StudentInfoList.add(info);
-            }
-            return gson.toJson(StudentInfoList);
-        }
-    }
+
 }

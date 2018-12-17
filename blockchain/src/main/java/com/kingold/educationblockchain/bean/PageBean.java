@@ -1,11 +1,10 @@
 package com.kingold.educationblockchain.bean;
 
+import java.util.List;
+
 /**
  * 分页bean
  */
-
-import java.util.List;
-
 public class PageBean<T> {
     // 当前页
     private Integer currentPage = 1;

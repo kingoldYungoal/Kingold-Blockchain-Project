@@ -92,7 +92,7 @@ func (t *AutoTraceChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Respo
 		return t.readEvent(stub, args)
 	} else if function == "queryCertByCRMId" {
 		return t.queryCertByCRMId(stub, args)
-	} /*else if function == "queryCertByEducationNo" { 
+	} else if function == "queryCertByEducationNo" { 
 		return t.queryCertByEducationNo(stub, args)
 	} else if function == "queryCertByIdCardNo" { 
 		return t.queryCertByIdCardNo(stub, args)
@@ -102,7 +102,7 @@ func (t *AutoTraceChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Respo
 		return t.queryEventByEducationNo(stub, args)
 	} else if function == "queryEventByIdCardNo" { 
 		return t.queryEventByIdCardNo(stub, args)
-	} */
+	} 
 	/*else if function == "revokeCertStatus" { 
 		return t.revokeCertStatus(stub, args)
 	} */
@@ -367,7 +367,36 @@ func (t *AutoTraceChaincode) readEvent(stub shim.ChaincodeStubInterface, args []
 func (t *AutoTraceChaincode) queryCertByCRMId(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	return t.queryCertBySth(stub, args, "crm_id");
 }
-
+// ===============================================
+// queryCertByEducationNo - query Certs By EducationNo from chaincode state
+// ===============================================
+func (t *AutoTraceChaincode) queryCertByEducationNo(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+	return t.queryCertBySth(stub, args, "stu_education_no");
+}
+// ===============================================
+// queryCertByIdCardNo - query Certs By idCardNo from chaincode state
+// ===============================================
+func (t *AutoTraceChaincode) queryCertByIdCardNo(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+	return t.queryCertBySth(stub, args, "stu_idCard_no");
+}
+// ===============================================
+// queryEventByCRMId - query Certs By CRMId from chaincode state
+// ===============================================
+func (t *AutoTraceChaincode) queryEventByCRMId(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+	return t.queryEventBySth(stub, args, "crm_id");
+}
+// ===============================================
+// queryEventByEducationNo - query Certs By EducationNo from chaincode state
+// ===============================================
+func (t *AutoTraceChaincode) queryEventByEducationNo(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+	return t.queryEventBySth(stub, args, "stu_education_no");
+}
+// ===============================================
+// queryEventByIdCardNo - query Certs By idCardNo from chaincode state
+// ===============================================
+func (t *AutoTraceChaincode) queryEventByIdCardNo(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+	return t.queryEventBySth(stub, args, "stu_idCard_no");
+}
 // ===============================================
 // queryCertBySth - query Certs By CRMId,idCardNo or eduNo from chaincode state
 // ===============================================
@@ -405,6 +434,48 @@ var err error
 	fmt.Println("got the specified student" + stuId)
 	fmt.Println(stuObjects)
 	queryString = fmt.Sprintf("SELECT valueJson FROM <STATE> WHERE json_extract(valueJson, '$.docType') = 'cert' AND json_extract(valueJson, '$.stu_id') = '%s'", stuId)
+	
+	queryResults, err = getQueryResultForQueryString(stub, queryString)
+	
+	return shim.Success(queryResults)
+}
+// ===============================================
+// queryEventBySth - query Events By CRMId,idCardNo or eduNo from chaincode state
+// ===============================================
+func (t *AutoTraceChaincode) queryEventBySth(stub shim.ChaincodeStubInterface,args []string, sth string) peer.Response {
+var err error
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting "+ sth +" of a student to query")
+	}
+	arg:=args[0]
+	// queryString := fmt.Sprintf("SELECT valueJson FROM <STATE> WHERE json_extract(valueJson, '$.docType') = 'cert' AND json_extract(valueJson, '$.stu_id') = '%s'")
+	queryString := fmt.Sprintf("SELECT valueJson FROM <STATE> WHERE json_extract(valueJson, '$.docType') = 'student' AND json_extract(valueJson, '$.%s') = '%s'",sth,arg)
+	
+	queryResults, err := getQueryResultForQueryString(stub, queryString)
+	
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	
+	var stuObjects []response
+	err = json.Unmarshal(queryResults,&stuObjects)
+	
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	if len(stuObjects)<1 {
+		return shim.Error(sth + " : " + arg  + " is not existed")
+	}
+	var stu student
+	json.Unmarshal([]byte(stuObjects[0].StudentJson),&stu)	
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	stuId:=stu.StudentId
+	fmt.Println("got the specified student" + stuId)
+	fmt.Println(stuObjects)
+	queryString = fmt.Sprintf("SELECT valueJson FROM <STATE> WHERE json_extract(valueJson, '$.docType') = 'event' AND json_extract(valueJson, '$.stu_id') = '%s'", stuId)
 	
 	queryResults, err = getQueryResultForQueryString(stub, queryString)
 	

@@ -1,7 +1,5 @@
 package com.kingold.educationblockchain.bean;
 
-import java.util.Date;
-
 public class Electronicscertificate {
 
     public String getKg_certificateno() {

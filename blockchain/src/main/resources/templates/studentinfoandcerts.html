@@ -7,45 +7,45 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">
     <link rel="stylesheet" th:href="@{/css/studentinfo.css}" href="../static/css/studentinfo.css">
-    <script type="text/javascript" src="../static/javascript/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
 </head>
 <body style="background-color: #f8f6fa;">
 <div class="pagewrap">
     <div id="header">
         <div id="imgbox">
-            <img id="headimg" src="../static/images/logo2.png">
+            <img id="headimg" th:src="@{/images/logo2.png}">
         </div>
         <input type="button" id="headbtn" value="返回" />
     </div>
     <div id="maindiv">
         <div id="infodiv">
             <div id="stuimgbox">
-                <img id="stuimg" src="../static/images/stuimg.png">
+                <img id="stuimg" th:src="@{/images/stuimg.png}">
             </div>
             <div class="container">
                 <div class="columndiv">
                     <ul>
-                        <li><span class="columnspan">档案编号</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">出生日期</span><span class="showspan">12121212121212</span></li>
+                        <li><span class="columnspan">档案编号</span><span class="showspan" th:text="${studentprofile.getKg_name()}"></span></li>
+                        <li><span class="columnspan">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span><span class="showspan" th:text="${studentprofile.getKg_fullname()}"></span></li>
+                        <li><span class="columnspan">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span><span class="showspan" th:text="${studentprofile.getKg_sex()}"></span></li>
+                        <li><span class="columnspan">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄</span><span class="showspan" th:text="${studentprofile.getKg_age()}"></span></li>
+                        <li><span class="columnspan">出生日期</span><span class="showspan"></span></li>
                     </ul>
                 </div>
                 <div class="columndiv" style="width:33%;">
                     <ul>
-                        <li><span class="columnspan">户口所在地</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">护照/身份证号</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">学&nbsp;&nbsp;&nbsp;籍&nbsp;&nbsp;&nbsp;号</span><span class="showspan">12121212121212</span></li>
+                        <li><span class="columnspan">户口所在地</span><span class="showspan" th:text="${studentprofile.getKg_registeredresidence()}"></span></li>
+                        <li><span class="columnspan">护照/身份证号</span><span class="showspan" th:text="${studentprofile.getKg_passportnumberoridnumber()}"></span></li>
+                        <li><span class="columnspan">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态</span><span class="showspan" th:text="${studentprofile.getKg_status()}"></span></li>
+                        <li><span class="columnspan">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span><span class="showspan" th:text="${studentprofile.getKg_studentnumber()}"></span></li>
+                        <li><span class="columnspan">学&nbsp;&nbsp;&nbsp;籍&nbsp;&nbsp;&nbsp;号</span><span class="showspan" th:text="${studentprofile.getKg_educationnumber()}"></span></li>
                     </ul>
                 </div>
                 <div class="columndiv2">
                     <ul>
-                        <li><span class="columnspan">入读学校</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">入读班级</span><span class="showspan">12121212121212</span></li>
-                        <li><span class="columnspan">ID</span><span class="showspan">12121212121212</span></li>
+                        <li><span class="columnspan">入读学校</span><span class="showspan" th:text="${studentprofile.getKg_schoolname()}"></span></li>
+                        <li><span class="columnspan">入读班级</span><span class="showspan" th:text="${studentprofile.getKg_classname()}"></span></li>
+                        <li><span class="columnspan">ID</span><span class="showspan" th:text="${studentprofile.getKg_studentprofileid()}"></span></li>
                     </ul>
                 </div>
             </div>
@@ -96,7 +96,6 @@
                             </a>
                         </li></ul>
                     </li>
-                    <li></li>
                 </ul>
             </div>
         </div>

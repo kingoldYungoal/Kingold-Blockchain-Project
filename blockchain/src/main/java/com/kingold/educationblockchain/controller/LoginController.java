@@ -1,17 +1,22 @@
 package com.kingold.educationblockchain.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/login")
 public class LoginController {
+    @Autowired
+    private StudentProfileService mStudentProfileService;
     @Autowired
     private ParentInformationService mParentInfomationService;
     @Autowired
@@ -20,6 +25,7 @@ public class LoginController {
     private StudentParentService mStudentParentService;
     @Autowired
     private StudentTeacherService mStudentTeacherService;
+
     private Gson gson;
 
     @RequestMapping("/login")
@@ -27,19 +33,29 @@ public class LoginController {
         return "/login";
     }
 
-    @RequestMapping(value = "/loginauth",method = RequestMethod.GET)
-    @ResponseBody
-    public String UserLoginAuth(@RequestParam(value = "phonenumber", required = true)String phonenumber, @RequestParam(value = "role", required = true)int role){
+    @RequestMapping(value = "/loginVerify",method = RequestMethod.POST)
+    public ModelAndView UserLoginVerify(String phonenumber, int role){
         //role 為1，代表家長，為2，代表教師
+        ModelAndView model = new ModelAndView();
         if (role == 1) {
             ParentInformation parentInformation = mParentInfomationService.FindParentInformationByPhone(phonenumber);
             if (parentInformation != null) {
                 List<StudentParent> studentParents = mStudentParentService.FindStudentParentByParentId(parentInformation.getKg_parentinformationid());
                 if (studentParents != null && studentParents.size() > 0) {
                     if(studentParents.size() > 1){
-                        return "student/childrenList?phonenumber=" + phonenumber;
+                        List<StudentProfile> StudentProfileList = new ArrayList<>();
+                        for(StudentParent sp : studentParents){
+                            StudentProfileList.add(mStudentProfileService.GetStudentProfileById(sp.getKg_studentprofileid()));
+                        }
+                        model.addObject("childrenList",StudentProfileList);
+                        model.addObject("parentInformation",parentInformation);
+                        model.setViewName("childrenlist");
+                        return model;
                     }else{
-                        return "student/studentinfo?id=" + studentParents.get(0).getKg_studentprofileid();
+                        StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentParents.get(0).getKg_studentprofileid());
+                        model.addObject("studentprofile",studentprofile);
+                        model.setViewName("studentinfoandcerts");
+                        return model;
                     }
                 }
             }
@@ -49,13 +65,94 @@ public class LoginController {
                 List<StudentTeacher> studentTeachers = mStudentTeacherService.FindStudentTeacherByTeacherId(teacherInformation.getKg_teacherinformationid());
                 if (studentTeachers != null && studentTeachers.size() > 0) {
                     if(studentTeachers.size() > 1){
-                        return "student/studentList?phonenumber=" + phonenumber;
+                        List<StudentInfo> StudentInfoList = GetStudentList(studentTeachers);
+                        model.addObject("studentList",StudentInfoList);
+                        model.addObject("teacherInformation", teacherInformation);
+                        model.setViewName("studentlist");
+                        return model;
                     }else{
-                        return "student/studentinfo?id=" + studentTeachers.get(0).getKg_studentprofileid();
+                        StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentTeachers.get(0).getKg_studentprofileid());
+                        model.addObject("studentprofile",studentprofile);
+                        model.setViewName("studentinfoandcerts");
+                        return model;
                     }
                 }
             }
         }
-        return "home/login";
+        model.addObject("loginVerify",false);
+        model.setViewName("login");
+        return model;
+    }
+
+    @RequestMapping(value = "/IsExistPhone", method = RequestMethod.POST)
+    @ResponseBody
+    public String IsExistPhone(@RequestBody JSONObject params){
+        gson = new Gson();
+        String phone = params.getString("phone");
+        if(phone != null && phone.trim().length() > 0){
+            //先从家长信息表中查询此号码
+            ParentInformation parentInformation = mParentInfomationService.FindParentInformationByPhone(phone);
+            if(parentInformation != null){
+                return gson.toJson(true);
+            }
+            //从教师信息表中查询此号码
+            TeacherInformation teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(phone);
+            if(teacherInformation != null){
+                return gson.toJson(true);
+            }
+            return gson.toJson(false);
+        }else{
+            return gson.toJson(false);
+        }
+    }
+
+    @RequestMapping(value = "/IsExistPhoneByRole", method = RequestMethod.POST)
+    @ResponseBody
+    public String IsExistPhoneByRole(@RequestBody JSONObject params){
+        gson = new Gson();
+        String phone = params.getString("phone");
+        int role = params.getInteger("role");
+        if(phone != null && phone.trim().length() > 0){
+            if(role == 1){
+                ParentInformation parentInformation = mParentInfomationService.FindParentInformationByPhone(phone);
+                if(parentInformation != null){
+                    return gson.toJson(true);
+                }
+                return gson.toJson(false);
+            }else{
+                TeacherInformation teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(phone);
+                if(teacherInformation != null){
+                    return gson.toJson(true);
+                }
+                return gson.toJson(false);
+            }
+        }else{
+            return gson.toJson(false);
+        }
+    }
+
+    public List<StudentInfo> GetStudentList(List<StudentTeacher> list){
+        List<StudentInfo> StudentInfoList = new ArrayList<>();
+        for (StudentTeacher st : list) {
+            StudentProfile profile = mStudentProfileService.GetStudentProfileById(st.getKg_studentprofileid());
+            StudentInfo info = new StudentInfo();
+            if(profile != null){
+                info.setKg_studentprofileid(profile.getKg_studentprofileid());
+                info.setKg_classname(profile.getKg_classname());
+                info.setKg_fullname(profile.getKg_fullname());
+                info.setKg_educationnumber(profile.getKg_educationnumber());
+                info.setKg_sex(profile.getKg_sex());
+            }
+            List<StudentParent> parents = mStudentParentService.FindStudentParentByStudentId(st.getKg_studentprofileid());
+            if(parents != null && parents.size() > 0){
+                ParentInformation parentInformation = mParentInfomationService.FindParentInformationById(parents.get(0).getKg_parentinformationid());
+                if(parentInformation != null){
+                    info.setKg_parentName(parentInformation.getKg_name());
+                    info.setKg_parentPhoneNumber(parentInformation.getKg_phonenumber());
+                }
+            }
+            StudentInfoList.add(info);
+        }
+        return StudentInfoList;
     }
 }
