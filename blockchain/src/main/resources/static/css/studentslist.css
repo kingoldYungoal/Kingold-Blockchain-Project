@@ -104,6 +104,10 @@
     float:left;
 }
 
+#nodiv select{
+    width: 200px;
+}
+
 #datadiv{
     width: 89%;
     height: 78%;

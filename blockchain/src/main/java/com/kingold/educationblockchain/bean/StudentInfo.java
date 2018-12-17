@@ -72,6 +72,16 @@ public class StudentInfo {
 
     private String kg_parentPhoneNumber;
 
+    public String getKg_jointime() {
+        return kg_jointime;
+    }
+
+    public void setKg_jointime(String kg_jointime) {
+        this.kg_jointime = kg_jointime;
+    }
+
+    private String kg_jointime;
+
     public StudentInfo(){
     }
 }

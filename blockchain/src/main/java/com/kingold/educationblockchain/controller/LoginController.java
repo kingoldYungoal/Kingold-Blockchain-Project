@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,10 +74,12 @@ public class LoginController {
                             StudentInfoList = GetStudentList(studentTeachers);
                         }
                         // 获取所有的classname
-                        List<String> classList = new ArrayList<>();
+                        List<StudentInfo> classList = new ArrayList<>();
+                        List<String> classes = new ArrayList<>();
                         for(StudentInfo studentInfo: StudentInfoList){
-                            if(!classList.contains(studentInfo.getKg_classname())){
-                                classList.add(studentInfo.getKg_classname());
+                            if(!classes.contains(studentInfo.getKg_classname())){
+                                classes.add(studentInfo.getKg_classname());
+                                classList.add(studentInfo);
                             }
                         }
                         model.addObject("classList",classList);
@@ -156,6 +159,7 @@ public class LoginController {
                 info.setKg_fullname(profile.getKg_fullname());
                 info.setKg_educationnumber(profile.getKg_educationnumber());
                 info.setKg_sex(profile.getKg_sex());
+                info.setKg_jointime(profile.getKg_jointime());
             }
             List<StudentParent> parents = mStudentParentService.FindStudentParentByStudentId(st.getKg_studentprofileid());
             if(parents != null && parents.size() > 0){

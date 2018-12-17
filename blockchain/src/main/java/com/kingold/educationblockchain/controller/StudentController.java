@@ -1,5 +1,6 @@
 package com.kingold.educationblockchain.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
@@ -74,15 +75,23 @@ public class StudentController {
         return gson.toJson(StudentProfileList);
     }
 
-    @RequestMapping(value = "/studentlist", method = RequestMethod.GET)
+    @RequestMapping(value = "/studentlist", method = RequestMethod.POST)
     @ResponseBody
-    public String GetStudentList(@RequestParam(value = "phonenumber", required = true)String phonenumber,@RequestParam(value = "classname", required = true)String classname,@RequestParam(value = "pageNum", required = true)int pageNum,@RequestParam(value = "pageSize", required = true)int pageSize) {
+    public String GetStudentList(@RequestBody JSONObject params) {
         gson = new Gson();
+        String teacherphone = params.getString("teacherphone");
+        String classname = params.getString("classname");
+        int pageNum = params.getInteger("pageNum");
+        int pageSize = params.getInteger("pageSize");
+        System.out.println("teacherphone="+teacherphone);
         TeacherInformation teacherInformation;
         List<StudentProfile> studentProfiles = new ArrayList<>();
-        if(phonenumber.trim().length() > 0){
-            teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(phonenumber);
+        if(teacherphone.trim().length() > 0){
+            teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(teacherphone);
+            System.out.println("teacherInformation="+teacherInformation.getKg_schoolname());
             if(teacherInformation != null){
+                System.out.println("pageNum="+pageNum);
+                System.out.println("pageSize="+pageSize);
                 studentProfiles  = mStudentProfileService.GetStudentsByClassAndTeacher(teacherInformation.getKg_teacherinformationid(),classname,pageNum,pageSize);
             }
         }
