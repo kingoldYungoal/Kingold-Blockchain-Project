@@ -13,20 +13,20 @@
 <div class="pagewrap">
     <div id="header">
         <div id="imgbox">
-            <img id="headimg" th:src="@{/images/logo2.png}">
+            <img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">
         </div>
         <input type="button" id="headbtn" value="返回" />
     </div>
     <div id="maindiv">
         <div id="infodiv">
             <div id="stuimgbox">
-                <img id="stuimg" th:src="@{/images/teacherimg.png}">
+                <img id="stuimg" th:src="@{/images/teacherimg.png}" src="../static/images/parentimg.png">
             </div>
             <div id="parentinfodiv">
-                <span id="namespan" th:text="${studentprofile.getKg_fullname()}">陈家长</span>
+                <span id="namespan" th:text="${parentInformation.getKg_name()}">陈家长</span>
                 <div id="phonediv">
-                    <img id="phoneimg" th:src="@{/images/phoneicon.png}">
-                    <span id="phonespan" th:text="${studentprofile.getKg_fullname()}">13400000000</span>
+                    <img id="phoneimg" th:src="@{/images/phoneicon.png}" src="../static/images/phoneicon.png">
+                    <span id="phonespan" th:text="${parentInformation.getKg_phonenumber()}">13400000000</span>
                 </div>
             </div>
         </div>
@@ -47,20 +47,12 @@
                 </thead>
         　　　　 <tbody th:remove="all-but-first">
                     <tr th:each="childrenInfo:${childrenList}">
-　　　　　　　　　　　　    <td th:text="${childrenInfo.getKg_fullname()}" width="15%">1</td>
-                        <td th:text="${childrenInfo.getKg_educationnumber()}" width="18%">Red Chair</td>
-                        <td th:text="${#dates.format(childrenInfo.getKg_jointime, 'yyyy-MM-dd')}" width="18%">2014-12-01</td>
-                        <td th:text="${childrenInfo.description}" width="15%">2014-12-01</td>
-                        <td th:text="${childrenInfo.getKg_schoolname()}" width="18%">2014-12-01</td>
-                        <td th:text="${childrenInfo.getKg_classname()}" width="15%">2014-12-01</td>
-                    </tr>
-                    <tr th:each="childrenInfo:${childrenList}">
-　　　　　　　　　　　　    <td th:text="${childrenInfo.getKg_fullname()}">1</td>
-                        <td th:text="${childrenInfo.getKg_educationnumber()}">Red Chair</td>
-                        <td th:text="${#dates.format(childrenInfo.getKg_jointime, 'yyyy-MM-dd')}">2014-12-01</td>
-                        <td th:text="${childrenInfo.description}">2014-12-01</td>
-                        <td th:text="${childrenInfo.getKg_schoolname()}">2014-12-01</td>
-                        <td th:text="${childrenInfo.getKg_classname()}">2014-12-01</td>
+　　　　　　　　　　　　    <td th:text="${childrenInfo.getKg_fullname()}" width="15%"></td>
+                        <td th:text="${childrenInfo.getKg_educationnumber()}" width="18%"></td>
+                        <td th:text="${childrenInfo.getKg_jointime()}" width="18%"></td>
+                        <td th:text="${childrenInfo.getKg_sex()}" width="15%"></td>
+                        <td th:text="${childrenInfo.getKg_schoolname()}" width="18%"></td>
+                        <td th:text="${childrenInfo.getKg_classname()}" width="15%"></td>
                     </tr>
                 </tbody>
             </table>

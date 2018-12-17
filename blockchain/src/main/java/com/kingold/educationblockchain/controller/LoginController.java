@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/login")
@@ -65,7 +66,20 @@ public class LoginController {
                 List<StudentTeacher> studentTeachers = mStudentTeacherService.FindStudentTeacherByTeacherId(teacherInformation.getKg_teacherinformationid());
                 if (studentTeachers != null && studentTeachers.size() > 0) {
                     if(studentTeachers.size() > 1){
-                        List<StudentInfo> StudentInfoList = GetStudentList(studentTeachers);
+                        List<StudentInfo> StudentInfoList;
+                        if(studentTeachers.size() > 10){
+                            StudentInfoList = GetStudentList(studentTeachers.subList(0,9));
+                        }else{
+                            StudentInfoList = GetStudentList(studentTeachers);
+                        }
+                        // 获取所有的classname
+                        List<String> classList = new ArrayList<>();
+                        for(StudentInfo studentInfo: StudentInfoList){
+                            if(!classList.contains(studentInfo.getKg_classname())){
+                                classList.add(studentInfo.getKg_classname());
+                            }
+                        }
+                        model.addObject("classList",classList);
                         model.addObject("studentList",StudentInfoList);
                         model.addObject("teacherInformation", teacherInformation);
                         model.setViewName("studentlist");

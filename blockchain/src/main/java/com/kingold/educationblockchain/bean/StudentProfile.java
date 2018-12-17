@@ -30,7 +30,7 @@ public class StudentProfile {
 
     private String kg_entrancestate;
 
-    private int kg_status;
+    private int kg_state;
 
     private String kg_jointime;
 
@@ -42,12 +42,12 @@ public class StudentProfile {
         this.kg_jointime = kg_jointime;
     }
 
-    public int getKg_status() {
-        return kg_status;
+    public int getKg_state() {
+        return kg_state;
     }
 
-    public void setKg_status(int kg_status) {
-        this.kg_status = kg_status;
+    public void setKg_state(int kg_state) {
+        this.kg_state = kg_state;
     }
 
     public int getKg_studentprofileid() {

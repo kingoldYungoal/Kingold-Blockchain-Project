@@ -1,5 +1,7 @@
 package com.kingold.educationblockchain.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.kingold.educationblockchain.bean.PageBean;
 import com.kingold.educationblockchain.bean.StudentProfile;
 import com.kingold.educationblockchain.dao.StudentProfileMapper;
 import com.kingold.educationblockchain.service.StudentProfileService;
@@ -31,6 +33,20 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     @Override
     public List<StudentProfile> GetStudentProfileByNumber(String eduNumber, String stuNumber){
         return mStudentProfileMapper.GetStudentProfileByNumber(eduNumber,stuNumber);
+    }
+
+    /**
+     * 根据教師信息id，学生班级查询
+     */
+    @Override
+    public List<StudentProfile> GetStudentsByClassAndTeacher(int teacherId, String classname,int currentPage,int pageSize){
+        //设置分页信息，分别是当前页数和每页显示的总记录数
+        PageHelper.startPage(currentPage, pageSize);
+        List<StudentProfile> allItems = mStudentProfileMapper.GetStudentsByClassAndTeacher(teacherId,classname);
+        int countNums = allItems.size();            //总记录数
+        PageBean<StudentProfile> pageData = new PageBean<>(currentPage, pageSize, countNums);
+        pageData.setItems(allItems);
+        return pageData.getItems();
     }
 
     /**

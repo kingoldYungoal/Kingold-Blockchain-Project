@@ -7,48 +7,47 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">
     <link rel="stylesheet" th:href="@{/css/studentslist.css}" href="../static/css/studentslist.css">
+    <link rel="stylesheet" th:href="@{/css/selectFilter.css}" href="../static/css/selectFilter.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/bootstrap.min.js}" src="../static/javascript/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/selectFilter.js}" src="../static/javascript/selectFilter.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/studentslist.js}" src="../static/javascript/studentslist.js"></script>
 </head>
 <body style="background-color: #f8f6fa;">
+<input type="hidden" id="phone" name="phone" th:value="${teacherInformation.getKg_phonenumber()}">
 <div class="pagewrap">
     <div id="header">
         <div id="imgbox">
-            <img id="headimg" th:src="@{/images/logo2.png}">
+            <img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">
         </div>
         <input type="button" id="headbtn" value="返回" />
     </div>
     <div id="maindiv">
         <div id="infodiv">
             <div id="stuimgbox">
-                <img id="stuimg" th:src="@{/images/teacherimg.png}">
+                <img id="stuimg" th:src="@{/images/teacherimg.png}" src="../static/images/teacherimg.png">
             </div>
             <div id="parentinfodiv">
-                <span id="namespan" th:text="${studentprofile.getKg_fullname()}">陈家长</span>
+                <span id="namespan" th:text="${teacherInformation.getKg_name()}"></span>
                 <div id="phonediv">
-                    <img id="phoneimg" th:src="@{/images/phoneicon.png}">
-                    <span id="phonespan" th:text="${studentprofile.getKg_fullname()}">13400000000</span>
+                    <img id="phoneimg" th:src="@{/images/phoneicon.png}" src="../static/images/phoneicon.png">
+                    <span id="phonespan" th:text="${teacherInformation.getKg_phonenumber()}"></span>
                 </div>
             </div>
         </div>
         <div id="nodiv">
             <span>学生列表</span>
-            <select th:field="*{paymentMethod}" th:remove="all-but-first">
-                <option th:each="paymentMethod : ${paymentMethods}" th:value="${paymentMethod}" th:text="${paymentMethod.description}">
-                    Credit card
-                </option>
-                <option th:each="paymentMethod : ${paymentMethods}" th:value="${paymentMethod}" th:text="${paymentMethod.description}">
-                    Credit card
-                </option>
-                <option th:each="paymentMethod : ${paymentMethods}" th:value="${paymentMethod}" th:text="${paymentMethod.description}">
-                    Credit card
-                </option>
-                <option th:each="paymentMethod : ${paymentMethods}" th:value="${paymentMethod}" th:text="${paymentMethod.description}">
-                    Credit card
-                </option>
-                <option th:each="paymentMethod : ${paymentMethods}" th:value="${paymentMethod}" th:text="${paymentMethod.description}">
-                    Credit card
-                </option>
-            </select>
+            <div class="filter-box">
+                <div class="filter-text">
+                    <input class="filter-title" type="text" disabled="disabled" placeholder="班级筛选" />
+                    <i class="icon icon-filter-arrow"></i>
+                </div>
+                <select onchange="getUserList(this.value,1,1)" name="filter">
+                    <option value="">请选择</option>
+                    <option th:each="c:${classList}" th:value="${c.getKg_classname()}"
+                            th:text="${c.getKg_classname()}">未审核</option>
+                </select>
+            </div>
         </div>
         <div id="datadiv">
             <table>
@@ -62,27 +61,30 @@
                     <th>家长联系电话</th>
                 </tr>
                 </thead>
-                　　　　 <tbody th:remove="all-but-first">
-            <tr th:each="childrenInfo:${childrenList}">
-　　　　　　　　　 <td th:text="${childrenInfo.getKg_fullname()}" width="15%">1</td>
-                <td th:text="${childrenInfo.getKg_educationnumber()}" width="18%">Red Chair</td>
-                <td th:text="${#dates.format(childrenInfo.getKg_jointime, 'yyyy-MM-dd')}" width="18%">2014-12-01</td>
-                <td th:text="${childrenInfo.description}" width="15%">2014-12-01</td>
-                <td th:text="${childrenInfo.getKg_schoolname()}" width="18%">2014-12-01</td>
-                <td th:text="${childrenInfo.getKg_classname()}" width="15%">2014-12-01</td>
-            </tr>
-            <tr th:each="childrenInfo:${childrenList}">
-　　　　　　　　　 <td th:text="${childrenInfo.getKg_fullname()}">1</td>
-                <td th:text="${childrenInfo.getKg_educationnumber()}">Red Chair</td>
-                <td th:text="${#dates.format(childrenInfo.getKg_jointime, 'yyyy-MM-dd')}">2014-12-01</td>
-                <td th:text="${childrenInfo.description}">2014-12-01</td>
-                <td th:text="${childrenInfo.getKg_schoolname()}">2014-12-01</td>
-                <td th:text="${childrenInfo.getKg_classname()}">2014-12-01</td>
-            </tr>
-            </tbody>
+        　　　　 <tbody th:remove="all-but-first">
+                    <tr th:each="studentInfo:${studentList}">
+        　　　　　　　　　 <td th:text="${studentInfo.getKg_fullname()}" width="15%">1</td>
+                        <td th:text="${studentInfo.getKg_educationnumber()}" width="18%">Red Chair</td>
+                        <td th:text="${studentInfo.getKg_jointime()}" width="18%">2014-12-01</td>
+                        <td th:text="${studentInfo.getKg_sex()}" width="15%">2014-12-01</td>
+                        <td th:text="${studentInfo.getKg_parentName()}" width="18%">2014-12-01</td>
+                        <td th:text="${studentInfo.getKg_parentPhoneNumber()}" width="15%">2014-12-01</td>
+                    </tr>
+                </tbody>
             </table>
+            <div class="page" style="width: 100%;height:50px;">
+                <ul class="pagination"></ul>
+            </div>
         </div>
     </div>
 </div>
 </body>
+<script>
+    //这里是初始化
+    $('.filter-box').selectFilter({
+        callBack : function (val){
+            //返回选择的值
+        }
+    });
+</script>
 </html>

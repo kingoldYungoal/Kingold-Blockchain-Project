@@ -5,10 +5,11 @@ import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api")
@@ -24,6 +25,9 @@ public class CommonController {
     @Autowired
     private StudentTeacherService mStudentTeacherService;
     private Gson gson;
+
+    @Autowired
+    private Environment environment;
 
 //    private Logger logger = Logger.getLogger(CommonController.class);
 
@@ -48,11 +52,12 @@ public class CommonController {
     @RequestMapping(value = "/Delete", method = RequestMethod.GET)
     public String Delete(@RequestParam(value = "id", required = true)int id, @RequestParam(value = "tablename", required = true)String tablename) {
         gson = new Gson();
+        System.out.println("hosturl=" + environment.getProperty("chainCode.hostUrl"));
+        System.out.println("authorizationKey=" + environment.getProperty("chainCode.authorizationKey"));
         if(tablename.trim().length() == 0 || id <= 0){
             return gson.toJson(false);
         }
-        boolean flag = DeleteData(id, tablename);
-        return gson.toJson(flag);
+        return gson.toJson(DeleteData(id, tablename));
     }
 
     public boolean InsertData(String tableName,String jsonParam){

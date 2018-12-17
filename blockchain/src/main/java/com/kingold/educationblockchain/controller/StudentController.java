@@ -31,7 +31,6 @@ public class StudentController {
     @Autowired
     private StudentParentService mStudentParentService;
     @Autowired
-    private StudentTeacherService mStudentTeacherService;
     private Gson gson;
 
 
@@ -77,16 +76,16 @@ public class StudentController {
 
     @RequestMapping(value = "/studentlist", method = RequestMethod.GET)
     @ResponseBody
-    public String GetStudentList(@RequestParam(value = "phonenumber", required = true)String phonenumber) {
+    public String GetStudentList(@RequestParam(value = "phonenumber", required = true)String phonenumber,@RequestParam(value = "classname", required = true)String classname,@RequestParam(value = "pageNum", required = true)int pageNum,@RequestParam(value = "pageSize", required = true)int pageSize) {
         gson = new Gson();
-        TeacherInformation teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(phonenumber);
-        // 分页
-        // List<StudentTeacher> studentTeachers = mStudentTeacherService.FindStudentTeacherByPage(teacherInformation.getKg_teacherinformationid(),1,10);
-        // 不分页
-        List<StudentTeacher> studentTeachers = mStudentTeacherService.FindStudentTeacherByTeacherId(teacherInformation.getKg_teacherinformationid());
-        //跳转到学生列表页面
-        return "";
+        TeacherInformation teacherInformation;
+        List<StudentProfile> studentProfiles = new ArrayList<>();
+        if(phonenumber.trim().length() > 0){
+            teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(phonenumber);
+            if(teacherInformation != null){
+                studentProfiles  = mStudentProfileService.GetStudentsByClassAndTeacher(teacherInformation.getKg_teacherinformationid(),classname,pageNum,pageSize);
+            }
+        }
+        return gson.toJson(studentProfiles);
     }
-
-
 }
