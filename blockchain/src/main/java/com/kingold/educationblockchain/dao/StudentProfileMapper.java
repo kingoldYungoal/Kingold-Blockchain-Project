@@ -56,9 +56,33 @@ public interface StudentProfileMapper {
     List<StudentProfile> GetStudentProfileByNumber(String eduNumber, String stuNumber);
 
     /**
+     * 根据教師信息id查询
+     */
+    @Select("select * from KG_STUDENTPROFILE where kg_studentprofileid in (SELECT kg_studentprofileid FROM kg_student_teacher where kg_teacherinformationid=#{teacherId} and kg_state=0) and kg_state=0")
+    @Results({
+            @Result(property = "kg_studentprofileid", column = "KG_STUDENTPROFILEID"),
+            @Result(property = "kg_classname", column = "KG_CLASSNAME"),
+            @Result(property = "kg_schoolname", column = "KG_SCHOOLNAME"),
+            @Result(property = "kg_educationnumber", column = "KG_EDUCATIONNUMBER"),
+            @Result(property = "kg_studentnumber", column = "KG_STUDENTNUMBER"),
+            @Result(property = "kg_name", column = "KG_NAME"),
+            @Result(property = "kg_fullname", column = "KG_FULLNAME"),
+            @Result(property = "kg_sex", column = "KG_SEX"),
+            @Result(property = "kg_age", column = "KG_AGE"),
+            @Result(property = "kg_countryname", column = "KG_COUNTRYNAME"),
+            @Result(property = "kg_birthday", column = "KG_BIRTHDAY"),
+            @Result(property = "kg_registeredresidence", column = "KG_REGISTEREDRESIDENCE"),
+            @Result(property = "kg_passportnumberoridnumber", column = "KG_PASSPORTNUMBERORIDNUMBER"),
+            @Result(property = "kg_entrancestate", column = "KG_ENTRANCESTATE"),
+            @Result(property = "kg_state", column = "KG_STATE"),
+            @Result(property = "kg_jointime", column = "KG_JOINTIME")
+    })
+    List<StudentProfile> GetStudentsByTeacherId(int teacherId);
+
+    /**
      * 根据教師信息id，学生班级查询
      */
-    @Select("select * from KG_STUDENTPROFILE where kg_studentprofileid in (SELECT kg_studentprofileid FROM kg_student_teacher where kg_teacherinformationid=#{teacherId} and kg_state=0) and kg_classname=#{kg_classname} and kg_state=0")
+    @Select("select * from KG_STUDENTPROFILE where kg_studentprofileid in (SELECT kg_studentprofileid FROM kg_student_teacher where kg_teacherinformationid=#{teacherId} and kg_state=0) and kg_classname=#{classname} and kg_state=0")
     List<StudentProfile> GetStudentsByClassAndTeacher(int teacherId, String classname);
 
     /**

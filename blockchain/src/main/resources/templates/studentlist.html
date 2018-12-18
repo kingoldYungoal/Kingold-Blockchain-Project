@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>侨鑫教育平台</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css">
     <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">
+    <link rel="stylesheet" th:href="@{/css/alert.css}" href="../static/css/alert.css">
     <link rel="stylesheet" th:href="@{/css/studentslist.css}" href="../static/css/studentslist.css">
-    <!--<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" href="../static/css/bootstrap-select.css">-->
-    <!--<link rel="stylesheet" th:href="@{/css/selectFilter.css}" href="../static/css/selectFilter.css">-->
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" th:src="@{/javascript/bootstrap.min.js}" src="../static/javascript/bootstrap.min.js"></script>
     <script type="text/javascript" th:src="@{/javascript/bootstrap-paginator.js}" src="../static/javascript/bootstrap-paginator.js"></script>
-    <!--<script type="text/javascript" th:src="@{/javascript/bootstrap-select.min.js}" src="../static/javascript/bootstrap-select.min.js"></script>-->
-    <!--<script type="text/javascript" th:src="@{/javascript/selectFilter.js}" src="../static/javascript/selectFilter.js"></script>-->
+    <script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="../static/javascript/alert.min.js"></script>
     <script type="text/javascript" th:src="@{/javascript/studentslist.js}" src="../static/javascript/studentslist.js"></script>
 </head>
 <body style="background-color: #f8f6fa;">
@@ -23,7 +21,7 @@
         <div id="imgbox">
             <img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">
         </div>
-        <input type="button" id="headbtn" value="返回" />
+        <input type="button" id="headbtn" value="返回" onclick="GoBack();" />
     </div>
     <div id="maindiv">
         <div id="infodiv">
@@ -41,7 +39,7 @@
         <div id="nodiv">
             <span>学生列表</span>
             <div class="classdiv">
-                <select onchange="initTable()" name="select">
+                <select onchange="initTable(this.value)" id="selectDiv" name="select">
                     <option value="">--班级筛选--</option>
                     <option th:each="info:${classList}" th:value="${info.getKg_classname()}" th:text="${info.getKg_classname()}"></option>
                 </select>
@@ -60,29 +58,25 @@
                 </tr>
                 </thead>
         　　　　 <tbody th:remove="all-but-first">
-                    <tr th:each="studentInfo:${studentList}">
-        　　　　　　　　　 <td th:text="${studentInfo.getKg_fullname()}" width="15%"></td>
-                        <td th:text="${studentInfo.getKg_educationnumber()}" width="18%"></td>
-                        <td th:text="${studentInfo.getKg_jointime()}" width="18%"></td>
-                        <td th:text="${studentInfo.getKg_sex()}" width="15%"></td>
-                        <td th:text="${studentInfo.getKg_parentName()}" width="18%"></td>
-                        <td th:text="${studentInfo.getKg_parentPhoneNumber()}" width="15%"></td>
-                    </tr>
+                    <!--<tr th:each="studentInfo:${studentList}">-->
+        <!--　　　　　　　　　 <td th:text="${studentInfo.getKg_fullname()}" width="15%"></td>-->
+                        <!--<td th:text="${studentInfo.getKg_educationnumber()}" width="18%"></td>-->
+                        <!--<td th:text="${studentInfo.getKg_jointime()}" width="18%"></td>-->
+                        <!--<td th:text="${studentInfo.getKg_sex()}" width="15%"></td>-->
+                        <!--<td th:text="${studentInfo.getKg_parentName()}" width="18%"></td>-->
+                        <!--<td th:text="${studentInfo.getKg_parentPhoneNumber()}" width="15%"></td>-->
+                    <!--</tr>-->
                 </tbody>
             </table>
-            <div style="text-align:right;">
-                <ul id="example"></ul>
+            <div style="text-align:center;" id="pages">
             </div>
         </div>
     </div>
 </div>
 </body>
 <script>
-    // $(".selectpicker").selectpicker({
-    //     noneSelectedText : '班级筛选'//默认显示内容
-    // });
-    // $(window).on('load', function() {
-    //     $('.selectpicker').selectpicker('refresh');
-    // });
+    function GoBack() {
+        window.location.href = "/login/login";
+    }
 </script>
 </html>

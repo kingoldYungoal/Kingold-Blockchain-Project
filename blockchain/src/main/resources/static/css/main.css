@@ -64,15 +64,15 @@ textarea:focus:-moz-placeholder { color:transparent; }
 textarea:focus::-moz-placeholder { color:transparent; }
 textarea:focus:-ms-input-placeholder { color:transparent; }
 
-input::-webkit-input-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:25px;}
-input:-moz-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:25px;}
-input::-moz-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:25px;}
-input:-ms-input-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:25px;}
+input::-webkit-input-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;}
+input:-moz-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;}
+input::-moz-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;}
+input:-ms-input-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;}
 
-textarea::-webkit-input-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:25px;}
-textarea:-moz-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:25px;}
-textarea::-moz-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:25px;}
-textarea:-ms-input-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:25px;}
+textarea::-webkit-input-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:20px;}
+textarea:-moz-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:20px;}
+textarea::-moz-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:20px;}
+textarea:-ms-input-placeholder { color: #a1a6bb;font-size: 18px;font-family: PingFang-SC-Regular;padding-left:20px;}
 
 /*---------------------------------------------*/
 button {

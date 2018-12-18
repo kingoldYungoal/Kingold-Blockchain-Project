@@ -1,82 +1,87 @@
-var classname = "";
-
-//var phone = $("#phone").val();
-var phone='13100000000';
 var pageNum = 1;
-
 var pageSize = 10;
+var classnames;
+var phone;
+$(document).ready(function(){
+    classnames = $("#selectDiv").val();
+    phone = $("#phone").val();
+    initTable(classnames);
+});
 
 //ajax获取后台数据
-function initTable() {
-
+function initTable(classname) {
     var tbody="";
-    var datas = {
-        'teacherphone' : phone,
-        'classname':classname,
-        'pageNum':pageNum,
-        'pageSize':pageSize
-    };
     $.ajax({
-        type: 'post',
+        type: 'get',
         dataType : "json",
         async: false,
         url: "/student/studentlist",//请求的action路径页面
-        data:JSON.stringify(datas),
+        data:{"teacherphone":phone,"classname":classname, "pageNum":pageNum,"pageSize":pageSize},
         error: function () {//请求失败处理函数
             alert('请求失败');
         },
         success:function(data){ //请求成功后处理函数。
-            $.each(data.list, function(i, n) {
-                var trs = "";
-                trs += "<tr><td width='15%'>" + n.getKg_fullname() + "</td><td width='18%'>"+n.getKg_educationnumber() + "</td><td width='18%'>"+n.getKg_jointime()+"</td><td width='15%'>"+n.getKg_sex()+"</td><td width='18%'>"+n.getKg_parentName()+"</td><td width='15%'>"+n.getKg_parentPhoneNumber()+"</td></tr>";
-                tbody+=trs;
-            });
-            $("#datadiv table").html(tbody);
-
-            var pageCount = data.pageCount; //取到pageCount的值
-            var currentPage = data.CurrentPage; //得到currentPage
-
-            var options = {
-                bootstrapMajorVersion: 3, //版本
-                currentPage: currentPage, //当前页数
-                totalPages: pageCount, //总页数
-                numberOfPages: 10,
-                itemTexts: function (type, page, current) {
-                    switch (type) {
-                        case "first":
-                            return "首页";
-                        case "prev":
-                            return "上一页";
-                        case "next":
-                            return "下一页";
-                        case "last":
-                            return "末页";
-                        case "page":
-                            return page;
-                    }
-                },//点击事件，用于通过Ajax来刷新整个list列表
-                onPageClicked: function (event, originalEvent, type, page) {
-                    $.ajax({
-                        url: "/student/studentlist",
-                        type: "get",
-                        dataType : "json",
-                        data:{"teacherphone":phone,"classname":classname, "pageNum":pageNum,"pageSize":pageSize},
-                        success: function (data) {
-                            $.each(data.list, function(i, n) {
-                                var trs = "";
-                                trs += "<tr><td width='15%'>" + n.getKg_fullname() + "</td><td width='18%'>"+n.getKg_educationnumber() + "</td><td width='18%'>"+n.getKg_jointime()+"</td><td width='15%'>"+n.getKg_sex()+"</td><td width='18%'>"+n.getKg_parentName()+"</td><td width='15%'>"+n.getKg_parentPhoneNumber()+"</td></tr>";
-                                tbody+=trs;
-                            });
-                            $("#datadiv table").html(tbody);
-                        }
-                    });
+            if (data.items.length > 0){
+                for (var i = 0;i <data.items.length;i++){
+                    var trs = "";
+                    trs += "<tr><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
+                    tbody+=trs;
                 }
-            };
-            $('#example').bootstrapPaginator(options);
+            }
+            $("#datadiv table tbody").html(tbody);
+            if (data.totalPage > 1){
+                var pageCount = data.totalPage; //取到pageCount的值
+                var currentPage = data.currentPage; //得到currentPage
+                var options = {
+                    bootstrapMajorVersion: 2, //版本
+                    currentPage: currentPage, //当前页数
+                    totalPages: pageCount, //总页数
+                    numberOfPages: pageCount,
+                    shouldShowPage:true,
+                    itemTexts: function (type, page, currentPage) {
+                        switch (type) {
+                            case "first":
+                                return "首页";
+                            case "prev":
+                                return "上一页";
+                            case "next":
+                                return "下一页";
+                            case "last":
+                                return "末页";
+                            case "page":
+                                return page;
+                        }
+                    },//点击事件，用于通过Ajax来刷新整个list列表
+                    onPageClicked: function (event, originalEvent, type, page) {
+                        $("#datadiv table tbody").html("");
+                        var tbodys="";
+                        $.ajax({
+                            url: "/student/studentlist",
+                            type: "get",
+                            dataType : "json",
+                            data:{"teacherphone":phone,"classname":classname, "pageNum":page,"pageSize":pageSize},
+                            success: function (data) {
+                                if (data.items.length > 0){
+                                    for (var i = 0;i <data.items.length;i++){
+                                        var trs = "";
+                                        trs += "<tr><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
+                                        tbodys+=trs;
+                                    }
+                                }
+                                $("#datadiv table tbody").html(tbodys);
+                            }
+                        });
+                    }
+                };
+                $('#pages').bootstrapPaginator(options);
+                $("#pages ul li").each(function(){
+                    if (this.hasClass("active")){
+                        this.attr("disabled",true);
+                    }
+                });
+            }else{
+                $("#pages").html('');
+            }
         }
     });
 }
-
-$(document).ready(function(){
-    initTable();
-});

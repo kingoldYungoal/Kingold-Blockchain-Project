@@ -75,26 +75,22 @@ public class StudentController {
         return gson.toJson(StudentProfileList);
     }
 
-    @RequestMapping(value = "/studentlist", method = RequestMethod.POST)
+    @RequestMapping(value = "/studentlist", method = RequestMethod.GET)
     @ResponseBody
-    public String GetStudentList(@RequestBody JSONObject params) {
+    public String GetStudentList(@RequestParam(value = "teacherphone", required = true)String teacherphone,@RequestParam(value = "classname", required = true)String classname,@RequestParam(value = "pageNum", required = true)int pageNum,@RequestParam(value = "pageSize", required = true)int pageSize) {
         gson = new Gson();
-        String teacherphone = params.getString("teacherphone");
-        String classname = params.getString("classname");
-        int pageNum = params.getInteger("pageNum");
-        int pageSize = params.getInteger("pageSize");
-        System.out.println("teacherphone="+teacherphone);
         TeacherInformation teacherInformation;
-        List<StudentProfile> studentProfiles = new ArrayList<>();
+        PageBean<StudentInfo> studentInfoPage = new PageBean<StudentInfo>();
         if(teacherphone.trim().length() > 0){
             teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(teacherphone);
-            System.out.println("teacherInformation="+teacherInformation.getKg_schoolname());
             if(teacherInformation != null){
-                System.out.println("pageNum="+pageNum);
-                System.out.println("pageSize="+pageSize);
-                studentProfiles  = mStudentProfileService.GetStudentsByClassAndTeacher(teacherInformation.getKg_teacherinformationid(),classname,pageNum,pageSize);
+                if(classname.trim().length() > 0){
+                    studentInfoPage = mStudentProfileService.GetStudentsByClassAndTeacher(teacherInformation.getKg_teacherinformationid(),classname,pageNum,pageSize);
+                }else{
+                    studentInfoPage = mStudentProfileService.GetStudentsByTeacherId(teacherInformation.getKg_teacherinformationid(),pageNum,pageSize);
+                }
             }
         }
-        return gson.toJson(studentProfiles);
+        return gson.toJson(studentInfoPage);
     }
 }

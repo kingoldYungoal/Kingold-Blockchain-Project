@@ -67,12 +67,7 @@ public class LoginController {
                 List<StudentTeacher> studentTeachers = mStudentTeacherService.FindStudentTeacherByTeacherId(teacherInformation.getKg_teacherinformationid());
                 if (studentTeachers != null && studentTeachers.size() > 0) {
                     if(studentTeachers.size() > 1){
-                        List<StudentInfo> StudentInfoList;
-                        if(studentTeachers.size() > 10){
-                            StudentInfoList = GetStudentList(studentTeachers.subList(0,9));
-                        }else{
-                            StudentInfoList = GetStudentList(studentTeachers);
-                        }
+                        List<StudentInfo> StudentInfoList = StudentInfoList = GetStudentList(studentTeachers);
                         // 获取所有的classname
                         List<StudentInfo> classList = new ArrayList<>();
                         List<String> classes = new ArrayList<>();

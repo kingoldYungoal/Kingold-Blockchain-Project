@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/login.css}" href="../static/css/login.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="../static/javascript/alert.min.js"></script>
-    <script th:src="@{/javascript/login.js}"></script>
+    <script th:src="@{/javascript/login.js}" src="../static/javascript/login.js"></script>
 </head>
 <body>
 <div class="pagewrap">
@@ -27,13 +27,17 @@
                     <input type="button" id="codebtn" value="获取验证码" />
                 </div>
                 <div class="wrap-radio">
-                    <div class="wrap-radios">
-                        <input type="radio" name="role" id="teacherRadio" value="2" class="radio" checked /> 教师
-                        <input type="radio" name="role" id="parentRadio" value="1" class="radio" /> 家长
+                    <div style="margin-left:100px;" class="wrap-radios">
+                        <input type="radio" name="role" id="teacherRadio" value="2" class="radio" checked />
+                        <label for="teacherRadio">教师</label>
+                    </div>
+                    <div style="text-align: left;" class="wrap-radios">
+                        <input type="radio" name="role" id="parentRadio" value="1" class="radio" />
+                        <label for="parentRadio">家长</label>
                     </div>
                 </div>
                 <div class="wrap-form-btn">
-                    <input id="loginbtn" class="login-form-btn" type="button" value="登 录">
+                    <input id="loginbtn" class="login-form-btn" type="button" value="登 录" style="width:387px;">
                 </div>
             </form>
         </div>
