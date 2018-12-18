@@ -104,8 +104,39 @@
     float:left;
 }
 
-#nodiv select{
+.classdiv{
     width: 200px;
+    height:40px;
+    float:left;
+    margin-left:30px;
+    margin-top:15px;
+}
+
+.classdiv select{
+    outline: none;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 20px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 1px solid #004a80;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+
+.classdiv:after{
+    content: "";
+    width: 14px;
+    height: 8px;
+    background: url(/static/images/selecticon.png) no-repeat center;
+    position: absolute;
+    right: 20px;
+    top: 35%;
+    pointer-events: none;
 }
 
 #datadiv{

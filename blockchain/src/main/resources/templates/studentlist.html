@@ -40,16 +40,12 @@
         </div>
         <div id="nodiv">
             <span>学生列表</span>
-            <!--<div class="filter-box">-->
-                <!--<div class="filter-text">-->
-                    <!--<input class="filter-title" type="text" disabled="disabled" placeholder="班级筛选" />-->
-                    <!--<i class="icon icon-filter-arrow"></i>-->
-                <!--</div>-->
-                <select onchange="initTable()" id="select" name="select" class="selectpicker" data-actions-box="true">
-                    <option value="">请选择</option>
+            <div class="classdiv">
+                <select onchange="initTable()" name="select">
+                    <option value="">--班级筛选--</option>
                     <option th:each="info:${classList}" th:value="${info.getKg_classname()}" th:text="${info.getKg_classname()}"></option>
                 </select>
-            <!--</div>-->
+            </div>
         </div>
         <div id="datadiv">
             <table>
