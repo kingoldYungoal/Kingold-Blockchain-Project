@@ -66,7 +66,7 @@ function initTable(classname) {
                                 if (data.items.length > 0){
                                     for (var i = 0;i <data.items.length;i++){
                                         var trs = "";
-                                        trs += "<tr onclick='GoStudentInfo(data.items[i].kg_studentprofileid)'><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
+                                        trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
                                         tbodys+=trs;
                                     }
                                 }

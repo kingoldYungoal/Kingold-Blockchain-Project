@@ -31,13 +31,13 @@ public class ShowElectronicscertificateController {
     * 学生证书页面
     * */
     @RequestMapping(value = "/studentcertificate", method = RequestMethod.GET)
-    public ModelAndView StudentCertificate() {
+    public ModelAndView StudentCertificate(@RequestParam(value = "fileId", required = true)String fileId) {
         //获取证书Id逻辑
         // fileId ="";
-        String fileId = "D74E601160ACFA522860ACB1B85DDA650E6B10A3A8FA";
+        String fileIds = "D74E601160ACFA522860ACB1B85DDA650E6B10A3A8FA";
 
         ModelAndView model = new ModelAndView();
-        model.addObject("certificateid",fileId);
+        model.addObject("certificateid",fileIds);
         model.setViewName("studentcertdetail");
         return model;
     }

@@ -3,37 +3,23 @@ package com.kingold.educationblockchain.bean;
 import com.google.gson.annotations.SerializedName;
 
 public class EventInfo {
-    @SerializedName("cert_id")
-    public String  CertId;
+    @SerializedName("evt_id")
+    private String  EventId;
     @SerializedName("stu_id")
-    public String StudentId;
-    @SerializedName("cert_no")
-    public String CertNo;
-    @SerializedName("cert_type")
-    public String CertType;
-    @SerializedName("cert_holder")
-    public String CertHolder;
-    @SerializedName("cert_name")
-    public String CertName;
-    @SerializedName("cert_content")
-    public String  CertContent;
-    @SerializedName("cert_pdf_path")
-    public String CertPdfPath;
-    @SerializedName("cert_hash")
-    public String  CertHash;
-    @SerializedName("cert_issuer")
-    public String  CertIssuer;
-    @SerializedName("cert_issue_date")
-    public String CertIssueDate;
-    @SerializedName("cert_operation_time")
-    public String CertOperationTime;
+    private String StudentId;
+    @SerializedName("evt_content")
+    private String EventContent;
+    @SerializedName("evt_date")
+    private String EventDate;
+    @SerializedName("evt_org")
+    private String EventOrg;
 
-    public String getCertId() {
-        return CertId;
+    public String getEventId() {
+        return EventId;
     }
 
-    public void setCertId(String certId) {
-        CertId = certId;
+    public void setEventId(String eventId) {
+        EventId = eventId;
     }
 
     public String getStudentId() {
@@ -44,92 +30,36 @@ public class EventInfo {
         StudentId = studentId;
     }
 
-    public String getCertNo() {
-        return CertNo;
+    public String getEventContent() {
+        return EventContent;
     }
 
-    public void setCertNo(String certNo) {
-        CertNo = certNo;
+    public void setEventContent(String eventContent) {
+        EventContent = eventContent;
     }
 
-    public String getCertType() {
-        return CertType;
+    public String getEventDate() {
+        return EventDate;
     }
 
-    public void setCertType(String certType) {
-        CertType = certType;
+    public void setEventDate(String eventDate) {
+        EventDate = eventDate;
     }
 
-    public String getCertHolder() {
-        return CertHolder;
+    public String getEventOrg() {
+        return EventOrg;
     }
 
-    public void setCertHolder(String certHolder) {
-        CertHolder = certHolder;
+    public void setEventOrg(String eventOrg) {
+        EventOrg = eventOrg;
     }
 
-    public String getCertName() {
-        return CertName;
+    public String getEventOperationTime() {
+        return EventOperationTime;
     }
 
-    public void setCertName(String certName) {
-        CertName = certName;
-    }
-
-    public String getCertContent() {
-        return CertContent;
-    }
-
-    public void setCertContent(String certContent) {
-        CertContent = certContent;
-    }
-
-    public String getCertPdfPath() {
-        return CertPdfPath;
-    }
-
-    public void setCertPdfPath(String certPdfPath) {
-        CertPdfPath = certPdfPath;
-    }
-
-    public String getCertHash() {
-        return CertHash;
-    }
-
-    public void setCertHash(String certHash) {
-        CertHash = certHash;
-    }
-
-    public String getCertIssuer() {
-        return CertIssuer;
-    }
-
-    public void setCertIssuer(String certIssuer) {
-        CertIssuer = certIssuer;
-    }
-
-    public String getCertIssueDate() {
-        return CertIssueDate;
-    }
-
-    public void setCertIssueDate(String certIssueDate) {
-        CertIssueDate = certIssueDate;
-    }
-
-    public String getCertOperationTime() {
-        return CertOperationTime;
-    }
-
-    public void setCertOperationTime(String certOperationTime) {
-        CertOperationTime = certOperationTime;
-    }
-
-    public String getCertStatus() {
-        return CertStatus;
-    }
-
-    public void setCertStatus(String certStatus) {
-        CertStatus = certStatus;
+    public void setEventOperationTime(String eventOperationTime) {
+        EventOperationTime = eventOperationTime;
     }
 
     public String getRemark() {
@@ -140,8 +70,8 @@ public class EventInfo {
         Remark = remark;
     }
 
-    @SerializedName("cert_status")
-    public String CertStatus;
+    @SerializedName("evt_operation_time")
+    private String EventOperationTime;
     @SerializedName("remark")
-    public String Remark;
+    private String Remark;
 }

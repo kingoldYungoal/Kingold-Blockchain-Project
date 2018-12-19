@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,26 +31,30 @@ public class StudentController {
     @Autowired
     private Gson gson;
 
+    @Value("${chainCode.channel}")
+    private String channel;
 
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
-    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)int id,@RequestParam(value = "backpage", required = true)String backpage, HttpServletRequest request) {
+    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)int id,@RequestParam(value = "backpage", required = true)String backpage, ModelMap map) {
         ModelAndView model = new ModelAndView();
         try {
-            System.out.println("id=" +id);
-            model.addObject("backpage", backpage);
-            model.addObject("studentInfo", mStudentProfileService.GetStudentProfileById(id));
+            StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(id);
+            map.addAttribute("studentInfo", studentProfile);
+            model.addObject("studentprofile",studentProfile);
+            model.addObject("backpage",backpage);
 
             CommonController commonController =new CommonController();
-            List<CertInfo> json = commonController.QueryCertByCRMId(String.valueOf(id),request.getParameter("channel"));
-
-            model.addObject("certjson", json);
+            List<CertInfo> json=  commonController.QueryCertByCRMId("crm1",channel);
+            //List<CertInfo> json=  commonController.QueryCertByCRMId(request.getParameter("crm_id"),request.getParameter("channel"));
+            map.addAttribute("json", json);
+            System.out.print(json);
+            model.setViewName("studentinfoandcerts");
         }
         catch (HttpClientErrorException ex)
         {
-            String errorMessage = ex.getResponseBodyAsString();
-            model.addObject("err_message", errorMessage);
-            return model;
+            String s = ex.getResponseBodyAsString();
         }
+
         return model;
     }
 
