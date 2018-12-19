@@ -82,3 +82,61 @@
 .showspan{
     width:65%;display:block;color:#566075;text-align: left;font-size: 15px;margin-top:15px;padding-left:120px;
 }
+.certinfo_title{
+    text-align:left;
+    font-size: 18px;
+    color: #CD8221;
+    border-bottom: #CD8221 solid 2px;
+    width:95%;
+}
+
+.certinfo{
+    width:95%;
+    font-size: 15px;
+    line-height: 37px;
+    color: #A1A6BB;
+    background-color:#F7F9FD;
+    padding: 5px 5px 5px 5px;
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+.certinfo a{
+    font-size: 15px;
+    color: #CD8221;
+}
+.certinfo a{
+    font-size: 15px;
+    color: #CD8221;
+    margin:-5px;
+}
+.timeline{
+    height:100%;
+    margin-left: 20px;
+    border-left:#004A80 solid 1px;
+}
+.timelinefirst{
+    height:50%;
+    margin-left: 20px;
+    border-left:#004A80 solid 1px;
+}
+.certicon{
+    font-size:50px;
+    margin-left: 33px;
+    margin-top: 20px;
+    display: list-item;
+    color: #004A80;
+    list-style-type: disc;
+}
+.certtext{
+    color: #566075;
+}
+.certdate
+{
+    margin:20px;
+    color:#004A80;
+    font-size: 20px;
+    border: #004A80 solid 1px;
+    max-lines: 2;
+    line-height: 22px;
+    max-width: 90px;
+}

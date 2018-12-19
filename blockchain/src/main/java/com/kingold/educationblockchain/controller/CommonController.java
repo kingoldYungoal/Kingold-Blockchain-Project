@@ -7,6 +7,7 @@ import com.kingold.educationblockchain.service.*;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.EventInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -214,13 +215,21 @@ public class CommonController {
     //blockchain api
 
     /*
+    学生信息上链
+     */
+    public String InitStudent(StudentJson studentJson,String channelName) {
+        try {
+            return getPayload("initStudent", getInsertStudentJson(studentJson),channelName).toString();
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+    /*
     证书信息上链
      */
     public String InsertCertinfo(CertInfo certInfo,String channelName) {
         try {
-            gson = new Gson();
-            String certJson = gson.toJson(certInfo);
-            return getPayload("insertCertinfo",'"'+certJson+'"',channelName).toString();
+            return getPayload("insertCertinfo", getInsertCertJson(certInfo),channelName).toString();
         } catch (HttpClientErrorException ex) {
             throw ex;
         }
@@ -231,9 +240,7 @@ public class CommonController {
      */
     public String InsertEventinfo(EventInfo eventInfo,String channelName) {
         try {
-            gson = new Gson();
-            String eventJson = gson.toJson(eventInfo);
-            return getPayload("insertEventInfo",'"'+eventJson+'"',channelName).toString();
+            return getPayload("insertEventInfo", getInsertEventJson(eventInfo),channelName).toString();
         } catch (HttpClientErrorException ex) {
             throw ex;
         }
@@ -287,17 +294,71 @@ public class CommonController {
     /*
     通过证书id查询证书详细信息
      */
-    public String QueryCertById(String certId, String channelName) {
+    public CertInfo QueryCertById(String certId, String channelName) {
         try {
 
-            JsonArray jsonArray= getPayload("queryCertById",'"'+certId+'"',channelName).getAsJsonArray();
+            String jsonString= getPayload("readCert",'"'+certId+'"',channelName).toString();
             gson = new Gson();
-            return gson.toJson(jsonArray.get(0));
-        } catch (HttpClientErrorException ex) {
+            CertInfo certInfo= gson.fromJson(jsonString,CertInfo.class);
+            return certInfo;
+        } catch (Exception ex) {
             throw ex;
         }
     }
+    /*
+    通过事件id查询证书详细信息
+     */
+    public EventInfo QueryEventById(String evtId, String channelName) {
+        try {
 
+            String jsonString= getPayload("readEvent",'"'+evtId+'"',channelName).toString();
+            gson = new Gson();
+            EventInfo evtInfo= gson.fromJson(jsonString,EventInfo.class);
+            return evtInfo;
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+    private String getInsertCertJson(CertInfo cert)
+    {
+        return  String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
+                cert.getCertId() ,
+                cert.getStudentId(),
+                cert.getCertNo(),
+                cert.getCertType(),
+                cert.getCertHolder(),
+                cert.getCertName(),
+                cert.getCertContent(),
+                cert.getCertPdfPath(),
+                cert.getCertHash(),
+                cert.getCertIssuer(),
+                cert.getCertIssueDate(),
+                cert.getCertOperationTime(),
+                cert.getCertStatus(),
+                cert.getRemark());
+    }
+    private String getInsertEventJson(EventInfo event)
+    {
+        return  String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
+                event.getEventId() ,
+                event.getStudentId(),
+                event.getEventContent(),
+                event.getEventDate(),
+                event.getEventOrg(),
+                event.getEventOperationTime(),
+                event.getRemark());
+    }
+    private String getInsertStudentJson(StudentJson student)
+    {
+        return  String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
+                student.getStudentId(),
+                student.getCrmId(),
+                student.getStudentEducationNo(),
+                student.getStudentIdCardNo(),
+                student.getStudentNameString(),
+                student.getStudentOperationTime(),
+                student.getRemark());
+    }
     /*
     获取返回结果
      */
@@ -317,9 +378,24 @@ public class CommonController {
 
         HttpEntity<String> request1 = new HttpEntity<String>(requestStr, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
-        JsonParser parse= new JsonParser();
-        JsonObject jsonObject= (JsonObject) parse.parse(response.getBody());
-        String payload=jsonObject.getAsJsonObject("result").get("payload").getAsString();
-        return parse.parse(payload);
+        String  errMsg;
+        if(response.getStatusCode()== HttpStatus.OK)
+        {
+            JsonParser parse= new JsonParser();
+            JsonObject jsonObject= (JsonObject) parse.parse(response.getBody());
+            if(jsonObject.has("returnCode")&&jsonObject.get("returnCode").getAsString().compareTo("Success")==0)
+            {
+                if(jsonObject.has("result")) {
+                    String payload = jsonObject.getAsJsonObject("result").get("payload").getAsString();
+                    return parse.parse(payload);
+                }
+                return jsonObject.get("returnCode");
+            }
+            errMsg = jsonObject.get("info").toString();
+        }
+        else {
+            errMsg = response.getBody();
+        }
+        throw new Error(errMsg);
     }
 }

@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -33,25 +34,18 @@ public class StudentController {
     private StudentParentService mStudentParentService;
     @Autowired
     private Gson gson;
-
-
+    @Value("chainCode.channel")
+    private  String channel;
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
     @ResponseBody
     public String GetStudentProfile(@RequestParam(value = "id", required = true)int id, ModelMap map) {
         try {
             map.addAttribute("studentInfo", mStudentProfileService.GetStudentProfileById(id));
 
-            String urlStr="https://yungoal-kingoldcloud.blockchain.ocp.oraclecloud.com:443/restproxy1/bcsgw/rest/v1/transaction/invocation";
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            String requestStr="{\"channel\":\"channel1\",\"chaincode\":\"kingold\",\"method\":\"queryEventByEducationNo\",\"args\":[\"edu1\"],\"chaincodeVer\":\"v7\"}";
-            headers.add("Content-Type","application/json");
-            headers.add("Connection", "keep-alive");
-            headers.add("Authorization",authCode);
-            HttpEntity<String> request1=new HttpEntity<String>(requestStr,headers);
-            ResponseEntity<String> respose = restTemplate.postForEntity(urlStr, request1,String.class);
-
-            map.addAttribute("json", respose.getBody());
+            CommonController commonController =new CommonController();
+            List<CertInfo> json=  commonController.QueryCertByCRMId("crm1",channel);
+            //List<CertInfo> json=  commonController.QueryCertByCRMId(request.getParameter("crm_id"),request.getParameter("channel"));
+            map.addAttribute("json", json);
         }
         catch (HttpClientErrorException ex)
         {

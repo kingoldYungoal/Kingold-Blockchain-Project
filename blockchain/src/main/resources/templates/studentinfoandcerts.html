@@ -50,53 +50,39 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
+        
+        <div class="col-12">
             <div class="card col">
-                <ul class="row certinfo">
-                    <li class="col-md-2 float-left">2018/11/27</li>
-                    <li class="col-md-3 float-left">
-                        <ul class="row"><li class="col-12">证书名称</li><li class="col-12">办发机构</li></ul>
-                    </li>
-                    <li class="col-md-3 float-left">
-                        <ul class="row"><li class="col-md-12">证件类别</li><li class="col-md-12">颁证日期</li></ul>
-                    </li>
-                    <li class="col-md-2 float-left">
-                        <ul class="row"><li class="col-md-12">标签</li></ul>
-                    </li>
-                    <li class="col-md-2 float-left"><ul class="row"><li class="col-md-12">
-                        <a  class="row text-center" href="">
+                <div class="certinfo_title">证书信息</div>
+                <div class="certinfo" th:each="cert,index:${json}"}>
+                    <div class="timeline row" >
+                        <div class="certicon"></div>
+                    <div class="col-2 float-left certdate" th:text="${cert.CertIssueDate}">2018/11/27</div>
+                    <div class="col-3 float-left">
+                        <div class="row">
+                            <div class="col-12"><div class="col-4 float-left">证书名称</div><div class="col-8 certtext" th:text="${cert.CertName}"></div></div>
+                            <div class="col-12"><div class="col-4 float-left">办发机构</div><div class="col-8 certtext" th:text="${cert.CertIssuer}">办发机构办发机构</div></div>
+                        </div>
+                    </div>
+                    <div class="col-3 float-left">
+                        <div class="row">
+                            <div class="col-12"><div class="col-4 float-left">证件类别</div><div class="col-8 certtext" th:text="${cert.CertType}"></div></div>
+                            <div class="col-12"><div class="col-4 float-left">颁证日期</div><div class="col-8 certtext" th:text="${cert.CertIssueDate}"></div></div>
+                        </div>
+                    </div>
+                    <div class="col-2 float-left">
+                        <div class="row"><div class="col-12"><div class="col-4 float-left">标签</div><div class="col-8 certtext" th:text="${cert.Remark}"></div></div></div>
+                    </div>
+                    <div class="col-1 float-left"><div class="row"><div class="col-md-12">
+                        <a  class="row text-center" href="#">
                             <div class="col-12">
-                                <img class ="search-img" src="../images/detail.png">
+                                <img class ="search-img" th:src="@{/images/detail.png}" src="../static/images/detail.png">
                             </div>
-                            <div class="text-center">点击查看大图 </div>
+                            <div class="text-center">点击查看证书大图 </div>
                         </a>
-                    </li></ul>
-                    </li>
-                    <li></li>
-                </ul>
-                <ul class="row certinfo">
-                    <li class="col-md-2 float-left">2018/11/27</li>
-                    <li class="col-md-3 float-left">
-                        <ul class="row"><li class="col-md-12">证书名称</li><li class="col-md-12">办发机构</li></ul>
-                    </li>
-                    <li class="col-md-3 float-left">
-                        <ul class="row"><li class="col-md-12">证件类别</li><li class="col-md-12">颁证日期</li></ul>
-                    </li>
-                    <li class="col-md-2 float-left">
-                        <ul class="row"><li class="col-md-12">标签</li></ul>
-                    </li>
-                    <li class="col-md-2 float-left">
-                        <ul class="row"><li class="col-md-12">
-                            <a  class="row text-center" href="">
-                                <div class="col-12">
-                                    <img class ="search-img" src="../images/detail.png">
-                                </div>
-                                <div class="text-center">点击查看大图 </div>
-                            </a>
-                        </li></ul>
-                    </li>
-                </ul>
+                        </div></div>
+                    </div></div>
+                </div>
             </div>
         </div>
     </div>

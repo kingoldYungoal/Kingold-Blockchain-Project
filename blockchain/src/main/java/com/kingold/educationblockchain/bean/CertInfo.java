@@ -4,29 +4,29 @@ import com.google.gson.annotations.SerializedName;
 
 public class CertInfo {
     @SerializedName("cert_id")
-    public String  CertId;
+    private String  CertId;
     @SerializedName("stu_id")
-    public String StudentId;
+    private String StudentId;
     @SerializedName("cert_no")
-    public String CertNo;
+    private String CertNo;
     @SerializedName("cert_type")
-    public String CertType;
+    private String CertType;
     @SerializedName("cert_holder")
-    public String CertHolder;
+    private String CertHolder;
     @SerializedName("cert_name")
-    public String CertName;
+    private String CertName;
     @SerializedName("cert_content")
-    public String  CertContent;
+    private String  CertContent;
     @SerializedName("cert_pdf_path")
-    public String CertPdfPath;
+    private String CertPdfPath;
     @SerializedName("cert_hash")
-    public String  CertHash;
+    private String  CertHash;
     @SerializedName("cert_issuer")
-    public String  CertIssuer;
+    private String  CertIssuer;
     @SerializedName("cert_issue_date")
-    public String CertIssueDate;
+    private String CertIssueDate;
     @SerializedName("cert_operation_time")
-    public String CertOperationTime;
+    private String CertOperationTime;
 
     public String getCertId() {
         return CertId;
@@ -141,7 +141,7 @@ public class CertInfo {
     }
 
     @SerializedName("cert_status")
-    public String CertStatus;
+    private String CertStatus;
     @SerializedName("remark")
-    public String Remark;
+    private String Remark;
 }
