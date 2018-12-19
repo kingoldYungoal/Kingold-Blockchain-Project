@@ -44,7 +44,7 @@ public class StudentController {
             model.addObject("backpage",backpage);
 
             CommonController commonController =new CommonController();
-            List<CertInfo> json=  commonController.QueryCertByCRMId("crm1",channel);
+            List<CertInfo> json=  commonController.QueryCertByCRMId(String.valueOf(id),channel);
             //List<CertInfo> json=  commonController.QueryCertByCRMId(request.getParameter("crm_id"),request.getParameter("channel"));
             map.addAttribute("json", json);
             System.out.print(json);

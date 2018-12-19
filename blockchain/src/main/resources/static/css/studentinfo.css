@@ -18,7 +18,7 @@
 }
 
 #headimg{
-    margin-left:8%;
+    margin-left:9%;
 }
 
 #headbtn{
@@ -30,7 +30,7 @@
     background-color: #004a80;
     border: 0px;
     float:right;
-    margin-right: 14%;
+    margin-right: 15%;
 }
 
 #maindiv{
@@ -39,8 +39,8 @@
 }
 
 #infodiv{
-    width: 89%;
-    height: 20%;
+    width: 90%;
+    height: 22%;
     background-color: #fff;
     display: table;
     margin-top:20px;
@@ -86,8 +86,14 @@
     text-align:left;
     font-size: 18px;
     color: #CD8221;
-    border-bottom: #CD8221 solid 2px;
     width:95%;
+    font-weight: bold;
+    margin: 15px 0px 0px 15px;
+}
+
+#colhr
+{
+    height:2px;border:none;border-top:2px solid #CD8221;width:100%;
 }
 
 .certinfo{
@@ -100,28 +106,34 @@
     margin-top:10px;
     margin-bottom: 10px;
 }
-.certinfo a{
-    font-size: 15px;
-    color: #CD8221;
-}
+
 .certinfo a{
     font-size: 15px;
     color: #CD8221;
     margin:-5px;
 }
 .timeline{
-    height:100%;
     margin-left: 20px;
+    border-left:#004A80 solid 1px;
+}
+.timelinelast{
+    margin-left: 20px;
+}
+.timelinelastline{
+    height:50px;
     border-left:#004A80 solid 1px;
 }
 .timelinefirst{
-    height:50%;
-    margin-left: 20px;
+    margin-top:50px;
+    margin-left: 25px;
     border-left:#004A80 solid 1px;
+}
+.timelinefirst .innerdiv{
+    margin-top: -50px;
 }
 .certicon{
     font-size:50px;
-    margin-left: 33px;
+    margin-left: 18px;
     margin-top: 20px;
     display: list-item;
     color: #004A80;
@@ -132,6 +144,7 @@
 }
 .certdate
 {
+    height:min-content;
     margin:20px;
     color:#004A80;
     font-size: 20px;

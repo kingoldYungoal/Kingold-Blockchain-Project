@@ -34,10 +34,10 @@ public class ShowElectronicscertificateController {
     public ModelAndView StudentCertificate(@RequestParam(value = "fileId", required = true)String fileId) {
         //获取证书Id逻辑
         // fileId ="";
-        String fileIds = "D74E601160ACFA522860ACB1B85DDA650E6B10A3A8FA";
+        //String fileIds = "D74E601160ACFA522860ACB1B85DDA650E6B10A3A8FA";
 
         ModelAndView model = new ModelAndView();
-        model.addObject("certificateid",fileIds);
+        model.addObject("certificateid",fileId);
         model.setViewName("studentcertdetail");
         return model;
     }
