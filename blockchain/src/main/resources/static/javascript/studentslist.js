@@ -5,13 +5,16 @@ var phone;
 $(document).ready(function(){
     classnames = $("#selectDiv").val();
     phone = $("#phone").val();
+    // $(".overlay").css({'display':'block','opacity':'0.8'});
+    // $(".showbox").animate({'margin-top':'300px','opacity':'1'});
     initTable(classnames);
 });
 
 //ajax获取后台数据
 function initTable(classname) {
-
     var tbody="";
+    // $(".overlay").css({'display':'block','opacity':'0.8'});
+    // $(".showbox").animate({'margin-top':'300px','opacity':'1'});
     $.ajax({
         type: 'get',
         dataType : "json",
@@ -29,7 +32,10 @@ function initTable(classname) {
                     tbody+=trs;
                 }
             }
+
             $("#datadiv table tbody").html(tbody);
+            // $(".showbox").stop(true);
+            // $(".overlay").css({'display':'none','opacity':'0'});
 
             if (data.totalPage > 1){
                 var pageCount = data.totalPage; //取到pageCount的值
@@ -56,6 +62,8 @@ function initTable(classname) {
                     },//点击事件，用于通过Ajax来刷新整个list列表
                     onPageClicked: function (event, originalEvent, type, page) {
                         $("#datadiv table tbody").html("");
+                        $(".overlay").css({'display':'block','opacity':'0.8'});
+                        $(".showbox").animate({'margin-top':'300px','opacity':'1'});
                         var tbodys="";
                         $.ajax({
                             url: "/student/studentlist",
@@ -70,6 +78,8 @@ function initTable(classname) {
                                         tbodys+=trs;
                                     }
                                 }
+                                $(".showbox").stop(true);
+                                $(".overlay").css({'display':'none','opacity':'0'});
                                 $("#datadiv table tbody").html(tbodys);
                             }
                         });

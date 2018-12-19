@@ -148,13 +148,15 @@ $(function () {
              $("#authcode").focus();
              return false;
          }
-
+         // $(".overlay").css({'display':'block','opacity':'0.8'});
+         // $(".showbox").animate({'margin-top':'300px','opacity':'1'});
          var datas = {
              'phone' : phonenumber,
              'role': role
          };
          //$("#loginform").submit();
          // 手机号码是否存在
+
          $.ajax({
              type:"post",
              url:"/login/IsExistPhoneByRole",
@@ -175,6 +177,8 @@ $(function () {
                          async: false,
                          success:function (data) {
                              if (data.success){
+                                 // $(".showbox").stop(true);
+                                 // $(".overlay").css({'display':'none','opacity':'0'});
                                  var verifycodes = data.result.result;
                                  if (verifycodes == authcode){
                                      M.dialog13 = jqueryAlert({
@@ -183,8 +187,11 @@ $(function () {
                                          'closeTime': 2000,
                                      })
                                      M.dialog13.show();
+
                                      $("#loginform").submit();
                                  }else{
+                                     // $(".showbox").stop(true);
+                                     // $(".overlay").css({'display':'none','opacity':'0'});
                                      M.dialog13 = jqueryAlert({
                                          'icon': '../images/alertimgs/warning.png',
                                          'content': '验证码验证失败',
@@ -194,6 +201,8 @@ $(function () {
                                  }
                              }
                          },error:function (data) {
+                             // $(".showbox").stop(true);
+                             // $(".overlay").css({'display':'none','opacity':'0'});
                              M.dialog13 = jqueryAlert({
                                  'icon': '../images/alertimgs/warning.png',
                                  'content': '验证码验证失败',
@@ -203,6 +212,8 @@ $(function () {
                          }
                      });
                  }else{
+                     // $(".showbox").stop(true);
+                     // $(".overlay").css({'display':'none','opacity':'0'});
                      M.dialog13 = jqueryAlert({
                          'icon': '../images/alertimgs/warning.png',
                          'content': '此号码不存在',
@@ -211,6 +222,8 @@ $(function () {
                      M.dialog13.show();
                  }
              },error:function (data) {
+                 // $(".showbox").stop(true);
+                 // $(".overlay").css({'display':'none','opacity':'0'});
                  M.dialog13 = jqueryAlert({
                      'icon': '../images/alertimgs/warning.png',
                      'content': '验证码验证失败',
