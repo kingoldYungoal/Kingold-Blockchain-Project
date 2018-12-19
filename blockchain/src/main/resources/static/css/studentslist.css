@@ -1,5 +1,14 @@
 /*//////////////////////////////////////////////////////////////////
 [ childrenlist ]*/
+#loading{z-index:1;padding:5px 0 5px 29px;
+    background:url(../images/loading_red.gif) no-repeat center;
+    left:0;
+    top:0;
+    width:90px;
+    position:fixed;
+    height:21px;
+}
+
 .pagewrap {
     width: 100%;
     height:100%;
@@ -169,4 +178,5 @@
     font-size: 15px;
     height:50px;
     line-height:50px;
+    cursor:pointer;
 }

@@ -120,6 +120,47 @@
             <artifactId>pagehelper</artifactId>
             <version>4.1.6</version>
         </dependency>
+
+        <!-- always needed -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>kernel</artifactId>
+            <version>7.1.4</version>
+        </dependency>
+        <!-- always needed -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>io</artifactId>
+            <version>7.1.4</version>
+        </dependency>
+        <!-- always needed -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>layout</artifactId>
+            <version>7.1.4</version>
+        </dependency>
+        <!-- only needed for forms -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>forms</artifactId>
+            <version>7.1.4</version>
+        </dependency>
+        <!-- only needed for Asian fonts -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>font-asian</artifactId>
+            <version>7.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.5.6</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -46,7 +46,7 @@
                     </tr>
                 </thead>
         　　　　 <tbody th:remove="all-but-first">
-                    <tr th:each="childrenInfo:${childrenList}">
+                    <tr th:each="childrenInfo:${childrenList}" data-id="${childrenInfo.getKg_studentprofileid()" onclick="GoStudentInfo(this)">
 　　　　　　　　　　　　    <td th:text="${childrenInfo.getKg_fullname()}" width="15%"></td>
                         <td th:text="${childrenInfo.getKg_educationnumber()}" width="18%"></td>
                         <td th:text="${childrenInfo.getKg_jointime()}" width="18%"></td>
@@ -63,6 +63,11 @@
 <script>
     function GoBack() {
         window.location.href = "/login/login";
+    }
+
+    function GoStudentInfo(obj) {
+        var id = $(obj).attr("data-id");
+        window.location.href = "/student/studentinfo?id=" + id + "&backpage=parent";
     }
 </script>
 </html>

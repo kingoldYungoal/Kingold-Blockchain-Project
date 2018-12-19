@@ -10,6 +10,7 @@ $(document).ready(function(){
 
 //ajax获取后台数据
 function initTable(classname) {
+
     var tbody="";
     $.ajax({
         type: 'get',
@@ -24,11 +25,12 @@ function initTable(classname) {
             if (data.items.length > 0){
                 for (var i = 0;i <data.items.length;i++){
                     var trs = "";
-                    trs += "<tr><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
+                    trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
                     tbody+=trs;
                 }
             }
             $("#datadiv table tbody").html(tbody);
+
             if (data.totalPage > 1){
                 var pageCount = data.totalPage; //取到pageCount的值
                 var currentPage = data.currentPage; //得到currentPage
@@ -64,7 +66,7 @@ function initTable(classname) {
                                 if (data.items.length > 0){
                                     for (var i = 0;i <data.items.length;i++){
                                         var trs = "";
-                                        trs += "<tr><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
+                                        trs += "<tr onclick='GoStudentInfo(data.items[i].kg_studentprofileid)'><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
                                         tbodys+=trs;
                                     }
                                 }
@@ -74,14 +76,19 @@ function initTable(classname) {
                     }
                 };
                 $('#pages').bootstrapPaginator(options);
-                $("#pages ul li").each(function(){
-                    if (this.hasClass("active")){
-                        this.attr("disabled",true);
-                    }
-                });
+                // $("#pages ul li").each(function(){
+                //     if (this.hasClass("active")){
+                //         this.attr("disabled",true);
+                //     }
+                // });
             }else{
                 $("#pages").html('');
             }
         }
     });
+}
+
+function GoStudentInfo(obj) {
+    var id = $(obj).attr("data-id");
+    window.location.href = "/student/studentinfo?id=" + id + "&backpage=teacher";
 }

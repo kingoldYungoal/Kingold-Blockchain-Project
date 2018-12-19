@@ -1,10 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>侨鑫教育平台</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">
+    <link rel="stylesheet" th:href="@{/css/studentcert.css}" href="../static/css/studentcert.css">
 </head>
-<body>
-
+<body style="background-color: #f8f6fa;">
+    <div class="pagewrap">
+        <div id="header">
+            <div id="imgbox">
+                <img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">
+            </div>
+            <input type="button" id="headbtn" value="返回" onclick="GoBack();" />
+        </div>
+        <div id="maindiv">
+            <div id="certdiv">
+                <embed width="100%" height="100%" type="application/pdf" style="margin-top: 30px;" th:src="@{/electronicscertificate/certificate/show?fileid={certificateid}(certificateid=${certificateid})}"> </embed>
+            </div>
+            <!--<div id="downloaddiv">-->
+                <!--<a class="button" th:href="@{/electronicscertificate/certificate/download?fileid={certificateid}(certificateid=${certificateid})}">下载</a>-->
+            <!--</div>-->
+        </div>
+    </div>
 </body>
+<script>
+    function GoBack() {
+        window.location.href = "";
+    }
+</script>
 </html>

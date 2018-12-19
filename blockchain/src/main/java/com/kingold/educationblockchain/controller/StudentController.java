@@ -1,19 +1,15 @@
 package com.kingold.educationblockchain.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,30 +32,25 @@ public class StudentController {
 
 
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
-    @ResponseBody
-    public String GetStudentProfile(@RequestParam(value = "id", required = true)int id, ModelMap map) {
+    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)int id,@RequestParam(value = "backpage", required = true)String backpage, HttpServletRequest request) {
+        ModelAndView model = new ModelAndView();
         try {
-            map.addAttribute("studentInfo", mStudentProfileService.GetStudentProfileById(id));
+            System.out.println("id=" +id);
+            model.addObject("backpage", backpage);
+            model.addObject("studentInfo", mStudentProfileService.GetStudentProfileById(id));
 
-            String urlStr="https://yungoal-kingoldcloud.blockchain.ocp.oraclecloud.com:443/restproxy1/bcsgw/rest/v1/transaction/invocation";
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            String requestStr="{\"channel\":\"channel1\",\"chaincode\":\"kingold\",\"method\":\"queryEventByEducationNo\",\"args\":[\"edu1\"],\"chaincodeVer\":\"v7\"}";
-            headers.add("Content-Type","application/json");
-            headers.add("Connection", "keep-alive");
-            headers.add("Authorization",authCode);
-            HttpEntity<String> request1=new HttpEntity<String>(requestStr,headers);
-            ResponseEntity<String> respose = restTemplate.postForEntity(urlStr, request1,String.class);
+            CommonController commonController =new CommonController();
+            List<CertInfo> json = commonController.QueryCertByCRMId(String.valueOf(id),request.getParameter("channel"));
 
-            map.addAttribute("json", respose.getBody());
+            model.addObject("certjson", json);
         }
         catch (HttpClientErrorException ex)
         {
-            String s = ex.getResponseBodyAsString();
-            return "error";
+            String errorMessage = ex.getResponseBodyAsString();
+            model.addObject("err_message", errorMessage);
+            return model;
         }
-
-        return "studentinfoandcerts";
+        return model;
     }
 
     @RequestMapping(value = "/childrenList", method = RequestMethod.GET)

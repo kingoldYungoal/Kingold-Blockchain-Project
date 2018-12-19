@@ -56,6 +56,7 @@ public class LoginController {
                     }else{
                         StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentParents.get(0).getKg_studentprofileid());
                         model.addObject("studentprofile",studentprofile);
+                        model.addObject("backPage","login");
                         model.setViewName("studentinfoandcerts");
                         return model;
                     }
@@ -85,6 +86,7 @@ public class LoginController {
                     }else{
                         StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentTeachers.get(0).getKg_studentprofileid());
                         model.addObject("studentprofile",studentprofile);
+                        model.addObject("backPage","login");
                         model.setViewName("studentinfoandcerts");
                         return model;
                     }
