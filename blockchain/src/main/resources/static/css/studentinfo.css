@@ -110,18 +110,27 @@
     margin:-5px;
 }
 .timeline{
-    height:100%;
     margin-left: 20px;
+    border-left:#004A80 solid 1px;
+}
+.timelinelast{
+    margin-left: 20px;
+}
+.timelinelastline{
+    height:50px;
     border-left:#004A80 solid 1px;
 }
 .timelinefirst{
-    height:50%;
-    margin-left: 20px;
+    margin-top:50px;
+    margin-left: 25px;
     border-left:#004A80 solid 1px;
+}
+.timelinefirst .innerdiv{
+    margin-top: -50px;
 }
 .certicon{
     font-size:50px;
-    margin-left: 33px;
+    margin-left: 18px;
     margin-top: 20px;
     display: list-item;
     color: #004A80;
@@ -132,6 +141,7 @@
 }
 .certdate
 {
+    height:min-content;
     margin:20px;
     color:#004A80;
     font-size: 20px;
