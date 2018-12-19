@@ -17,7 +17,7 @@
         </div>
         <input type="button" id="headbtn" value="返回" />
     </div>
-    <div id="maindiv">
+    <div id="maindiv"><!--
         <div id="infodiv">
             <div id="stuimgbox">
                 <img id="stuimg" th:src="@{/images/stuimg.png}">
@@ -49,13 +49,13 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div>-->
 
-        <div class="col-12">
+        <div class="col-11">
             <div class="card col">
                 <div class="certinfo_title">证书信息</div>
                 <div class="certinfo" th:each="cert,index:${json}">
-                    <div class="" th:class="${index.first}? 'timelinefirst row' : (${index.last}? 'timelinelast now' : 'timeline row' )">
+                    <div class="" th:class="${index.first}? 'timelinefirst row' : (${index.last}? 'timelinelast row' : 'timeline row' )">
                     <div  class="col-12 innerdiv">
                             <div class="row timelinelastline float-left" th:if="${index.last}"></div>
                             <div class="float-left certicon"></div>
