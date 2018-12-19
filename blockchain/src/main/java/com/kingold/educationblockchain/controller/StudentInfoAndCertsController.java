@@ -1,27 +1,14 @@
 package com.kingold.educationblockchain.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
-import com.kingold.educationblockchain.util.CertInfo;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import com.kingold.educationblockchain.bean.CertInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 @Controller

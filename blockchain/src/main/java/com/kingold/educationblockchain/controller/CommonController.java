@@ -4,20 +4,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.*;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
-import com.kingold.educationblockchain.util.CertInfo;
-import com.kingold.educationblockchain.util.EventInfo;
+import com.kingold.educationblockchain.bean.CertInfo;
+import com.kingold.educationblockchain.bean.EventInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -33,6 +33,7 @@ public class CommonController {
     @Autowired
     private StudentTeacherService mStudentTeacherService;
     private Gson gson;
+
 //    private Logger logger = Logger.getLogger(CommonController.class);
 
     @RequestMapping(value = "/Insert", method = RequestMethod.POST)
@@ -59,8 +60,7 @@ public class CommonController {
         if(tablename.trim().length() == 0 || id <= 0){
             return gson.toJson(false);
         }
-        boolean flag = DeleteData(id, tablename);
-        return gson.toJson(flag);
+        return gson.toJson(DeleteData(id, tablename));
     }
 
     public boolean InsertData(String tableName,String jsonParam){
@@ -212,11 +212,41 @@ public class CommonController {
     }
 
     //blockchain api
+
+    /*
+    证书信息上链
+     */
+    public String InsertCertinfo(CertInfo certInfo,String channelName) {
+        try {
+            gson = new Gson();
+            String certJson = gson.toJson(certInfo);
+            return getPayload("insertCertinfo",'"'+certJson+'"',channelName).toString();
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+
+    /*
+    证书信息上链
+     */
+    public String InsertEventinfo(EventInfo eventInfo,String channelName) {
+        try {
+            gson = new Gson();
+            String eventJson = gson.toJson(eventInfo);
+            return getPayload("insertEventInfo",'"'+eventJson+'"',channelName).toString();
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+
+    /*
+    通过crmid查询学生所有证书
+     */
     public List<CertInfo> QueryCertByCRMId(String CrmId,String channelName) {
         try {
             JsonArray jsonArray=getPayload("queryCertByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
             Iterator<JsonElement> it =jsonArray.iterator();
-            Gson  gson=new Gson();
+            gson = new Gson();
             List<CertInfo> certInfoList=new ArrayList<CertInfo>();
             while(it.hasNext())
             {
@@ -230,12 +260,16 @@ public class CommonController {
             throw ex;
         }
     }
+
+    /*
+    通过crmid查询学生所有事件
+     */
     public List<EventInfo> QueryEventByCRMId(String CrmId, String channelName) {
         try {
 
             JsonArray jsonArray= getPayload("queryEventByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
             Iterator<JsonElement> it =jsonArray.iterator();
-            Gson  gson=new Gson();
+            gson = new Gson();
             List<EventInfo> eventInfoList=new ArrayList<EventInfo>();
             while(it.hasNext())
             {
@@ -249,6 +283,24 @@ public class CommonController {
             throw ex;
         }
     }
+
+    /*
+    通过证书id查询证书详细信息
+     */
+    public String QueryCertById(String certId, String channelName) {
+        try {
+
+            JsonArray jsonArray= getPayload("queryCertById",'"'+certId+'"',channelName).getAsJsonArray();
+            gson = new Gson();
+            return gson.toJson(jsonArray.get(0));
+        } catch (HttpClientErrorException ex) {
+            throw ex;
+        }
+    }
+
+    /*
+    获取返回结果
+     */
     private JsonElement getPayload(String functionName,String argJson,String  channelName)
     {
         RestTemplate restTemplate = new RestTemplate();

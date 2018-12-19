@@ -17,6 +17,11 @@ public interface StudentProfileService {
     List<StudentProfile> GetStudentProfileByNumber(String eduNumber, String stuNumber);
 
     /**
+     * 根据教師信息id，学生班级查询
+     */
+    List<StudentProfile> GetStudentsByClassAndTeacher(int teacherId, String classname,int currentPage,int pageSize);
+
+    /**
      * 學生信息新增
      */
     boolean AddStudentProfile(StudentProfile studentProfile);

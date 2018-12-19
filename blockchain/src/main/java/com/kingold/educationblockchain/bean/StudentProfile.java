@@ -1,7 +1,5 @@
 package com.kingold.educationblockchain.bean;
 
-import java.util.Date;
-
 public class StudentProfile {
 
     private int kg_studentprofileid;
@@ -30,7 +28,27 @@ public class StudentProfile {
 
     private String kg_passportnumberoridnumber;
 
-    private int kg_entrancestate;
+    private String kg_entrancestate;
+
+    private int kg_state;
+
+    private String kg_jointime;
+
+    public String getKg_jointime() {
+        return kg_jointime;
+    }
+
+    public void setKg_jointime(String kg_jointime) {
+        this.kg_jointime = kg_jointime;
+    }
+
+    public int getKg_state() {
+        return kg_state;
+    }
+
+    public void setKg_state(int kg_state) {
+        this.kg_state = kg_state;
+    }
 
     public int getKg_studentprofileid() {
         return kg_studentprofileid;
@@ -136,11 +154,11 @@ public class StudentProfile {
         this.kg_passportnumberoridnumber = kg_passportnumberoridnumber;
     }
 
-    public int getKg_entrancestate() {
+    public String getKg_entrancestate() {
         return kg_entrancestate;
     }
 
-    public void setKg_entrancestate(int kg_entrancestate) {
+    public void setKg_entrancestate(String kg_entrancestate) {
         this.kg_entrancestate = kg_entrancestate;
     }
 
