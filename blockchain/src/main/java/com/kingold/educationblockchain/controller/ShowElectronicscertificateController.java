@@ -14,6 +14,12 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.io.IOException;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 @Controller
 @RequestMapping("/electronicscertificate")
@@ -33,9 +39,6 @@ public class ShowElectronicscertificateController {
     @RequestMapping(value = "/studentcertificate", method = RequestMethod.GET)
     public ModelAndView StudentCertificate(@RequestParam(value = "fileId", required = true)String fileId) {
         //获取证书Id逻辑
-        // fileId ="";
-        //String fileIds = "D74E601160ACFA522860ACB1B85DDA650E6B10A3A8FA";
-
         ModelAndView model = new ModelAndView();
         model.addObject("certificateid",fileId);
         model.setViewName("studentcertdetail");
@@ -45,13 +48,14 @@ public class ShowElectronicscertificateController {
     /*
     * 展示证书
     * */
-    @RequestMapping(value = "/certificate/show", produces="application/pdf")
+    @RequestMapping(value = "/certificate/show", produces="application/jpg")
     public void ShowCertificate(@RequestParam(value = "fileid", required = true)String fileid,HttpServletResponse response) throws Exception{
-        response.setContentType("application/pdf");
+        response.setContentType("application/jpg");
         response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "filename=certificate.pdf");
+        response.setHeader("Content-Disposition", "filename=certificate.jpg");
         OutputStream outputStream = response.getOutputStream();
-        DownloadFileFromCECS(fileid, outputStream);
+        //DownloadFileFromCECS(fileid, outputStream);
+        GetJPGStreamFromCECS(fileid, outputStream);
     }
 
     /*
@@ -66,13 +70,61 @@ public class ShowElectronicscertificateController {
         response.setHeader("Content-Disposition", "attachment; filename="+certificateName);
 
         OutputStream outputStream = response.getOutputStream();
-        DownloadFileFromCECS(fileid, outputStream);
+        GetPDFStreamFromCECS(fileid, outputStream);
     }
 
     /*
     * 从CECS中获取文件流
     * */
-    private void DownloadFileFromCECS(String fileId, OutputStream outputStream) throws ParseException, IOException{
+    private void GetPDFStreamFromCECS(String fileid, OutputStream outputStream) throws Exception{
+        InputStream inputStream = DownloadFileFromCECS(fileid);
+
+        if(inputStream == null){
+            throw new Exception("获取证书失败");
+        }
+
+        int intByte;
+        while((intByte = inputStream.read()) != -1) {
+            outputStream.write(intByte);
+        }
+        outputStream.close();
+    }
+
+    /*
+     * 从CECS中获取JPG文件流
+     * */
+    private void GetJPGStreamFromCECS(String fileid, OutputStream outputStream) throws Exception{
+        InputStream certificateInputStream = DownloadFileFromCECS(fileid);
+
+        if(certificateInputStream == null){
+            throw new Exception("获取证书失败");
+        }
+
+        PDDocument doc = PDDocument.load(certificateInputStream);
+        PDFRenderer pdfRenderer = new PDFRenderer(doc);
+        PDPageTree pages = doc.getPages();
+        int pageCount = pages.getCount();
+        if(pageCount<1){
+            throw new Exception("PDF证书转化为JPG图片失败");
+        }
+
+        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 200);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(bim, "jpg", os);
+        byte[] datas = os.toByteArray();
+        InputStream jpgInputStream = new ByteArrayInputStream(datas);
+
+        int intByte;
+        while((intByte = jpgInputStream.read()) != -1) {
+            outputStream.write(intByte);
+        }
+        outputStream.close();
+    }
+
+    /*
+     * 从CECS中获取文件流
+     * */
+    private InputStream DownloadFileFromCECS(String fileId) throws ParseException, IOException{
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
         String url = mBaseUrl + fileId + "/data?version=1";
@@ -84,12 +136,9 @@ public class ShowElectronicscertificateController {
         int statusCode = response.getStatusLine().getStatusCode();
         HttpEntity responseEntity = response.getEntity();
         if ((200 <= statusCode && statusCode < 300) && responseEntity != null) {
-            InputStream inputStream = responseEntity.getContent();
-            int intByte;
-            while((intByte=inputStream.read()) != -1) {
-                outputStream.write(intByte);
-            }
-            outputStream.close();
+            return responseEntity.getContent();
         }
+
+        return null;
     }
 }

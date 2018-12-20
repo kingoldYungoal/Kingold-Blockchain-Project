@@ -61,13 +61,9 @@
 </div>
 </body>
 <script>
-    // function GoBack() {
-    //     window.location.href = "/login/login";
-    // }
-
     function GoStudentInfo(obj) {
         var id = $(obj).attr("data-id");
-        window.location.href = "/student/studentinfo?id=" + id + "&backpage=parent";
+        window.location.href = "/student/studentinfo?id=" + id;
     }
 </script>
 </html>

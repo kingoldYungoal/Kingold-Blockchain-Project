@@ -53,7 +53,7 @@
 
         <div class="col-11" style="margin-top: 1%;">
             <div class="card col" style="border: 0px;">
-                <div class="certinfo_title">证书信息</div>
+                <div class="certinfo_title">成长信息</div>
                 <hr id="colhr">
                 <div class="certinfo" th:each="cert,index:${json}">
                     <div class="" th:class="${index.first}? 'timelinefirst row' : (${index.last}? 'timelinelast row' : 'timeline row' )">
@@ -94,7 +94,7 @@
 </div>
 </body>
 <script>
-    function  GoCertDetail(obj) {
+    function GoCertDetail(obj) {
         var fileId = $(obj).attr("data-certId");
         window.location.href = "/electronicscertificate/studentcertificate?fileId=" + fileId;
     }

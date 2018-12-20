@@ -28,7 +28,7 @@ function initTable(classname) {
             if (data.items.length > 0){
                 for (var i = 0;i <data.items.length;i++){
                     var trs = "";
-                    trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
+                    trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td></td><td style='padding-left:20px;text-align: left;'>" + data.items[i].kg_fullname + "</td><td>"+data.items[i].kg_educationnumber + "</td><td>"+data.items[i].kg_jointime+"</td><td>"+data.items[i].kg_sex+"</td><td>"+data.items[i].kg_parentName+"</td><td style='padding-right:20px;text-align: right;'>"+data.items[i].kg_parentPhoneNumber+"</td><td></td></tr>";
                     tbody+=trs;
                 }
             }
@@ -74,7 +74,7 @@ function initTable(classname) {
                                 if (data.items.length > 0){
                                     for (var i = 0;i <data.items.length;i++){
                                         var trs = "";
-                                        trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td width='15%'>" + data.items[i].kg_fullname + "</td><td width='18%'>"+data.items[i].kg_educationnumber + "</td><td width='18%'>"+data.items[i].kg_jointime+"</td><td width='15%'>"+data.items[i].kg_sex+"</td><td width='18%'>"+data.items[i].kg_parentName+"</td><td width='15%'>"+data.items[i].kg_parentPhoneNumber+"</td></tr>";
+                                        trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td></td><td style='padding-left:20px;text-align: left;'>" + data.items[i].kg_fullname + "</td><td>"+data.items[i].kg_educationnumber + "</td><td>"+data.items[i].kg_jointime+"</td><td>"+data.items[i].kg_sex+"</td><td>"+data.items[i].kg_parentName+"</td><td style='padding-right:20px;text-align: right;'>"+data.items[i].kg_parentPhoneNumber+"</td><td></td></tr>";
                                         tbodys+=trs;
                                     }
                                 }
@@ -100,5 +100,5 @@ function initTable(classname) {
 
 function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
-    window.location.href = "/student/studentinfo?id=" + id + "&backpage=teacher";
+    window.location.href = "/student/studentinfo?id=" + id;
 }

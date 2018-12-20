@@ -164,7 +164,13 @@ public class LoginController {
                 if(parentInformation != null){
                     info.setKg_parentName(parentInformation.getKg_name());
                     info.setKg_parentPhoneNumber(parentInformation.getKg_phonenumber());
+                }else{
+                    info.setKg_parentName("");
+                    info.setKg_parentPhoneNumber("");
                 }
+            }else{
+                info.setKg_parentName("");
+                info.setKg_parentPhoneNumber("");
             }
             StudentInfoList.add(info);
         }

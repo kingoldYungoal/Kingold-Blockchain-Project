@@ -35,13 +35,12 @@ public class StudentController {
     private String channel;
 
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
-    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)int id,@RequestParam(value = "backpage", required = true)String backpage, ModelMap map) {
+    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)int id, ModelMap map) {
         ModelAndView model = new ModelAndView();
         try {
             StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(id);
             map.addAttribute("studentInfo", studentProfile);
             model.addObject("studentprofile",studentProfile);
-            model.addObject("backpage",backpage);
 
             CommonController commonController =new CommonController();
             List<CertInfo> json=  commonController.QueryCertByCRMId(String.valueOf(id),channel);

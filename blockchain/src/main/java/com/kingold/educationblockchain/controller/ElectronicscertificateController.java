@@ -88,7 +88,7 @@ public class ElectronicscertificateController {
                     .append(name).append(".pdf");
 
             String certificateFilePath = new StringBuffer("./src/main/resources/static/")
-                    .append(certificateName).toString() ;
+                    .append(certificateName).toString();
 
             Map<String,String> map = new HashMap();
             map.put("name",name);

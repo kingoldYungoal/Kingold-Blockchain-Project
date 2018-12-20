@@ -49,23 +49,17 @@
             <table>
                 <thead>
                 <tr>
-                    <th>学生姓名</th>
-                    <th>学籍号</th>
-                    <th>入学时间</th>
-                    <th>性别</th>
-                    <th>家长姓名</th>
-                    <th>家长联系电话</th>
+                    <th width="4%;" style="border: 0px;"></th>
+                    <th width="8%;" style="padding-left:20px;text-align: left;">学生姓名</th>
+                    <th width="18%;">学籍号</th>
+                    <th width="16%;">入学时间</th>
+                    <th width="13%;">性别</th>
+                    <th width="18%;">家长姓名</th>
+                    <th width="10%;" style="padding-right:20px;text-align: right;">家长联系电话</th>
+                    <th width="4%;" style="border: 0px;"></th>
                 </tr>
                 </thead>
         　　　　 <tbody th:remove="all-but-first">
-                    <!--<tr th:each="studentInfo:${studentList}">-->
-        <!--　　　　　　　　　 <td th:text="${studentInfo.getKg_fullname()}" width="15%"></td>-->
-                        <!--<td th:text="${studentInfo.getKg_educationnumber()}" width="18%"></td>-->
-                        <!--<td th:text="${studentInfo.getKg_jointime()}" width="18%"></td>-->
-                        <!--<td th:text="${studentInfo.getKg_sex()}" width="15%"></td>-->
-                        <!--<td th:text="${studentInfo.getKg_parentName()}" width="18%"></td>-->
-                        <!--<td th:text="${studentInfo.getKg_parentPhoneNumber()}" width="15%"></td>-->
-                    <!--</tr>-->
                 </tbody>
             </table>
             <div style="text-align:center;" id="pages">
@@ -78,9 +72,4 @@
 <div class="loadingWord"><img th:src="@{/images/waiting.gif}" src="../static/images/waiting.gif">加载中，请稍候...</div>
 </div>
 </body>
-<script>
-    // function GoBack() {
-    //     window.location.href = "/login/login";
-    // }
-</script>
 </html>
