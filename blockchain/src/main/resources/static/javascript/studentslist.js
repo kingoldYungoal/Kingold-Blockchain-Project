@@ -78,8 +78,8 @@ function initTable(classname) {
                                         tbodys+=trs;
                                     }
                                 }
-                                $(".showbox").stop(true);
-                                $(".overlay").css({'display':'none','opacity':'0'});
+                                // $(".showbox").stop(true);
+                                // $(".overlay").css({'display':'none','opacity':'0'});
                                 $("#datadiv table tbody").html(tbodys);
                             }
                         });
