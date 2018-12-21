@@ -17,7 +17,7 @@ public interface ParentInformationMapper {
             @Result(property = "kg_countryname", column = "KG_COUNTRYNAME"),
             @Result(property = "kg_state", column = "KG_STATE")
     })
-    ParentInformation FindParentInformationById(int id);
+    ParentInformation FindParentInformationById(String id);
 
     /**
      * 根据家长手机号查询家长信息
@@ -36,7 +36,7 @@ public interface ParentInformationMapper {
     /**
      * 家长数据新增
      */
-    @Insert("insert into kg_parentinformation(kg_name,kg_phonenumber,kg_parentrelationship,kg_countryname,kg_state) values (#{kg_name},#{kg_phonenumber},#{kg_parentrelationship},#{kg_countryname},#{kg_state})")
+    @Insert("insert into kg_parentinformation(kg_parentinformationid,kg_name,kg_phonenumber,kg_parentrelationship,kg_countryname,kg_state) values (#{kg_parentinformationid},#{kg_name},#{kg_phonenumber},#{kg_parentrelationship},#{kg_countryname},#{kg_state})")
     void AddParentInformation(ParentInformation parentInformation);
 
     /**
@@ -49,5 +49,5 @@ public interface ParentInformationMapper {
      * 家长数据删除
      */
     @Update("update kg_parentinformation set kg_state = 1 where kg_parentinformationid=#{id}")
-    void DeleteParentInformation(int id);
+    void DeleteParentInformation(String id);
 }

@@ -35,7 +35,7 @@ public class StudentController {
     private String channel;
 
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
-    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)int id, ModelMap map) {
+    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)String id, ModelMap map) {
         ModelAndView model = new ModelAndView();
         try {
             StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(id);

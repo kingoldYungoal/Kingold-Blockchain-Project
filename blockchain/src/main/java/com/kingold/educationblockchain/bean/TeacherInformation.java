@@ -2,7 +2,7 @@ package com.kingold.educationblockchain.bean;
 
 public class TeacherInformation {
 
-    private int kg_teacherinformationid;
+    private String kg_teacherinformationid;
 
     private String kg_name;
 
@@ -12,11 +12,11 @@ public class TeacherInformation {
 
     private int kg_state;
 
-    public int getKg_teacherinformationid() {
+    public String getKg_teacherinformationid() {
         return kg_teacherinformationid;
     }
 
-    public void setKg_teacherinformationid(int kg_teacherinformationid) {
+    public void setKg_teacherinformationid(String kg_teacherinformationid) {
         this.kg_teacherinformationid = kg_teacherinformationid;
     }
 
@@ -54,5 +54,4 @@ public class TeacherInformation {
 
     public TeacherInformation(){
     }
-
 }

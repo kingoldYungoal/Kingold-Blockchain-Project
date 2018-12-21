@@ -19,7 +19,7 @@ public class TeacherInformationServiceImpl implements TeacherInformationService 
      * 根据教師信息id查询教師信息
      */
     @Override
-    public TeacherInformation FindTeacherInformationById(int id){
+    public TeacherInformation FindTeacherInformationById(String id){
         return mTeacherInformationMapper.FindTeacherInformationById(id);
     }
 
@@ -68,7 +68,7 @@ public class TeacherInformationServiceImpl implements TeacherInformationService 
      * 教師数据删除
      */
     @Override
-    public boolean DeleteTeacherInformation(int id){
+    public boolean DeleteTeacherInformation(String id){
         boolean flag = false;
         try{
             mTeacherInformationMapper.DeleteTeacherInformation(id);

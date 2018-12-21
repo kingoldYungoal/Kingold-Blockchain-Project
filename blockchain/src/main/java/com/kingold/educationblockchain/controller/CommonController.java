@@ -6,6 +6,7 @@ import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.EventInfo;
+import com.kingold.educationblockchain.util.EncrypDES;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +16,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -33,6 +40,7 @@ public class CommonController {
     private StudentParentService mStudentParentService;
     @Autowired
     private StudentTeacherService mStudentTeacherService;
+    private EncrypDES des;
     private Gson gson;
 
 //    private Logger logger = Logger.getLogger(CommonController.class);
@@ -56,9 +64,9 @@ public class CommonController {
     }
 
     @RequestMapping(value = "/Delete", method = RequestMethod.GET)
-    public String Delete(@RequestParam(value = "id", required = true)int id, @RequestParam(value = "tablename", required = true)String tablename) {
+    public String Delete(@RequestParam(value = "id", required = true)String id, @RequestParam(value = "tablename", required = true)String tablename) {
         gson = new Gson();
-        if(tablename.trim().length() == 0 || id <= 0){
+        if(tablename.trim().length() == 0 || id.trim().length() == 0){
             return gson.toJson(false);
         }
         return gson.toJson(DeleteData(id, tablename));
@@ -69,6 +77,7 @@ public class CommonController {
         switch(tableName.trim()){
             case "kg_studentprofile":
                 StudentProfile studentProfile = JSONObject.parseObject(jsonParam,StudentProfile.class);
+                studentProfile.setKg_studentprofileid(UUID.randomUUID().toString());
                 // 判断学号，学籍号 是否已存在
                 List<StudentProfile> studentProfileList = mStudentProfileService.GetStudentProfileByNumber(studentProfile.getKg_educationnumber(),studentProfile.getKg_studentnumber());
                 if(studentProfileList == null || studentProfileList.size() <= 0){
@@ -77,13 +86,15 @@ public class CommonController {
                 break;
             case "kg_teacherinformation":
                 TeacherInformation teacherInformation= JSONObject.parseObject(jsonParam,TeacherInformation.class);
+                teacherInformation.setKg_teacherinformationid(UUID.randomUUID().toString());
                 // 判断教师信息是否存在
                 if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) == null) {
                     flag = mTeacherInfomationService.AddTeacherInformation(teacherInformation);
                 }
                 break;
             case "kg_parentinformation":
-                ParentInformation parentInformation= JSONObject.parseObject(jsonParam,ParentInformation.class);
+                ParentInformation parentInformation = JSONObject.parseObject(jsonParam,ParentInformation.class);
+                parentInformation.setKg_parentinformationid(UUID.randomUUID().toString());
                 // 判断家长信息是否存在
                 if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
                     flag = mParentInfomationService.AddParentInformation(parentInformation);
@@ -126,7 +137,7 @@ public class CommonController {
             case "kg_studentprofile":
                 StudentProfile studentProfile = JSONObject.parseObject(jsonParam,StudentProfile.class);
                 //判断学生信息是否存在
-                if(studentProfile.getKg_studentprofileid() > 0){
+                if(studentProfile.getKg_studentprofileid().trim().length() > 0){
                     if(mStudentProfileService.GetStudentProfileById(studentProfile.getKg_studentprofileid()) != null){
                         flag = mStudentProfileService.UpdateStudentProfile(studentProfile);
                     }
@@ -135,7 +146,7 @@ public class CommonController {
             case "kg_teacherinformation":
                 TeacherInformation teacherInformation= JSONObject.parseObject(jsonParam,TeacherInformation.class);
                 //判断教师信息是否存在
-                if(teacherInformation.getKg_teacherinformationid() > 0){
+                if(teacherInformation.getKg_teacherinformationid().trim().length() > 0){
                     if(mTeacherInfomationService.FindTeacherInformationById(teacherInformation.getKg_teacherinformationid()) != null){
                         flag = mTeacherInfomationService.UpdateTeacherInformation(teacherInformation);
                     }
@@ -144,7 +155,7 @@ public class CommonController {
             case "kg_parentinformation":
                 ParentInformation parentInformation= JSONObject.parseObject(jsonParam,ParentInformation.class);
                 //判断教师信息是否存在
-                if(parentInformation.getKg_parentinformationid() > 0){
+                if(parentInformation.getKg_parentinformationid().trim().length() > 0){
                     if(mParentInfomationService.FindParentInformationById(parentInformation.getKg_parentinformationid()) != null){
                         flag = mParentInfomationService.UpdateParentInformation(parentInformation);
                     }
@@ -154,7 +165,7 @@ public class CommonController {
         return flag;
     }
 
-    public boolean DeleteData(int id,String tableName){
+    public boolean DeleteData(String id,String tableName){
         boolean flag = false;
         switch(tableName.trim()){
             case "kg_studentprofile":
@@ -219,9 +230,26 @@ public class CommonController {
      */
     public String InitStudent(StudentJson studentJson,String channelName) {
         try {
+            if(studentJson != null){
+                des = new EncrypDES();
+                byte[] educationNo = des.Encrytor(studentJson.getStudentEducationNo());
+                studentJson.setStudentEducationNo(new String(educationNo));
+                byte[] cardNo = des.Encrytor(studentJson.getStudentIdCardNo());
+                studentJson.setStudentIdCardNo(new String(cardNo));
+            }
             return getPayload("initStudent", getInsertStudentJson(studentJson),channelName).toString();
-        } catch (HttpClientErrorException ex) {
-            throw ex;
+        }catch (HttpClientErrorException e1) {
+            return e1.getMessage();
+        }catch (NoSuchPaddingException e2){
+            return e2.getMessage();
+        }catch (NoSuchAlgorithmException e3){
+            return e3.getMessage();
+        }catch (InvalidKeyException e4) {
+            return e4.getMessage();
+        }catch (IllegalBlockSizeException e5){
+            return e5.getMessage();
+        }catch (BadPaddingException e6){
+            return e6.getMessage();
         }
     }
 

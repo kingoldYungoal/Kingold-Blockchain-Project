@@ -10,19 +10,19 @@ public class Electronicscertificate {
         this.kg_certificateno = kg_certificateno;
     }
 
-    public int getKg_electronicscertificateid() {
+    public String getKg_electronicscertificateid() {
         return kg_electronicscertificateid;
     }
 
-    public void setKg_electronicscertificateid(int kg_electronicscertificateid) {
+    public void setKg_electronicscertificateid(String kg_electronicscertificateid) {
         this.kg_electronicscertificateid = kg_electronicscertificateid;
     }
 
-    public int getKg_studentprofileid() {
+    public String getKg_studentprofileid() {
         return kg_studentprofileid;
     }
 
-    public void setKg_studentprofileid(int kg_studentprofileid) {
+    public void setKg_studentprofileid(String kg_studentprofileid) {
         this.kg_studentprofileid = kg_studentprofileid;
     }
 
@@ -132,9 +132,9 @@ public class Electronicscertificate {
 
     private String kg_certificateno;
 
-    private int kg_electronicscertificateid;
+    private String kg_electronicscertificateid;
 
-    private int kg_studentprofileid;
+    private String kg_studentprofileid;
 
     private String kg_studentname;
 
@@ -164,6 +164,4 @@ public class Electronicscertificate {
 
     public Electronicscertificate(){
     }
-
-
 }

@@ -1,12 +1,15 @@
 package com.kingold.educationblockchain.bean;
 
+/*
+教师查看学生列表信息展示bean
+ */
 public class StudentInfo {
 
-    public int getKg_studentprofileid() {
+    public String getKg_studentprofileid() {
         return kg_studentprofileid;
     }
 
-    public void setKg_studentprofileid(int kg_studentprofileid) {
+    public void setKg_studentprofileid(String kg_studentprofileid) {
         this.kg_studentprofileid = kg_studentprofileid;
     }
 
@@ -58,7 +61,7 @@ public class StudentInfo {
         this.kg_parentPhoneNumber = kg_parentPhoneNumber;
     }
 
-    private int kg_studentprofileid;
+    private String kg_studentprofileid;
 
     private String kg_classname;
 

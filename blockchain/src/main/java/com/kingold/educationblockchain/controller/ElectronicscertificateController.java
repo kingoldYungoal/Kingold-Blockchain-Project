@@ -60,7 +60,7 @@ public class ElectronicscertificateController {
         Gson gson = new Gson();
         boolean flag = false;
         try{
-            if(electronicscertificate.getKg_studentprofileid() > 0){
+            if(electronicscertificate.getKg_studentprofileid().trim().length() > 0){
                 if(mStudentProfileService.GetStudentProfileById(electronicscertificate.getKg_studentprofileid()) != null){
                     System.out.println(electronicscertificate.getKg_studentprofileid());
                     flag = mElectronicscertificateService.AddCertificate(electronicscertificate);
@@ -157,7 +157,6 @@ public class ElectronicscertificateController {
             JSONObject jsonObj = JSONObject.parseObject(result);
             return jsonObj.getString("id");
         }
-
         return  null;
     }
 }

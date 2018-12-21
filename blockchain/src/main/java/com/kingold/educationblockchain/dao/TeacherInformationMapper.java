@@ -17,7 +17,7 @@ public interface TeacherInformationMapper {
             @Result(property = "kg_countryname", column = "KG_COUNTRYNAME"),
             @Result(property = "kg_state", column = "KG_STATE")
     })
-    TeacherInformation FindTeacherInformationById(int id);
+    TeacherInformation FindTeacherInformationById(String id);
 
     /**
      * 根据教師手机号查询教師信息
@@ -36,7 +36,7 @@ public interface TeacherInformationMapper {
     /**
      * 教師数据新增
      */
-    @Insert("insert into kg_teacherinformation(kg_name,kg_phonenumber,kg_schoolname,kg_state) values (#{kg_name},#{kg_phonenumber},#{kg_schoolname},#{kg_state})")
+    @Insert("insert into kg_teacherinformation(kg_teacherinformationid,kg_name,kg_phonenumber,kg_schoolname,kg_state) values (#{kg_teacherinformationid},#{kg_name},#{kg_phonenumber},#{kg_schoolname},#{kg_state})")
     void AddTeacherInformation(TeacherInformation teacherInformation);
 
     /**
@@ -49,5 +49,5 @@ public interface TeacherInformationMapper {
      * 教師数据删除
      */
     @Update("update kg_teacherinformation set kg_state=1 where kg_teacherinformationid=#{id}")
-    void DeleteTeacherInformation(int id);
+    void DeleteTeacherInformation(String id);
 }

@@ -10,7 +10,7 @@ public class ParentInformation {
 
     private String kg_countryname;
 
-    private int kg_parentinformationid;
+    private String kg_parentinformationid;
 
     private int kg_state;
 
@@ -46,11 +46,11 @@ public class ParentInformation {
         this.kg_countryname = kg_countryname;
     }
 
-    public int getKg_parentinformationid() {
+    public String getKg_parentinformationid() {
         return kg_parentinformationid;
     }
 
-    public void setKg_parentinformationid(int kg_parentinformationid) {
+    public void setKg_parentinformationid(String kg_parentinformationid) {
         this.kg_parentinformationid = kg_parentinformationid;
     }
 

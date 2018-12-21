@@ -47,10 +47,10 @@
 }
 
 #stuimgbox{
-    width: 16%;
+    width: 11%;
     display: table-cell;
     vertical-align: middle;
-    margin-left:30%;
+    text-align: right;
 }
 
 #stuimg{
@@ -63,13 +63,16 @@
     vertical-align: middle;
 }
 .columndiv{
-    width:33%;height:90%;float:left;text-align: left;border-right: 1px solid #cad3e7;
+    width:26%;height:90%;float:left;text-align: left;border-right: 1px solid #cad3e7;
 }
 .columndiv2{
-    width:33%;height:90%;float:left;text-align: left;
+    width:30%;height:90%;float:left;text-align: left;border-right: 1px solid #cad3e7;
+}
+.columndiv3{
+    width:35%;height:90%;float:left;text-align: left;
 }
 .container ul{
-    width: 100%;height:100%;line-height:100%;overflow: hidden;margin-top:-10px;
+    width: 100%;height:100%;line-height:100%;overflow: hidden;
 }
 .columnli{
     font-size: 15px;
@@ -86,14 +89,14 @@
     text-align:left;
     font-size: 18px;
     color: #CD8221;
-    width:95%;
+    width:89%;
     font-weight: bold;
-    margin: 15px 0px 0px 15px;
+    margin: 15px 0px 0px 40px;
 }
 
 #colhr
 {
-    height:2px;border:none;border-top:2px solid #CD8221;width:100%;
+    height:2px;border:none;border-top:2px solid #CD8221;width:96%;
 }
 
 .certinfo{

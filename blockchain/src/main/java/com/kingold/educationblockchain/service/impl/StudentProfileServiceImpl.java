@@ -30,7 +30,7 @@ public class StudentProfileServiceImpl implements StudentProfileService {
      * 根據id查詢學生信息
      */
     @Override
-    public StudentProfile GetStudentProfileById(int id)
+    public StudentProfile GetStudentProfileById(String id)
     {
         return mStudentProfileMapper.GetStudentProfileById(id);
     }
@@ -47,7 +47,7 @@ public class StudentProfileServiceImpl implements StudentProfileService {
      * 根据教師信息id查询
      */
     @Override
-    public PageBean<StudentInfo> GetStudentsByTeacherId(int teacherId, int currentPage, int pageSize){
+    public PageBean<StudentInfo> GetStudentsByTeacherId(String teacherId, int currentPage, int pageSize){
         //设置分页信息，分别是当前页数和每页显示的总记录数
         List<StudentProfile> allItems = mStudentProfileMapper.GetStudentsByTeacherId(teacherId);
         PageHelper.startPage(currentPage, pageSize);
@@ -64,7 +64,7 @@ public class StudentProfileServiceImpl implements StudentProfileService {
      * 根据教師信息id，学生班级查询
      */
     @Override
-    public PageBean<StudentInfo> GetStudentsByClassAndTeacher(int teacherId, String classname,int currentPage,int pageSize){
+    public PageBean<StudentInfo> GetStudentsByClassAndTeacher(String teacherId, String classname,int currentPage,int pageSize){
         //设置分页信息，分别是当前页数和每页显示的总记录数
         List<StudentProfile> allItems = mStudentProfileMapper.GetStudentsByClassAndTeacher(teacherId,classname);
         PageHelper.startPage(currentPage, pageSize);
@@ -115,7 +115,7 @@ public class StudentProfileServiceImpl implements StudentProfileService {
      * 學生信息刪除
      */
     @Override
-    public boolean DeleteStudentProfile(int id)
+    public boolean DeleteStudentProfile(String id)
     {
         boolean flag = false;
         try{

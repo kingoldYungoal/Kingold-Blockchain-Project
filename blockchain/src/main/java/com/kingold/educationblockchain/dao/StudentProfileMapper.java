@@ -29,7 +29,7 @@ public interface StudentProfileMapper {
             @Result(property = "kg_state", column = "KG_STATE"),
             @Result(property = "kg_jointime", column = "KG_JOINTIME")
     })
-    StudentProfile GetStudentProfileById(int id);
+    StudentProfile GetStudentProfileById(String id);
 
     /**
      * 根據学号或者学籍号查詢學生信息
@@ -77,18 +77,18 @@ public interface StudentProfileMapper {
             @Result(property = "kg_state", column = "KG_STATE"),
             @Result(property = "kg_jointime", column = "KG_JOINTIME")
     })
-    List<StudentProfile> GetStudentsByTeacherId(int teacherId);
+    List<StudentProfile> GetStudentsByTeacherId(String teacherId);
 
     /**
      * 根据教師信息id，学生班级查询
      */
     @Select("select * from KG_STUDENTPROFILE where kg_studentprofileid in (SELECT kg_studentprofileid FROM kg_student_teacher where kg_teacherinformationid=#{teacherId} and kg_state=0) and kg_classname=#{classname} and kg_state=0")
-    List<StudentProfile> GetStudentsByClassAndTeacher(int teacherId, String classname);
+    List<StudentProfile> GetStudentsByClassAndTeacher(String teacherId, String classname);
 
     /**
      * 新增學生信息
      */
-    @Insert("insert into KG_STUDENTPROFILE(kg_classname,kg_schoolname,kg_educationnumber,kg_studentnumber,kg_name,kg_fullname,kg_sex,kg_age,kg_countryname,kg_birthday,kg_registeredresidence,kg_passportnumberoridnumber,kg_entrancestate,kg_state,kg_jointime) values (#{kg_classname},#{kg_schoolname},#{kg_educationnumber},#{kg_studentnumber},#{kg_name},#{kg_fullname},#{kg_sex},#{kg_age},#{kg_countryname},to_date(#{kg_birthday},'yyyy-mm-dd'),#{kg_registeredresidence},#{kg_passportnumberoridnumber},#{kg_entrancestate},#{kg_state},to_date(#{kg_jointime},'yyyy-mm-dd'))")
+    @Insert("insert into KG_STUDENTPROFILE(kg_studentprofileid, kg_classname,kg_schoolname,kg_educationnumber,kg_studentnumber,kg_name,kg_fullname,kg_sex,kg_age,kg_countryname,kg_birthday,kg_registeredresidence,kg_passportnumberoridnumber,kg_entrancestate,kg_state,kg_jointime) values (#{kg_studentprofileid},#{kg_classname},#{kg_schoolname},#{kg_educationnumber},#{kg_studentnumber},#{kg_name},#{kg_fullname},#{kg_sex},#{kg_age},#{kg_countryname},to_date(#{kg_birthday},'yyyy-mm-dd'),#{kg_registeredresidence},#{kg_passportnumberoridnumber},#{kg_entrancestate},#{kg_state},to_date(#{kg_jointime},'yyyy-mm-dd'))")
     void AddStudentProfile(StudentProfile studentProfile);
 
     /**
@@ -101,5 +101,5 @@ public interface StudentProfileMapper {
      * 刪除學生信息
      */
     @Update("update KG_STUDENTPROFILE set kg_state=1 where kg_studentprofileid=#{id}")
-    void DeleteStudentProfile(int id);
+    void DeleteStudentProfile(String id);
 }

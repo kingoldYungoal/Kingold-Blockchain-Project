@@ -2,7 +2,7 @@ package com.kingold.educationblockchain.bean;
 
 public class StudentProfile {
 
-    private int kg_studentprofileid;
+    private String kg_studentprofileid;
 
     private String kg_classname;
 
@@ -50,11 +50,11 @@ public class StudentProfile {
         this.kg_state = kg_state;
     }
 
-    public int getKg_studentprofileid() {
+    public String getKg_studentprofileid() {
         return kg_studentprofileid;
     }
 
-    public void setKg_studentprofileid(int kg_studentprofileid) {
+    public void setKg_studentprofileid(String kg_studentprofileid) {
         this.kg_studentprofileid = kg_studentprofileid;
     }
 

@@ -22,7 +22,12 @@ function initTable(classname) {
         url: "/student/studentlist",//请求的action路径页面
         data:{"teacherphone":phone,"classname":classname, "pageNum":pageNum,"pageSize":pageSize},
         error: function () {//请求失败处理函数
-            alert('请求失败');
+            M.dialog13 = jqueryAlert({
+                'icon': '../images/alertimgs/warning.png',
+                'content': '请求失败',
+                'closeTime': 2000,
+            })
+            M.dialog13.show();
         },
         success:function(data){ //请求成功后处理函数。
             if (data.items.length > 0){
@@ -62,8 +67,8 @@ function initTable(classname) {
                     },//点击事件，用于通过Ajax来刷新整个list列表
                     onPageClicked: function (event, originalEvent, type, page) {
                         $("#datadiv table tbody").html("");
-                        $(".overlay").css({'display':'block','opacity':'0.8'});
-                        $(".showbox").animate({'margin-top':'300px','opacity':'1'});
+                        // $(".overlay").css({'display':'block','opacity':'0.8'});
+                        // $(".showbox").animate({'margin-top':'300px','opacity':'1'});
                         var tbodys="";
                         $.ajax({
                             url: "/student/studentlist",
@@ -86,11 +91,11 @@ function initTable(classname) {
                     }
                 };
                 $('#pages').bootstrapPaginator(options);
-                // $("#pages ul li").each(function(){
-                //     if (this.hasClass("active")){
-                //         this.attr("disabled",true);
-                //     }
-                // });
+                // $("#pages ul li").hasClass('active')
+                // {
+                //     $("#pages ul li a").removeAttr('href');
+                //     $("#pages ul li a").removeAttr('onclick');
+                // }
             }else{
                 $("#pages").html('');
             }

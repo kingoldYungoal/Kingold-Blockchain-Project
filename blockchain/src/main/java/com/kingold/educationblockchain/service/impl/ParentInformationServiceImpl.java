@@ -19,7 +19,7 @@ public class ParentInformationServiceImpl implements ParentInformationService {
      * 根据家长信息id查询家长信息
      */
     @Override
-    public ParentInformation FindParentInformationById(int id){
+    public ParentInformation FindParentInformationById(String id){
         return mParentInformationMapper.FindParentInformationById(id);
     }
 
@@ -67,7 +67,7 @@ public class ParentInformationServiceImpl implements ParentInformationService {
      * 家长数据删除
      */
     @Override
-    public boolean DeleteParentInformation(int id){
+    public boolean DeleteParentInformation(String id){
         boolean flag = false;
         try{
             mParentInformationMapper.DeleteParentInformation(id);

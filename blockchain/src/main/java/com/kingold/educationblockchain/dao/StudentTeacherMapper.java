@@ -16,7 +16,7 @@ public interface StudentTeacherMapper {
             @Result(property = "kg_teacherinformationid", column = "KG_TEACHERINFORMATIONID"),
             @Result(property = "kg_state", column = "KG_STATE")
     })
-    List<StudentTeacher> FindStudentTeacherByTeacherId(int teacherId);
+    List<StudentTeacher> FindStudentTeacherByTeacherId(String teacherId);
 
     /**
      * 根据学生id查询
@@ -27,7 +27,7 @@ public interface StudentTeacherMapper {
             @Result(property = "kg_teacherinformationid", column = "KG_TEACHERINFORMATIONID"),
             @Result(property = "kg_state", column = "KG_STATE")
     })
-    List<StudentTeacher> FindStudentTeacherByStudentId(int studentId);
+    List<StudentTeacher> FindStudentTeacherByStudentId(String studentId);
 
     /**
      * 根据学生id,教師信息id查询
@@ -38,7 +38,7 @@ public interface StudentTeacherMapper {
             @Result(property = "kg_teacherinformationid", column = "KG_TEACHERINFORMATIONID"),
             @Result(property = "kg_state", column = "KG_STATE")
     })
-    StudentTeacher FindStudentTeacher(int teacherId, int studentId);
+    StudentTeacher FindStudentTeacher(String teacherId, String studentId);
 
     /**
      * 學生教師關係新增
@@ -49,6 +49,6 @@ public interface StudentTeacherMapper {
     /**
      * 學生教師關係刪除
      */
-    @Update("update kg_student_teacher set kg_state=1 where kg_teacherinformationid=#{mTeateacherIdcherInformationId} and kg_studentprofileid=#{studentId}")
-    void DeleteStudentTeacher(int teacherId, int studentId);
+    @Update("update kg_student_teacher set kg_state=1 where kg_teacherinformationid=#{teacherId} and kg_studentprofileid=#{studentId}")
+    void DeleteStudentTeacher(String teacherId, String studentId);
 }

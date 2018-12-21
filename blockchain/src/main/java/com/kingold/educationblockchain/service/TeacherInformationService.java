@@ -7,7 +7,7 @@ public interface TeacherInformationService {
     /**
      * 根据教師信息id查询教師信息
      */
-    TeacherInformation FindTeacherInformationById(int id);
+    TeacherInformation FindTeacherInformationById(String id);
 
     /**
      * 根据教師手机号查询教師信息
@@ -27,5 +27,5 @@ public interface TeacherInformationService {
     /**
      * 教師数据删除
      */
-    boolean DeleteTeacherInformation(int id);
+    boolean DeleteTeacherInformation(String id);
 }

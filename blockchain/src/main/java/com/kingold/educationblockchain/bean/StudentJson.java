@@ -2,6 +2,9 @@ package com.kingold.educationblockchain.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+/*
+学生信息上链bean
+ */
 public class StudentJson {
     @SerializedName("stu_id")
     private String StudentId;

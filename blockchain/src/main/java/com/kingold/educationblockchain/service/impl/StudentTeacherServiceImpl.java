@@ -21,7 +21,7 @@ public class StudentTeacherServiceImpl implements StudentTeacherService {
      * 根据教師信息id查询
      */
     @Override
-    public List<StudentTeacher> FindStudentTeacherByTeacherId(int teacherId){
+    public List<StudentTeacher> FindStudentTeacherByTeacherId(String teacherId){
         return mStudentTeacherMapper.FindStudentTeacherByTeacherId(teacherId);
     }
 
@@ -29,7 +29,7 @@ public class StudentTeacherServiceImpl implements StudentTeacherService {
      * 根据学生id查询
      */
     @Override
-    public List<StudentTeacher> FindStudentTeacherByStudentId(int studentId){
+    public List<StudentTeacher> FindStudentTeacherByStudentId(String studentId){
         return mStudentTeacherMapper.FindStudentTeacherByStudentId(studentId);
     }
 
@@ -37,7 +37,7 @@ public class StudentTeacherServiceImpl implements StudentTeacherService {
      * 根据学生id,教師信息id查询
      */
     @Override
-    public List<StudentTeacher> FindStudentTeacherByPage(int teacherId, int currentPage,int pageSize){
+    public List<StudentTeacher> FindStudentTeacherByPage(String teacherId, int currentPage,int pageSize){
         //设置分页信息，分别是当前页数和每页显示的总记录数
         PageHelper.startPage(currentPage, pageSize);
 
@@ -52,7 +52,7 @@ public class StudentTeacherServiceImpl implements StudentTeacherService {
      * 根据学生id,教師信息id查询
      */
     @Override
-    public StudentTeacher FindStudentTeacher(int teacherId, int studentId){
+    public StudentTeacher FindStudentTeacher(String teacherId, String studentId){
         return mStudentTeacherMapper.FindStudentTeacher(teacherId, studentId);
     }
 
@@ -76,7 +76,7 @@ public class StudentTeacherServiceImpl implements StudentTeacherService {
      * 狀態更新
      */
     @Override
-    public boolean DeleteStudentTeacher(int teacherId, int studentId){
+    public boolean DeleteStudentTeacher(String teacherId, String studentId){
         boolean flag = false;
         try{
             mStudentTeacherMapper.DeleteStudentTeacher(teacherId, studentId);

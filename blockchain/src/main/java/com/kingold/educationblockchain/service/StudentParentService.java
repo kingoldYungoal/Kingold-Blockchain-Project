@@ -9,17 +9,17 @@ public interface StudentParentService {
     /**
      * 根据家長信息id查询
      */
-    List<StudentParent> FindStudentParentByParentId(int parentId);
+    List<StudentParent> FindStudentParentByParentId(String parentId);
 
     /**
      * 根据学生id查询
      */
-    List<StudentParent> FindStudentParentByStudentId(int studentId);
+    List<StudentParent> FindStudentParentByStudentId(String studentId);
 
     /**
      * 根据学生id,家長信息id查询
      */
-    StudentParent FindStudentParent(int parentId, int studentId);
+    StudentParent FindStudentParent(String parentId, String studentId);
 
     /**
      * 學生家長關係新增
@@ -29,5 +29,5 @@ public interface StudentParentService {
     /**
      * 學生家長關係刪除
      */
-    boolean DeleteStudentParent(int parentId, int studentId);
+    boolean DeleteStudentParent(String parentId, String studentId);
 }

@@ -7,7 +7,7 @@ public interface ParentInformationService {
     /**
      * 根据家长信息id查询家长信息
      */
-    ParentInformation FindParentInformationById(int id);
+    ParentInformation FindParentInformationById(String id);
 
     /**
      * 根据家长手机号查询家长信息
@@ -27,5 +27,5 @@ public interface ParentInformationService {
     /**
      * 家长数据删除
      */
-    boolean DeleteParentInformation(int id);
+    boolean DeleteParentInformation(String id);
 }

@@ -20,7 +20,7 @@ public class StudentParentServiceImpl implements StudentParentService {
      * 根据家長信息id查询
      */
     @Override
-    public List<StudentParent> FindStudentParentByParentId(int parentId){
+    public List<StudentParent> FindStudentParentByParentId(String parentId){
         return mStudentParentMapper.FindStudentParentByParentId(parentId);
     }
 
@@ -28,7 +28,7 @@ public class StudentParentServiceImpl implements StudentParentService {
      * 根据学生id查询
      */
     @Override
-    public List<StudentParent> FindStudentParentByStudentId(int studentId){
+    public List<StudentParent> FindStudentParentByStudentId(String studentId){
         return mStudentParentMapper.FindStudentParentByStudentId(studentId);
     }
 
@@ -36,7 +36,7 @@ public class StudentParentServiceImpl implements StudentParentService {
      * 根据学生id,家長信息id查询
      */
     @Override
-    public StudentParent FindStudentParent(int parentId, int studentId){
+    public StudentParent FindStudentParent(String parentId, String studentId){
         return mStudentParentMapper.FindStudentParent(parentId, studentId);
     }
 
@@ -60,7 +60,7 @@ public class StudentParentServiceImpl implements StudentParentService {
      * 學生家長關係刪除
      */
     @Override
-    public boolean DeleteStudentParent(int parentId, int studentId){
+    public boolean DeleteStudentParent(String parentId, String studentId){
         boolean flag = false;
         try{
             mStudentParentMapper.DeleteStudentParent(parentId, studentId);

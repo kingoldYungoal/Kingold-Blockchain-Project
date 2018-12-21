@@ -20,7 +20,7 @@ public class ElectronicscertificateServiceImpl implements Electronicscertificate
      * 根據id查詢证书信息
      */
     @Override
-    public Electronicscertificate GetCertificateById(int id)
+    public Electronicscertificate GetCertificateById(String id)
     {
         return mElectronicscertificateMapper.GetCertificateById(id);
     }
@@ -29,7 +29,7 @@ public class ElectronicscertificateServiceImpl implements Electronicscertificate
      * 根據crmid查詢证书信息
      */
     @Override
-    public List<Electronicscertificate> GetCertificatesByStudentId(int studentId){
+    public List<Electronicscertificate> GetCertificatesByStudentId(String studentId){
         return mElectronicscertificateMapper.GetCertificatesByStudentId(studentId);
     }
 
@@ -71,7 +71,7 @@ public class ElectronicscertificateServiceImpl implements Electronicscertificate
      * 证书信息刪除
      */
     @Override
-    public boolean DeleteCertificate(int id)
+    public boolean DeleteCertificate(String id)
     {
         boolean flag = false;
         try{
