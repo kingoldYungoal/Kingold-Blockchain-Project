@@ -1,7 +1,7 @@
 $(function () {
     var M = {};
     var wait=60;
-    var re = /^(13[0-9]|15[0|1|2|3|5|6|7|8|9]|17[0-9]|18[0-9]|14[57])\d{8}$/;
+    var re = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
     var $codebtn = $("#codebtn");
 
     $("#codebtn").click(function () {
@@ -22,7 +22,7 @@ $(function () {
             $("#phonenumber").focus();
             return false;
         }
-        if (!re.test(phonenumber)) {
+        if (phonenumber.match(re) == false) {
             M.dialog13 = jqueryAlert({
                 'icon': '../images/alertimgs/warning.png',
                 'content': '请输入正确的手机号码',

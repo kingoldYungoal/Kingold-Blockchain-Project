@@ -6,8 +6,11 @@ import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.EventInfo;
+import com.kingold.educationblockchain.util.BlockChainPayload;
+import com.kingold.educationblockchain.util.DateHandler;
 import com.kingold.educationblockchain.util.EncrypDES;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpEntity;
@@ -21,10 +24,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @RestController
@@ -40,7 +41,11 @@ public class CommonController {
     private StudentParentService mStudentParentService;
     @Autowired
     private StudentTeacherService mStudentTeacherService;
+    @Value("${chainCode.channel}")
+    private String channel;
+    private DateHandler dateHandler;
     private EncrypDES des;
+    private BlockChainPayload payload = new BlockChainPayload();
     private Gson gson;
 
 //    private Logger logger = Logger.getLogger(CommonController.class);
@@ -81,49 +86,93 @@ public class CommonController {
                 // 判断学号，学籍号 是否已存在
                 List<StudentProfile> studentProfileList = mStudentProfileService.GetStudentProfileByNumber(studentProfile.getKg_educationnumber(),studentProfile.getKg_studentnumber());
                 if(studentProfileList == null || studentProfileList.size() <= 0){
-                    flag = mStudentProfileService.AddStudentProfile(studentProfile);
+                    //将学生信息添加到数据库
+                    try{
+
+                        boolean tableflag = mStudentProfileService.AddStudentProfile(studentProfile);
+                        if(tableflag){
+                            //将学生信息上链
+                            StudentJson studentJson = new StudentJson();
+                            //敏感信息加密
+                            des = new EncrypDES();
+                            byte[] educationNo = des.Encrytor(studentProfile.getKg_educationnumber());
+                            byte[] cardNo = des.Encrytor(studentProfile.getKg_passportnumberoridnumber());
+                            studentJson.setStudentId(studentProfile.getKg_studentprofileid());
+                            studentJson.setCrmId(studentProfile.getKg_studentprofileid());
+                            studentJson.setStudentEducationNo(new String(educationNo));
+                            studentJson.setStudentIdCardNo(new String(cardNo));
+                            studentJson.setStudentNameString(studentProfile.getKg_fullname());
+                            dateHandler = new DateHandler();
+                            studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
+                            //studentJson.setRemark();
+                            InitStudent(studentJson, channel);
+
+                            flag = true;
+                        }
+                    }catch (HttpClientErrorException e1) {
+                        //删除表中新增的数据
+                        mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
+                    }catch (Exception ex){
+                        //throw ex;
+                    }
                 }
                 break;
             case "kg_teacherinformation":
-                TeacherInformation teacherInformation= JSONObject.parseObject(jsonParam,TeacherInformation.class);
-                teacherInformation.setKg_teacherinformationid(UUID.randomUUID().toString());
-                // 判断教师信息是否存在
-                if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) == null) {
-                    flag = mTeacherInfomationService.AddTeacherInformation(teacherInformation);
+                try{
+                    TeacherInformation teacherInformation = JSONObject.parseObject(jsonParam,TeacherInformation.class);
+                    teacherInformation.setKg_teacherinformationid(UUID.randomUUID().toString());
+                    // 判断教师信息是否存在
+                    if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) == null) {
+                        flag = mTeacherInfomationService.AddTeacherInformation(teacherInformation);
+                    }
+                }catch(Exception ex){
+                    throw ex;
                 }
                 break;
             case "kg_parentinformation":
-                ParentInformation parentInformation = JSONObject.parseObject(jsonParam,ParentInformation.class);
-                parentInformation.setKg_parentinformationid(UUID.randomUUID().toString());
-                // 判断家长信息是否存在
-                if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
-                    flag = mParentInfomationService.AddParentInformation(parentInformation);
+                try{
+                    ParentInformation parentInformation = JSONObject.parseObject(jsonParam,ParentInformation.class);
+                    parentInformation.setKg_parentinformationid(UUID.randomUUID().toString());
+                    // 判断家长信息是否存在
+                    if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
+                        flag = mParentInfomationService.AddParentInformation(parentInformation);
+                    }
+                }catch(Exception ex){
+                    throw ex;
                 }
                 break;
             case "kg_student_parent":
-                StudentParent studentParent= JSONObject.parseObject(jsonParam,StudentParent.class);
-                //判断 是否存在 家长信息，学生信息
-                StudentProfile profile = mStudentProfileService.GetStudentProfileById(studentParent.getKg_studentprofileid());
-                ParentInformation pInformation = mParentInfomationService.FindParentInformationById(studentParent.getKg_parentinformationid());
-                if(profile != null && pInformation != null){
-                    //判断 之前并不存在 家长和学生关系信息
-                    StudentParent sp = mStudentParentService.FindStudentParent(studentParent.getKg_parentinformationid(), studentParent.getKg_studentprofileid());
-                    if(sp == null){
-                        flag = mStudentParentService.AddStudentParent(studentParent);
+                try{
+                    StudentParent studentParent= JSONObject.parseObject(jsonParam,StudentParent.class);
+                    //判断 是否存在 家长信息，学生信息
+                    StudentProfile profile = mStudentProfileService.GetStudentProfileById(studentParent.getKg_studentprofileid());
+                    ParentInformation pInformation = mParentInfomationService.FindParentInformationById(studentParent.getKg_parentinformationid());
+                    if(profile != null && pInformation != null){
+                        //判断 之前并不存在 家长和学生关系信息
+                        StudentParent sp = mStudentParentService.FindStudentParent(studentParent.getKg_parentinformationid(), studentParent.getKg_studentprofileid());
+                        if(sp == null){
+                            flag = mStudentParentService.AddStudentParent(studentParent);
+                        }
                     }
+                }catch(Exception ex){
+                    throw ex;
                 }
                 break;
             case "kg_student_teacher":
-                StudentTeacher studentTeacher= JSONObject.parseObject(jsonParam,StudentTeacher.class);
-                //判断 是否存在 教师信息，学生信息
-                StudentProfile profile2 = mStudentProfileService.GetStudentProfileById(studentTeacher.getKg_studentprofileid());
-                TeacherInformation tInformation = mTeacherInfomationService.FindTeacherInformationById(studentTeacher.getKg_teacherinformationid());
-                if(profile2 != null && tInformation != null){
-                    //判断 之前并不存在 教师和学生关系信息
-                    StudentTeacher st = mStudentTeacherService.FindStudentTeacher(studentTeacher.getKg_teacherinformationid(), studentTeacher.getKg_studentprofileid());
-                    if(st == null){
-                        flag = mStudentTeacherService.AddStudentTeacher(studentTeacher);
+                try{
+                    StudentTeacher studentTeacher= JSONObject.parseObject(jsonParam,StudentTeacher.class);
+                    //判断 是否存在 教师信息，学生信息
+                    StudentProfile profile2 = mStudentProfileService.GetStudentProfileById(studentTeacher.getKg_studentprofileid());
+                    TeacherInformation tInformation = mTeacherInfomationService.FindTeacherInformationById(studentTeacher.getKg_teacherinformationid());
+                    if(profile2 != null && tInformation != null){
+                        //判断 之前并不存在 教师和学生关系信息
+                        StudentTeacher st = mStudentTeacherService.FindStudentTeacher(studentTeacher.getKg_teacherinformationid(), studentTeacher.getKg_studentprofileid());
+                        if(st == null){
+                            flag = mStudentTeacherService.AddStudentTeacher(studentTeacher);
+                        }
                     }
+                }catch(Exception ex){
+                    throw ex;
                 }
                 break;
         }
@@ -167,58 +216,60 @@ public class CommonController {
 
     public boolean DeleteData(String id,String tableName){
         boolean flag = false;
-        switch(tableName.trim()){
-            case "kg_studentprofile":
-                StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(id);
-                if(studentProfile != null){
-                    // 删除学生信息，同时删除学生教师关系信息，学生家长关系信息
-                    if(mStudentProfileService.DeleteStudentProfile(id)){
-                        List<StudentTeacher> stList = mStudentTeacherService.FindStudentTeacherByStudentId(id);
-                        if(stList != null && stList.size() > 0){
-                            for(StudentTeacher st : stList){
-                                mStudentTeacherService.DeleteStudentTeacher(st.getKg_teacherinformationid(),st.getKg_studentprofileid());
+        if(id.trim().length() > 0){
+            switch(tableName.trim()){
+                case "kg_studentprofile":
+                    StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(id);
+                    if(studentProfile != null){
+                        // 删除学生信息，同时删除学生教师关系信息，学生家长关系信息
+                        if(mStudentProfileService.DeleteStudentProfile(id)){
+                            List<StudentTeacher> stList = mStudentTeacherService.FindStudentTeacherByStudentId(id);
+                            if(stList != null && stList.size() > 0){
+                                for(StudentTeacher st : stList){
+                                    mStudentTeacherService.DeleteStudentTeacher(st.getKg_teacherinformationid(),st.getKg_studentprofileid());
+                                }
                             }
-                        }
-                        List<StudentParent> spList = mStudentParentService.FindStudentParentByStudentId(id);
-                        if(spList != null && spList.size() > 0){
-                            for(StudentParent sp : spList){
-                                mStudentParentService.DeleteStudentParent(sp.getKg_parentinformationid(),sp.getKg_studentprofileid());
+                            List<StudentParent> spList = mStudentParentService.FindStudentParentByStudentId(id);
+                            if(spList != null && spList.size() > 0){
+                                for(StudentParent sp : spList){
+                                    mStudentParentService.DeleteStudentParent(sp.getKg_parentinformationid(),sp.getKg_studentprofileid());
+                                }
                             }
+                            flag = true;
                         }
-                        flag = true;
                     }
-                }
-                break;
-            case "kg_teacherinformation":
-                TeacherInformation teacherInformation= mTeacherInfomationService.FindTeacherInformationById(id);
-                if(teacherInformation != null){
-                    // 删除教师信息，同时删除学生教师关系信息
-                    if(mTeacherInfomationService.DeleteTeacherInformation(id)){
-                        List<StudentTeacher> stList = mStudentTeacherService.FindStudentTeacherByTeacherId(id);
-                        if(stList != null && stList.size() > 0){
-                            for(StudentTeacher st : stList){
-                                mStudentTeacherService.DeleteStudentTeacher(st.getKg_teacherinformationid(),st.getKg_studentprofileid());
+                    break;
+                case "kg_teacherinformation":
+                    TeacherInformation teacherInformation= mTeacherInfomationService.FindTeacherInformationById(id);
+                    if(teacherInformation != null){
+                        // 删除教师信息，同时删除学生教师关系信息
+                        if(mTeacherInfomationService.DeleteTeacherInformation(id)){
+                            List<StudentTeacher> stList = mStudentTeacherService.FindStudentTeacherByTeacherId(id);
+                            if(stList != null && stList.size() > 0){
+                                for(StudentTeacher st : stList){
+                                    mStudentTeacherService.DeleteStudentTeacher(st.getKg_teacherinformationid(),st.getKg_studentprofileid());
+                                }
                             }
+                            flag = true;
                         }
-                        flag = true;
                     }
-                }
-                break;
-            case "kg_parentinformation":
-                ParentInformation parentInformation= mParentInfomationService.FindParentInformationById(id);
-                if(parentInformation != null){
-                    // 删除家长信息，同时删除学生家长关系信息
-                    if(mParentInfomationService.DeleteParentInformation(id)){
-                        List<StudentParent> spList = mStudentParentService.FindStudentParentByParentId(id);
-                        if(spList != null && spList.size() > 0){
-                            for(StudentParent sp : spList){
-                                mStudentParentService.DeleteStudentParent(sp.getKg_parentinformationid(),sp.getKg_studentprofileid());
+                    break;
+                case "kg_parentinformation":
+                    ParentInformation parentInformation= mParentInfomationService.FindParentInformationById(id);
+                    if(parentInformation != null){
+                        // 删除家长信息，同时删除学生家长关系信息
+                        if(mParentInfomationService.DeleteParentInformation(id)){
+                            List<StudentParent> spList = mStudentParentService.FindStudentParentByParentId(id);
+                            if(spList != null && spList.size() > 0){
+                                for(StudentParent sp : spList){
+                                    mStudentParentService.DeleteStudentParent(sp.getKg_parentinformationid(),sp.getKg_studentprofileid());
+                                }
                             }
+                            flag = true;
                         }
-                        flag = true;
                     }
-                }
-                break;
+                    break;
+            }
         }
         return flag;
     }
@@ -230,37 +281,9 @@ public class CommonController {
      */
     public String InitStudent(StudentJson studentJson,String channelName) {
         try {
-            if(studentJson != null){
-                des = new EncrypDES();
-                byte[] educationNo = des.Encrytor(studentJson.getStudentEducationNo());
-                studentJson.setStudentEducationNo(new String(educationNo));
-                byte[] cardNo = des.Encrytor(studentJson.getStudentIdCardNo());
-                studentJson.setStudentIdCardNo(new String(cardNo));
-            }
-            return getPayload("initStudent", getInsertStudentJson(studentJson),channelName).toString();
+            return payload.GetPayload("initStudent", getInsertStudentJson(studentJson),channelName).toString();
         }catch (HttpClientErrorException e1) {
             return e1.getMessage();
-        }catch (NoSuchPaddingException e2){
-            return e2.getMessage();
-        }catch (NoSuchAlgorithmException e3){
-            return e3.getMessage();
-        }catch (InvalidKeyException e4) {
-            return e4.getMessage();
-        }catch (IllegalBlockSizeException e5){
-            return e5.getMessage();
-        }catch (BadPaddingException e6){
-            return e6.getMessage();
-        }
-    }
-
-    /*
-   证书信息上链
-    */
-    public String InsertCertinfo(CertInfo certInfo,String channelName) {
-        try {
-            return getPayload("insertCertinfo", getInsertCertJson(certInfo),channelName).toString();
-        } catch (HttpClientErrorException ex) {
-            throw ex;
         }
     }
 
@@ -269,7 +292,7 @@ public class CommonController {
      */
     public String InsertEventinfo(EventInfo eventInfo,String channelName) {
         try {
-            return getPayload("insertEventInfo", getInsertEventJson(eventInfo), channelName).toString();
+            return payload.GetPayload("insertEventInfo", getInsertEventJson(eventInfo), channelName).toString();
         } catch (HttpClientErrorException ex) {
             throw ex;
         }
@@ -280,7 +303,7 @@ public class CommonController {
      */
     public List<CertInfo> QueryCertByCRMId(String CrmId,String channelName) {
         try {
-            JsonArray jsonArray=getPayload("queryCertByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
+            JsonArray jsonArray = payload.GetPayload("queryCertByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
             Iterator<JsonElement> it =jsonArray.iterator();
             gson = new Gson();
             List<CertInfo> certInfoList=new ArrayList<CertInfo>();
@@ -303,7 +326,7 @@ public class CommonController {
     public List<EventInfo> QueryEventByCRMId(String CrmId, String channelName) {
         try {
 
-            JsonArray jsonArray= getPayload("queryEventByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
+            JsonArray jsonArray = payload.GetPayload("queryEventByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
             Iterator<JsonElement> it =jsonArray.iterator();
             gson = new Gson();
             List<EventInfo> eventInfoList=new ArrayList<EventInfo>();
@@ -326,9 +349,9 @@ public class CommonController {
     public CertInfo QueryCertById(String certId, String channelName) {
         try {
 
-            String jsonString= getPayload("readCert",'"'+certId+'"',channelName).toString();
+            String jsonString = payload.GetPayload("readCert",'"'+certId+'"',channelName).toString();
             gson = new Gson();
-            CertInfo certInfo= gson.fromJson(jsonString,CertInfo.class);
+            CertInfo certInfo = gson.fromJson(jsonString,CertInfo.class);
             return certInfo;
         } catch (Exception ex) {
             throw ex;
@@ -341,33 +364,15 @@ public class CommonController {
     public EventInfo QueryEventById(String evtId, String channelName) {
         try {
 
-            String jsonString= getPayload("readEvent",'"'+evtId+'"',channelName).toString();
+            String jsonString = payload.GetPayload("readEvent",'"'+evtId+'"',channelName).toString();
             gson = new Gson();
-            EventInfo evtInfo= gson.fromJson(jsonString,EventInfo.class);
+            EventInfo evtInfo = gson.fromJson(jsonString,EventInfo.class);
             return evtInfo;
         } catch (Exception ex) {
             throw ex;
         }
     }
 
-    private String getInsertCertJson(CertInfo cert)
-    {
-        return  String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
-                cert.getCertId() ,
-                cert.getStudentId(),
-                cert.getCertNo(),
-                cert.getCertType(),
-                cert.getCertHolder(),
-                cert.getCertName(),
-                cert.getCertContent(),
-                cert.getCertPdfPath(),
-                cert.getCertHash(),
-                cert.getCertIssuer(),
-                cert.getCertIssueDate(),
-                cert.getCertOperationTime(),
-                cert.getCertStatus(),
-                cert.getRemark());
-    }
     private String getInsertEventJson(EventInfo event)
     {
         return  String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
@@ -389,45 +394,5 @@ public class CommonController {
                 student.getStudentNameString(),
                 student.getStudentOperationTime(),
                 student.getRemark());
-    }
-
-    /*
-    获取返回结果
-     */
-    private JsonElement getPayload(String functionName,String argJson,String  channelName)
-    {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        String requestStr = String.format("{\"channel\":\"%s\",\"chaincode\":\"%s\",\"method\":\"%s\",\"args\":[%s],\"chaincodeVer\":\"%s\"}",
-                channelName,
-                ChainCodeConfig.getProperty("chainCode.chainCodeName"),
-                functionName,
-                argJson,
-                ChainCodeConfig.getProperty("chainCode.chainCodeVer"));
-        headers.add("Content-Type", "application/json");
-        headers.add("Connection", "keep-alive");
-        headers.add("Authorization", ChainCodeConfig.getProperty("chainCode.authorizationKey"));
-
-        HttpEntity<String> request1 = new HttpEntity<String>(requestStr, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
-        String  errMsg;
-        if(response.getStatusCode()== HttpStatus.OK)
-        {
-            JsonParser parse= new JsonParser();
-            JsonObject jsonObject= (JsonObject) parse.parse(response.getBody());
-            if(jsonObject.has("returnCode")&&jsonObject.get("returnCode").getAsString().compareTo("Success")==0)
-            {
-                if(jsonObject.has("result")) {
-                    String payload = jsonObject.getAsJsonObject("result").get("payload").getAsString();
-                    return parse.parse(payload);
-                }
-                return jsonObject.get("returnCode");
-            }
-            errMsg = jsonObject.get("info").toString();
-        }
-        else {
-            errMsg = response.getBody();
-        }
-        throw new Error(errMsg);
     }
 }

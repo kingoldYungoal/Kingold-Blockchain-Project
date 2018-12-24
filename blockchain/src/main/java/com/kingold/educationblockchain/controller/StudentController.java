@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentController {
 
-    private static final String  authCode = "Basic aGVsaXgubGl1QG9yYWNsZS5jb206QWJjZDEyMzQ=";
+    private static final String authCode = "Basic aGVsaXgubGl1QG9yYWNsZS5jb206QWJjZDEyMzQ=";
 
     @Autowired
     private StudentProfileService mStudentProfileService;

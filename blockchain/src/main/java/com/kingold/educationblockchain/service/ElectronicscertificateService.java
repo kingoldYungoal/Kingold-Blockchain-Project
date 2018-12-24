@@ -34,5 +34,4 @@ public interface ElectronicscertificateService {
      * 刪除电子证书数据
      */
     boolean DeleteCertificate(String id);
-
 }
