@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -404,17 +405,28 @@ public class CommonController {
                 functionName,
                 argJson,
                 ChainCodeConfig.getProperty("chainCode.chainCodeVer"));
-        headers.add("Content-Type", "application/json");
+        headers.add("Content-Type", "application/json; charset='utf-8'");
         headers.add("Connection", "keep-alive");
+        headers.add("Accept-Charset", "utf-8");
         headers.add("Authorization", ChainCodeConfig.getProperty("chainCode.authorizationKey"));
 
-        HttpEntity<String> request1 = new HttpEntity<String>(requestStr, headers);
+        HttpEntity<String> request1 = null;
+        try {
+            request1 = new HttpEntity<String>(new String(requestStr.getBytes("UTF-8"),"UTF-8"), headers);
+        } catch (Exception e) {
+            throw new Error(e.getMessage());
+        }
         ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
         String  errMsg;
         if(response.getStatusCode()== HttpStatus.OK)
         {
             JsonParser parse= new JsonParser();
-            JsonObject jsonObject= (JsonObject) parse.parse(response.getBody());
+            JsonObject jsonObject= null;
+            try {
+                jsonObject = (JsonObject) parse.parse(new String(response.getBody().getBytes("iso8859-1"),"UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             if(jsonObject.has("returnCode")&&jsonObject.get("returnCode").getAsString().compareTo("Success")==0)
             {
                 if(jsonObject.has("result")) {
