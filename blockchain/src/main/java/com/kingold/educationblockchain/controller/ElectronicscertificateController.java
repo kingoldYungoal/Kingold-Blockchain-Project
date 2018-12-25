@@ -1,6 +1,5 @@
 package com.kingold.educationblockchain.controller;
 
-import com.google.gson.Gson;
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
@@ -21,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,12 +60,13 @@ public class ElectronicscertificateController {
     private String mCertificateFileParentId;
 
     @Value("${chainCode.channel}")
-    private String channel;
+    private String mChannel;
 
-    private DateHandler dateHandler;
-    private BlockChainPayload payload = new BlockChainPayload();
+    @Value("${Certificate.TemplatePath}")
+    private String mCertificateTemplatePath;
 
-    private static final String mCertificateTemplateFilePath = "./src/main/resources/static/certificate-template.pdf";
+    private DateHandler mDateHandler;
+    private BlockChainPayload mPayload = new BlockChainPayload();
 
     /*
      * 证书生成api
@@ -81,14 +83,14 @@ public class ElectronicscertificateController {
                     StringBuffer certificateName = new StringBuffer(UUID.randomUUID().toString())
                             .append(".pdf");
 
-                    String certificateFilePath = new StringBuffer("./src/main/resources/static/")
-                            .append(certificateName).toString();
+                    String certificateFilePath = new StringBuffer(mCertificateTemplatePath)
+                            .append(certificateName).toString() ;
 
                     Map<String,String> map = new HashMap();
                     map.put("name",cert.getKg_studentname());
                     map.put("classname",cert.getKg_classname());
-                    map.put("teachername",cert.getKg_teachername());
-                    map.put("certificatedate",cert.getKg_certificatedate());
+                    //map.put("teachername",cert.getKg_teachername());
+                    //map.put("certificatedate",cert.getKg_certificatedate());
                     GeneratePdfCertificate(certificateFilePath, map);
 
                     String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
@@ -109,16 +111,16 @@ public class ElectronicscertificateController {
                         certInfo.setCertType(cert.getKg_certitype());
                         certInfo.setCertHolder(cert.getKg_studentname());
                         certInfo.setCertName(cert.getKg_name());
-                        certInfo.setCertContent(cert.getKg_explain());
+                        //certInfo.setCertContent(cert.getKg_explain());
                         certInfo.setCertPdfPath(fileId);
                         //certInfo.setCertHash();
                         certInfo.setCertIssuer(cert.getKg_schoolname());
                         certInfo.setCertIssueDate(cert.getKg_certificatedate());
-                        dateHandler = new DateHandler();
-                        certInfo.setCertOperationTime(dateHandler.GetCurrentTime());
+                        mDateHandler = new DateHandler();
+                        certInfo.setCertOperationTime(mDateHandler.GetCurrentTime());
                         certInfo.setCertStatus("0");
                         certInfo.setRemark(cert.getKg_certitype());
-                        InsertCertinfo(certInfo,channel);
+                        InsertCertinfo(certInfo,mChannel);
                     }
                 }
             }
@@ -132,11 +134,14 @@ public class ElectronicscertificateController {
         }
     }
 
+
     /*
      * 生成证书
      * */
     private void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields ) throws Exception{
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(mCertificateTemplateFilePath), new PdfWriter(certificateFilePath));
+        Resource resource = new ClassPathResource("static/certificate-template.pdf");
+        File file = resource.getFile();
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(file.getPath()), new PdfWriter(certificateFilePath));
 
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDoc, true);
         form.setGenerateAppearance(true);
@@ -187,7 +192,7 @@ public class ElectronicscertificateController {
     */
     public String InsertCertinfo(CertInfo certInfo,String channelName) {
         try {
-            return payload.GetPayload("insertCertinfo", getInsertCertJson(certInfo),channelName).toString();
+            return mPayload.GetPayload("insertCertinfo", getInsertCertJson(certInfo),channelName).toString();
         } catch (HttpClientErrorException ex) {
             throw ex;
         }

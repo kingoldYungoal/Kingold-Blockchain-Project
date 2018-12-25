@@ -94,17 +94,20 @@ public class CommonController {
                             //将学生信息上链
                             StudentJson studentJson = new StudentJson();
                             //敏感信息加密
-                            des = new EncrypDES();
-                            byte[] educationNo = des.Encrytor(studentProfile.getKg_educationnumber());
-                            byte[] cardNo = des.Encrytor(studentProfile.getKg_passportnumberoridnumber());
+//                            des = new EncrypDES();
+//                            byte[] educationNo = des.Encrytor(studentProfile.getKg_educationnumber());
+//                            byte[] cardNo = des.Encrytor(studentProfile.getKg_passportnumberoridnumber());
                             studentJson.setStudentId(studentProfile.getKg_studentprofileid());
                             studentJson.setCrmId(studentProfile.getKg_studentprofileid());
-                            studentJson.setStudentEducationNo(new String(educationNo));
-                            studentJson.setStudentIdCardNo(new String(cardNo));
+//                            studentJson.setStudentEducationNo(new String(educationNo));
+//                            studentJson.setStudentIdCardNo(new String(cardNo));
+                            studentJson.setStudentEducationNo(studentProfile.getKg_educationnumber());
+                            studentJson.setStudentIdCardNo(studentProfile.getKg_passportnumberoridnumber());
                             studentJson.setStudentNameString(studentProfile.getKg_fullname());
                             dateHandler = new DateHandler();
                             studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
                             //studentJson.setRemark();
+                            System.out.print("channel=" + channel);
                             InitStudent(studentJson, channel);
 
                             flag = true;
