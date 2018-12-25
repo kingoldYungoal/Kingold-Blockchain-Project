@@ -6,6 +6,7 @@ import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.EventInfo;
+import com.kingold.educationblockchain.util.Base64;
 import com.kingold.educationblockchain.util.BlockChainPayload;
 import com.kingold.educationblockchain.util.DateHandler;
 import com.kingold.educationblockchain.util.EncrypDES;
@@ -315,11 +316,19 @@ public class CommonController {
                 String str =  it.next().getAsJsonObject().get("valueJson").getAsString();
                 gson.fromJson(str, CertInfo.class);
                 CertInfo obj= gson.fromJson(str, CertInfo.class);
+                obj.setCertNo(new String(Base64.decryptBASE64(obj.getCertNo())));
+                obj.setCertType(new String(Base64.decryptBASE64(obj.getCertType())));
+                obj.setCertHolder(new String(Base64.decryptBASE64(obj.getCertHolder())));
+                //obj.setCertContent(new String(Base64.decryptBASE64(obj.getCertContent())));
+                obj.setCertIssuer(new String(Base64.decryptBASE64(obj.getCertIssuer())));
+                obj.setRemark(new String(Base64.decryptBASE64(obj.getRemark())));
                 certInfoList.add(obj);
             }
             return certInfoList;
         } catch (HttpClientErrorException ex) {
             throw ex;
+        } catch(Exception e){
+            return null;
         }
     }
 

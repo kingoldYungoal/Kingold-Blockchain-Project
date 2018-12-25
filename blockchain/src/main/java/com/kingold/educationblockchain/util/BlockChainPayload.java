@@ -4,13 +4,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kingold.educationblockchain.controller.ChainCodeConfig;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 public class BlockChainPayload {
+
     /*
     获取返回结果
      */
@@ -28,7 +26,7 @@ public class BlockChainPayload {
         headers.add("Connection", "keep-alive");
         headers.add("Authorization", ChainCodeConfig.getProperty("chainCode.authorizationKey"));
 
-        HttpEntity<String> request1 = new HttpEntity<String>(requestStr, headers);
+        HttpEntity<String> request1 = new HttpEntity<>(requestStr, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
         String errMsg;
         if(response.getStatusCode()== HttpStatus.OK)

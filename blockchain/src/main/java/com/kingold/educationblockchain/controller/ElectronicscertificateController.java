@@ -8,6 +8,7 @@ import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
 import com.kingold.educationblockchain.service.StudentProfileService;
+import com.kingold.educationblockchain.util.Base64;
 import com.kingold.educationblockchain.util.BlockChainPayload;
 import com.kingold.educationblockchain.util.DateHandler;
 import com.kingold.educationblockchain.util.RetResult;
@@ -107,19 +108,19 @@ public class ElectronicscertificateController {
                         CertInfo certInfo = new CertInfo();
                         certInfo.setCertId(cert.getKg_electronicscertificateid());
                         certInfo.setStudentId(cert.getKg_studentprofileid());
-                        certInfo.setCertNo(cert.getKg_certificateno());
-                        certInfo.setCertType(cert.getKg_certitype());
-                        certInfo.setCertHolder(cert.getKg_studentname());
-                        certInfo.setCertName(cert.getKg_name());
-                        //certInfo.setCertContent(cert.getKg_explain());
+                        certInfo.setCertNo(Base64.encryptBASE64(cert.getKg_certificateno().getBytes()));
+                        certInfo.setCertType(Base64.encryptBASE64(cert.getKg_certitype().getBytes()));
+                        certInfo.setCertHolder(Base64.encryptBASE64(cert.getKg_studentname().getBytes()));
+                        certInfo.setCertName(Base64.encryptBASE64(cert.getKg_name().getBytes()));
+                        //certInfo.setCertContent(Base64.encryptBASE64(cert.getKg_explain().getBytes()));
                         certInfo.setCertPdfPath(fileId);
                         //certInfo.setCertHash();
-                        certInfo.setCertIssuer(cert.getKg_schoolname());
+                        certInfo.setCertIssuer(Base64.encryptBASE64(cert.getKg_schoolname().getBytes()));
                         certInfo.setCertIssueDate(cert.getKg_certificatedate());
                         mDateHandler = new DateHandler();
                         certInfo.setCertOperationTime(mDateHandler.GetCurrentTime());
                         certInfo.setCertStatus("0");
-                        certInfo.setRemark(cert.getKg_certitype());
+                        certInfo.setRemark(Base64.encryptBASE64(cert.getKg_certitype().getBytes()));
                         InsertCertinfo(certInfo,mChannel);
                     }
                 }
