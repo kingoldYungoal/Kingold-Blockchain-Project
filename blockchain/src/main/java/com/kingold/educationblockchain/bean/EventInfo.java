@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class EventInfo {
     @SerializedName("evt_id")
-    private String  EventId;
+    public String  EventId;
     @SerializedName("stu_id")
-    private String StudentId;
+    public String StudentId;
     @SerializedName("evt_content")
-    private String EventContent;
+    public String EventContent;
     @SerializedName("evt_date")
-    private String EventDate;
+    public String EventDate;
     @SerializedName("evt_org")
-    private String EventOrg;
+    public String EventOrg;
 
     public String getEventId() {
         return EventId;
@@ -71,7 +71,7 @@ public class EventInfo {
     }
 
     @SerializedName("evt_operation_time")
-    private String EventOperationTime;
+    public String EventOperationTime;
     @SerializedName("remark")
-    private String Remark;
+    public String Remark;
 }
