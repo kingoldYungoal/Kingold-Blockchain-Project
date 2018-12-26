@@ -7,6 +7,8 @@ import com.kingold.educationblockchain.controller.ChainCodeConfig;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.UnsupportedEncodingException;
+
 public class BlockChainPayload {
 
     /*
@@ -26,13 +28,23 @@ public class BlockChainPayload {
         headers.add("Connection", "keep-alive");
         headers.add("Authorization", ChainCodeConfig.getProperty("chainCode.authorizationKey"));
 
-        HttpEntity<String> request1 = new HttpEntity<>(requestStr, headers);
+        HttpEntity<String> request1 = null;
+        try {
+            request1 = new HttpEntity<>(new String(requestStr.getBytes("utf-8"),"iso-8859-1"), headers);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
         String errMsg;
         if(response.getStatusCode()== HttpStatus.OK)
         {
             JsonParser parse= new JsonParser();
-            JsonObject jsonObject= (JsonObject) parse.parse(response.getBody());
+            JsonObject jsonObject= null;
+            try {
+                jsonObject = (JsonObject) parse.parse(new String(response.getBody().getBytes("iso-8859-1"),"utf-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             if(jsonObject.has("returnCode")&&jsonObject.get("returnCode").getAsString().compareTo("Success")==0)
             {
                 if(jsonObject.has("result")) {
