@@ -422,7 +422,11 @@ public class CommonController {
         {
             JsonParser parse= new JsonParser();
             JsonObject jsonObject= null;
-                jsonObject = (JsonObject) parse.parse(response.getBody());
+            try {
+                jsonObject = (JsonObject) parse.parse(new String(response.getBody().getBytes("iso-8859-1"),"UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             if(jsonObject.has("returnCode")&&jsonObject.get("returnCode").getAsString().compareTo("Success")==0)
             {
                 if(jsonObject.has("result")) {
