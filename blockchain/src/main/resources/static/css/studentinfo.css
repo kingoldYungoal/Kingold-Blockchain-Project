@@ -135,12 +135,10 @@
     margin-top: -50px;
 }
 .certicon{
-    font-size:50px;
-    margin-left: 18px;
-    margin-top: 20px;
-    display: list-item;
+    font-size:20px;
+    margin-left: -23px;
+    margin-top: 26px;
     color: #004A80;
-    list-style-type: disc;
 }
 .certtext{
     color: #566075;

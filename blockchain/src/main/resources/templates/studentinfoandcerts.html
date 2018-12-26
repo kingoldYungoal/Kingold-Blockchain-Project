@@ -60,7 +60,7 @@
                     <div class="" th:class="${index.first}? 'timelinefirst row' : (${index.last}? 'timelinelast row' : 'timeline row' )">
                     <div  class="col-12 innerdiv" th:if="${cert.DisplayCertInfo}">
                         <div class="row timelinelastline float-left" th:if="${index.last}"></div>
-                        <div class="float-left certicon"></div>
+                        <div class="float-left certicon">&#9673</div>
                         <div class="col-2 float-left certdate" th:text="${cert.DisplayCertInfo.CertIssueDate}"></div>
                         <div class="col-3 float-left">
                             <div class="row">
@@ -89,7 +89,7 @@
                     </div>
                     <div  class="col-12 innerdiv" th:if="${cert.DisplayEventInfo}">
                         <div class="row timelinelastline float-left" th:if="${index.last}"></div>
-                        <div class="float-left certicon"></div>
+                        <div class="float-left certicon">&#9673</div>
                         <div class="col-2 float-left certdate" th:text="${cert.DisplayEventInfo.EventDate}"></div>
                         <div class="col-3 float-left">
                             <div class="row">
