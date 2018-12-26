@@ -42,4 +42,9 @@ public interface StudentProfileService {
      * 學生信息刪除
      */
     boolean DeleteStudentProfile(String id);
+
+    /**
+     * 學生信息从表中刪除
+     */
+    boolean RelDeleteStudentProfile(String id);
 }

@@ -128,6 +128,23 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         return flag;
     }
 
+    /**
+     * 學生信息从表中刪除
+     */
+    @Override
+    public boolean RelDeleteStudentProfile(String id)
+    {
+        boolean flag = false;
+        try{
+            mStudentProfileMapper.RelDeleteStudentProfile(id);
+            flag = true;
+        }catch(Exception e){
+            System.out.println("學生信息刪除失败!");
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
     public List<StudentInfo> GetStudentInfoList(List<StudentProfile> list) {
         List<StudentInfo> infoList = new ArrayList<>();
         if(list.size() > 0){

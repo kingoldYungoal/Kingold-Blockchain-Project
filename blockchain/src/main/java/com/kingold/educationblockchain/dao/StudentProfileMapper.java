@@ -102,4 +102,10 @@ public interface StudentProfileMapper {
      */
     @Update("update KG_STUDENTPROFILE set kg_state=1 where kg_studentprofileid=#{id}")
     void DeleteStudentProfile(String id);
+
+    /**
+     * 刪除學生信息
+     */
+    @Delete("delete from KG_STUDENTPROFILE where kg_studentprofileid=#{id}")
+    void RelDeleteStudentProfile(String id);
 }
