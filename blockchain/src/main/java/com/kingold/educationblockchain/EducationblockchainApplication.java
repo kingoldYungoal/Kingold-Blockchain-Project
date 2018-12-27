@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -13,11 +15,17 @@ import java.util.Properties;
 @SpringBootApplication(scanBasePackages = {"com.kingold.educationblockchain.controller","com.kingold.educationblockchain.service.impl"})
 @MapperScan(basePackages = {"com.kingold.educationblockchain.dao"}) //要扫描的dao包
 @EnableSwagger2
-public class EducationblockchainApplication {
+public class EducationblockchainApplication  {
 
     public static void main(String[] args) {
         SpringApplication.run(EducationblockchainApplication.class, args);
     }
+
+//    @Override//为了打包springboot项目
+//    protected SpringApplicationBuilder configure(
+//            SpringApplicationBuilder builder) {
+//        return builder.sources(this.getClass());
+//    }
 
     //配置mybatis的分页插件pageHelper
     @Bean

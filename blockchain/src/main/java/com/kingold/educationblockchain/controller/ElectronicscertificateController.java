@@ -16,6 +16,7 @@ import com.kingold.educationblockchain.util.RetResult;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,19 +109,19 @@ public class ElectronicscertificateController {
                         CertInfo certInfo = new CertInfo();
                         certInfo.setCertId(cert.getKg_electronicscertificateid());
                         certInfo.setStudentId(cert.getKg_studentprofileid());
-                        certInfo.setCertNo(Base64.encryptBASE64(cert.getKg_certificateno().getBytes()));
-                        certInfo.setCertType(Base64.encryptBASE64(cert.getKg_certitype().getBytes()));
-                        certInfo.setCertHolder(Base64.encryptBASE64(cert.getKg_studentname().getBytes()));
-                        certInfo.setCertName(Base64.encryptBASE64(cert.getKg_name().getBytes()));
-                        //certInfo.setCertContent(Base64.encryptBASE64(cert.getKg_explain().getBytes()));
+                        certInfo.setCertNo(cert.getKg_certificateno());
+                        certInfo.setCertType(cert.getKg_certitype());
+                        certInfo.setCertHolder(cert.getKg_studentname());
+                        certInfo.setCertName(cert.getKg_name());
+                        //certInfo.setCertContent(cert.getKg_explain());
                         certInfo.setCertPdfPath(fileId);
                         //certInfo.setCertHash();
-                        certInfo.setCertIssuer(Base64.encryptBASE64(cert.getKg_schoolname().getBytes()));
+                        certInfo.setCertIssuer(cert.getKg_schoolname());
                         certInfo.setCertIssueDate(cert.getKg_certificatedate());
                         mDateHandler = new DateHandler();
                         certInfo.setCertOperationTime(mDateHandler.GetCurrentTime());
                         certInfo.setCertStatus("0");
-                        certInfo.setRemark(Base64.encryptBASE64(cert.getKg_certitype().getBytes()));
+                        certInfo.setRemark(cert.getKg_certitype());
                         InsertCertinfo(certInfo,mChannel);
                     }
                 }

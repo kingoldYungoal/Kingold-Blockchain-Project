@@ -45,7 +45,6 @@ public class CommonController {
     @Value("${chainCode.channel}")
     private String channel;
     private DateHandler dateHandler;
-    private EncrypDES des;
     private BlockChainPayload payload = new BlockChainPayload();
     private Gson gson;
 
@@ -316,12 +315,6 @@ public class CommonController {
                 String str =  it.next().getAsJsonObject().get("valueJson").getAsString();
                 gson.fromJson(str, CertInfo.class);
                 CertInfo obj= gson.fromJson(str, CertInfo.class);
-                obj.setCertNo(new String(Base64.decryptBASE64(obj.getCertNo())));
-                obj.setCertType(new String(Base64.decryptBASE64(obj.getCertType())));
-                obj.setCertHolder(new String(Base64.decryptBASE64(obj.getCertHolder())));
-                //obj.setCertContent(new String(Base64.decryptBASE64(obj.getCertContent())));
-                obj.setCertIssuer(new String(Base64.decryptBASE64(obj.getCertIssuer())));
-                obj.setRemark(new String(Base64.decryptBASE64(obj.getRemark())));
                 certInfoList.add(obj);
             }
             return certInfoList;
