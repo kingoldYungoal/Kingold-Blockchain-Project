@@ -68,7 +68,6 @@ public class SmsCodeController {
             ResponseEntity<String> respose = restTemplate.postForEntity(requestUrl, requests,String.class);
             return respose.getBody();
         }catch(HttpClientErrorException ex){
-            String s = ex.getResponseBodyAsString();
             return "error";
         }catch (Exception e){
             return "error";

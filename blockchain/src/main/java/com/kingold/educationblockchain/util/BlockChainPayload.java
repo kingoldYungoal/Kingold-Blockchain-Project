@@ -26,14 +26,13 @@ public class BlockChainPayload {
                 ChainCodeConfig.getProperty("chainCode.chainCodeVer"));
         headers.add("Content-Type", "application/json");
         headers.add("Connection", "keep-alive");
-        headers.add("Accept-Charset", "utf-8");
         headers.add("Authorization", ChainCodeConfig.getProperty("chainCode.authorizationKey"));
 
         HttpEntity<String> request1 = null;
         try{
             request1 = new HttpEntity<>(new String(requestStr.getBytes("UTF-8"),"ISO-8859-1"), headers);
-        }catch (Exception e) {
-            throw new Error(e.getMessage());
+        }catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
         String errMsg;
@@ -42,7 +41,7 @@ public class BlockChainPayload {
             JsonParser parse= new JsonParser();
             JsonObject jsonObject;
             try{
-                 jsonObject= (JsonObject) parse.parse(new String(response.getBody().getBytes("iso-8859-1"),"iso-8859-1"));
+                 jsonObject= (JsonObject) parse.parse(new String(response.getBody().getBytes("iso-8859-1"),"utf-8"));
             }catch(UnsupportedEncodingException e){
                 throw new Error(e.getMessage());
             }

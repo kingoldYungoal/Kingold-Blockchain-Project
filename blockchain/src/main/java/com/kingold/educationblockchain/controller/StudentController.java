@@ -48,22 +48,11 @@ public class StudentController {
             CommonController commonController =new CommonController();
             List<DisplayInfo> displayInfos = new ArrayList<>();
             List<CertInfo> certJson =  commonController.QueryCertByCRMId(id,channel);
-            List<EventInfo> eventJson =  commonController.QueryEventByCRMId(id,channel);
             for (CertInfo cert:certJson){
                 DisplayInfo x=new DisplayInfo();
                 x.setDisplayCertInfo(cert);
                 try {
                     x.setInfoDate(new SimpleDateFormat("yyyy-mm-dd").parse(cert.getCertIssueDate()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                displayInfos.add(x);
-            }
-            for (EventInfo event:eventJson) {
-                DisplayInfo x=new DisplayInfo();
-                x.setDisplayEventInfo(event);
-                try {
-                    x.setInfoDate(new SimpleDateFormat("yyyy-mm-dd").parse(event.getEventDate()));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

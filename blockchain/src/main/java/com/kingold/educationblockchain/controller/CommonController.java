@@ -9,23 +9,11 @@ import com.kingold.educationblockchain.bean.EventInfo;
 import com.kingold.educationblockchain.util.Base64;
 import com.kingold.educationblockchain.util.BlockChainPayload;
 import com.kingold.educationblockchain.util.DateHandler;
-import com.kingold.educationblockchain.util.EncrypDES;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -94,20 +82,14 @@ public class CommonController {
                             //将学生信息上链
                             StudentJson studentJson = new StudentJson();
                             //敏感信息加密
-//                            des = new EncrypDES();
-//                            byte[] educationNo = des.Encrytor(studentProfile.getKg_educationnumber());
-//                            byte[] cardNo = des.Encrytor(studentProfile.getKg_passportnumberoridnumber());
                             studentJson.setStudentId(studentProfile.getKg_studentprofileid());
                             studentJson.setCrmId(studentProfile.getKg_studentprofileid());
-//                            studentJson.setStudentEducationNo(new String(educationNo));
-//                            studentJson.setStudentIdCardNo(new String(cardNo));
-                            studentJson.setStudentEducationNo(studentProfile.getKg_educationnumber());
-                            studentJson.setStudentIdCardNo(studentProfile.getKg_passportnumberoridnumber());
+                            studentJson.setStudentEducationNo(Base64.encryptBASE64(studentProfile.getKg_educationnumber().getBytes()).replace("\r\n",""));
+                            studentJson.setStudentIdCardNo(Base64.encryptBASE64(studentProfile.getKg_passportnumberoridnumber().getBytes()).replace("\r\n",""));
                             studentJson.setStudentNameString(studentProfile.getKg_fullname());
                             dateHandler = new DateHandler();
                             studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
                             //studentJson.setRemark();
-                            System.out.print("channel=" + channel);
                             InitStudent(studentJson, channel);
 
                             flag = true;
@@ -116,6 +98,7 @@ public class CommonController {
                         //删除表中新增的数据
                         mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
                     }catch (Exception ex){
+                        mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
                         //throw ex;
                     }
                 }
@@ -277,7 +260,7 @@ public class CommonController {
         return flag;
     }
 
-    //blockchain api
+    //--------------------blockchain api----------------------------------
 
     /*
     学生信息上链
@@ -389,6 +372,7 @@ public class CommonController {
                 event.getEventOperationTime(),
                 event.getRemark());
     }
+
     private String getInsertStudentJson(StudentJson student)
     {
         return  String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
