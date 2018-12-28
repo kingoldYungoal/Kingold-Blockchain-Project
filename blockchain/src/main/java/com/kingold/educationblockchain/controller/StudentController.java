@@ -49,7 +49,7 @@ public class StudentController {
             CommonController commonController =new CommonController();
             List<DisplayInfo> displayInfos=new ArrayList<DisplayInfo>();
             List<CertInfo> certJson=  commonController.QueryCertByCRMId(String.valueOf(id),channel);
-            List<EventInfo> eventJson=  commonController.QueryEventByCRMId(String.valueOf(id),channel);
+            //List<EventInfo> eventJson=  commonController.QueryEventByCRMId(String.valueOf(id),channel);
             for (CertInfo cert:certJson
                  ) {
                 DisplayInfo x=new DisplayInfo();
@@ -61,7 +61,7 @@ public class StudentController {
                 }
                 displayInfos.add(x);
             }
-            for (EventInfo event:eventJson
+            /*for (EventInfo event:eventJson
             ) {
                 DisplayInfo x=new DisplayInfo();
                 x.setDisplayEventInfo(event);
@@ -71,7 +71,7 @@ public class StudentController {
                     e.printStackTrace();
                 }
                 displayInfos.add(x);
-            }
+            }*/
             Collections.sort(displayInfos);
             map.addAttribute("json", displayInfos);
             //System.out.print(URLEncoder.encode(json.get(8).getCertNo().getBytes("UTF-8").toString(), "UTF-8"));

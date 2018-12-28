@@ -140,8 +140,48 @@ public class CertInfo {
         Remark = remark;
     }
 
+    public String getStuSchool() {
+        return StuSchool;
+    }
+
+    public void setStuSchool(String stuSchool) {
+        StuSchool = stuSchool;
+    }
+
+    public String getStuClass() {
+        return StuClass;
+    }
+
+    public void setStuClass(String stuClass) {
+        StuSchool = stuClass;
+    }
+
+    public String getStuTeacher() {
+        return StuTeacher;
+    }
+
+    public void setStuTeacher(String stuTeacher) {
+        StuSchool = stuTeacher;
+    }
+
+    public String getStuStudyGrade() {
+        return StuStudyGrade;
+    }
+
+    public void setStuStudyGrade(String stuStudyGrade) {
+        StuStudyGrade = stuStudyGrade;
+    }
+
     @SerializedName("cert_status")
     public String CertStatus;
     @SerializedName("remark")
     public String Remark;
+    @SerializedName("stuSchool")
+    public String StuSchool;
+    @SerializedName("stuClass")
+    public String StuClass;
+    @SerializedName("stuTeacher")
+    public String StuTeacher;
+    @SerializedName("stuStudyGrade")
+    public String StuStudyGrade;
 }

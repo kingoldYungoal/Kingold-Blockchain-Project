@@ -60,20 +60,29 @@
                         <div class="row timelinelastline float-left" th:if="${index.last}"></div>
                         <div class="float-left certicon">&#9673</div>
                         <div class="col-2 float-left certdate" th:text="${cert.DisplayCertInfo.CertIssueDate}"></div>
-                        <div class="col-3 float-left">
+                        <div class="col-2 float-left info-block">
                             <div class="row">
-                                <div class="col-12"><div class="col-4 float-left">证书名称</div><div class="col-8 certtext" th:text="${cert.DisplayCertInfo.CertName}"></div></div>
-                                <div class="col-12"><div class="col-4 float-left">办发机构</div><div class="col-8 certtext" th:text="${cert.DisplayCertInfo.CertIssuer}"></div></div>
+                                <div class="col-12 info-block"><div class="col-5 float-left">入读学校</div><div class="col-7 certtext" th:text="${cert.DisplayCertInfo.StuSchool}"></div></div>
+                                <div class="col-12 info-block"><div class="col-5 float-left">入读班级</div><div class="col-7 certtext" th:text="${cert.DisplayCertInfo.StuClass}"></div></div>
                             </div>
                         </div>
-                        <div class="col-3 float-left">
+                        <div class="col-2 float-left info-block">
                             <div class="row">
-                                <div class="col-12"><div class="col-4 float-left">证件类别</div><div class="col-8 certtext" th:text="${cert.DisplayCertInfo.CertType}"></div></div>
-                                <div class="col-12"><div class="col-4 float-left">颁证日期</div><div class="col-8 certtext" th:text="${cert.DisplayCertInfo.CertIssueDate}"></div></div>
+                                <div class="col-12 info-block"><div class="col-5 float-left">学级</div><div class="col-7 certtext" th:text="${cert.DisplayCertInfo.StuStudyGrade}"></div></div>
+                                <div class="col-12 info-block"><div class="col-5 float-left">班主任</div><div class="col-7 certtext" th:text="${cert.DisplayCertInfo.StuTeacher}"></div></div>
                             </div>
                         </div>
-                        <div class="col-2 float-left">
-                            <div class="row"><div class="col-12"><div class="col-4 float-left">标签</div><div class="col-8 certtext" th:text="${cert.DisplayCertInfo.Remark}"></div></div></div>
+                        <div class="col-2 float-left info-block">
+                            <div class="row">
+                                <div class="col-12 info-block"><div class="col-5 float-left">状态</div><div class="col-7 certtext" th:text="${cert.DisplayCertInfo.CertStatus=='1'}?'有效':'未生效'"></div></div>
+                                <div class="col-12 info-block"><div class="col-5 float-left">证书名称</div><div class="col-7 certtext" th:text="${cert.DisplayCertInfo.CertName}"></div></div>
+                            </div>
+                        </div>
+                        <div class="col-2 float-left info-block">
+                            <div class="row">
+                                <div class="col-12 info-block"><div class="col-5 float-left">证件类别</div><div class="col-7 certtext" th:text="${cert.DisplayCertInfo.CertType}"></div></div>
+                                <div class="col-12 info-block"><div class="col-5 float-left">标签</div><div class="col-7 certtext" th:text="${cert.DisplayCertInfo.Remark}"></div></div>
+                            </div>
                         </div>
                         <div class="col-1 float-left"><div class="row"><div class="row" th:attr="data-certId=${cert.DisplayCertInfo.CertPdfPath}" onclick="GoCertDetail(this)">
                             <a  class="row text-center" href="#">
@@ -85,7 +94,7 @@
                             </div></div>
                         </div>
                     </div>
-                    <div  class="col-12 innerdiv" th:if="${cert.DisplayEventInfo}">
+                    <!--<div  class="col-12 innerdiv" th:if="${cert.DisplayEventInfo}">
                         <div class="row timelinelastline float-left" th:if="${index.last}"></div>
                         <div class="float-left certicon">&#9673</div>
                         <div class="col-2 float-left certdate" th:text="${cert.DisplayEventInfo.EventDate}"></div>
@@ -103,7 +112,7 @@
                         <div class="col-2 float-left">
                             <div class="row"><div class="col-12"><div class="col-4 float-left">标签</div><div class="col-8 certtext" th:text="${cert.DisplayEventInfo.Remark}"></div></div></div>
                         </div>
-                        </div>
+                        </div>-->
                         </div>
                     </div>
                 </div>

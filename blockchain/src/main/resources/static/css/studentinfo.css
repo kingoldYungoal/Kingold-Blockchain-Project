@@ -154,3 +154,7 @@
     line-height: 22px;
     max-width: 90px;
 }
+.info-block{
+    padding-left:0px;
+    padding-right:0px;
+}

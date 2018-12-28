@@ -316,12 +316,25 @@ public class CommonController {
                 String str =  it.next().getAsJsonObject().get("valueJson").getAsString();
                 gson.fromJson(str, CertInfo.class);
                 CertInfo obj= gson.fromJson(str, CertInfo.class);
+                if(obj.getCertNo()!=null)
                 obj.setCertNo(new String(Base64.decryptBASE64(obj.getCertNo())));
+                if(obj.getCertType()!=null)
                 obj.setCertType(new String(Base64.decryptBASE64(obj.getCertType())));
+                if(obj.getCertHolder()!=null)
                 obj.setCertHolder(new String(Base64.decryptBASE64(obj.getCertHolder())));
                 //obj.setCertContent(new String(Base64.decryptBASE64(obj.getCertContent())));
+                if(obj.getCertIssuer()!=null)
                 obj.setCertIssuer(new String(Base64.decryptBASE64(obj.getCertIssuer())));
+                if(obj.getRemark()!=null)
                 obj.setRemark(new String(Base64.decryptBASE64(obj.getRemark())));
+                if(obj.getStuClass()!=null)
+                obj.setStuClass(new String(Base64.decryptBASE64(obj.getStuClass())));
+                if(obj.getStuTeacher()!=null)
+                obj.setStuTeacher(new String(Base64.decryptBASE64(obj.getStuTeacher())));
+                if(obj.getStuStudyGrade()!=null)
+                obj.setStuStudyGrade(new String(Base64.decryptBASE64(obj.getStuStudyGrade())));
+                if(obj.getStuSchool()!=null)
+                obj.setStuSchool(new String(Base64.decryptBASE64(obj.getStuSchool())));
                 certInfoList.add(obj);
             }
             return certInfoList;
