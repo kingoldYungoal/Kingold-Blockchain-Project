@@ -176,12 +176,12 @@ public class CertInfo {
     public String CertStatus;
     @SerializedName("remark")
     public String Remark;
-    @SerializedName("stuSchool")
+    @SerializedName("stu_school")
     public String StuSchool;
-    @SerializedName("stuClass")
+    @SerializedName("stu_class")
     public String StuClass;
-    @SerializedName("stuTeacher")
+    @SerializedName("stu_teacher")
     public String StuTeacher;
-    @SerializedName("stuStudyGrade")
+    @SerializedName("stu_studygrade")
     public String StuStudyGrade;
 }
