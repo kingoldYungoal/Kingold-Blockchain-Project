@@ -52,7 +52,7 @@ public class StudentController {
                 DisplayInfo x=new DisplayInfo();
                 x.setDisplayCertInfo(cert);
                 try {
-                    x.setInfoDate(new SimpleDateFormat("yyyy-mm-dd").parse(cert.getCertIssueDate()));
+                    x.setInfoDate(new SimpleDateFormat("yyyy-MM-dd").parse(cert.getCertIssueDate()));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
