@@ -5,11 +5,14 @@ import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import com.kingold.educationblockchain.util.Base64;
+import com.kingold.educationblockchain.util.EncrypDES;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.crypto.NoSuchPaddingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Controller
@@ -27,6 +30,8 @@ public class LoginController {
     private StudentTeacherService mStudentTeacherService;
 
     private Gson gson;
+
+    private EncrypDES des;
 
     @RequestMapping("/login")
     public String UserLogin(){

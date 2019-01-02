@@ -29,9 +29,9 @@ public class BlockChainPayload {
         headers.add("Authorization", ChainCodeConfig.getProperty("chainCode.authorizationKey"));
 
         HttpEntity<String> request1 = null;
-        try {
-            request1 = new HttpEntity<>(new String(requestStr.getBytes("utf-8"),"iso-8859-1"), headers);
-        } catch (UnsupportedEncodingException e) {
+        try{
+            request1 = new HttpEntity<>(new String(requestStr.getBytes("UTF-8"),"ISO-8859-1"), headers);
+        }catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         ResponseEntity<String> response = restTemplate.postForEntity(ChainCodeConfig.getProperty("chainCode.hostUrl"), request1, String.class);
@@ -39,12 +39,13 @@ public class BlockChainPayload {
         if(response.getStatusCode()== HttpStatus.OK)
         {
             JsonParser parse= new JsonParser();
-            JsonObject jsonObject= null;
-            try {
-                jsonObject = (JsonObject) parse.parse(new String(response.getBody().getBytes("iso-8859-1"),"utf-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+            JsonObject jsonObject;
+            try{
+                 jsonObject= (JsonObject) parse.parse(new String(response.getBody().getBytes("iso-8859-1"),"utf-8"));
+            }catch(UnsupportedEncodingException e){
+                throw new Error(e.getMessage());
             }
+
             if(jsonObject.has("returnCode")&&jsonObject.get("returnCode").getAsString().compareTo("Success")==0)
             {
                 if(jsonObject.has("result")) {

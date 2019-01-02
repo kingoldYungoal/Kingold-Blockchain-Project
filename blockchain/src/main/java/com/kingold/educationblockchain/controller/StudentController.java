@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,11 +46,9 @@ public class StudentController {
             model.addObject("studentprofile",studentProfile);
 
             CommonController commonController =new CommonController();
-            List<DisplayInfo> displayInfos=new ArrayList<DisplayInfo>();
-            List<CertInfo> certJson=  commonController.QueryCertByCRMId(String.valueOf(id),channel);
-            //List<EventInfo> eventJson=  commonController.QueryEventByCRMId(String.valueOf(id),channel);
-            for (CertInfo cert:certJson
-                 ) {
+            List<DisplayInfo> displayInfos = new ArrayList<>();
+            List<CertInfo> certJson =  commonController.QueryCertByCRMId(id,channel);
+            for (CertInfo cert:certJson){
                 DisplayInfo x=new DisplayInfo();
                 x.setDisplayCertInfo(cert);
                 try {
@@ -61,20 +58,8 @@ public class StudentController {
                 }
                 displayInfos.add(x);
             }
-            /*for (EventInfo event:eventJson
-            ) {
-                DisplayInfo x=new DisplayInfo();
-                x.setDisplayEventInfo(event);
-                try {
-                    x.setInfoDate(new SimpleDateFormat("yyyy-mm-dd").parse(event.getEventDate()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                displayInfos.add(x);
-            }*/
             Collections.sort(displayInfos);
             map.addAttribute("json", displayInfos);
-            //System.out.print(URLEncoder.encode(json.get(8).getCertNo().getBytes("UTF-8").toString(), "UTF-8"));
             model.setViewName("studentinfoandcerts");
         }
         catch (HttpClientErrorException ex)
