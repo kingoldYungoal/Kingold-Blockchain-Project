@@ -21,8 +21,6 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentController {
 
-    private static final String authCode = "Basic aGVsaXgubGl1QG9yYWNsZS5jb206QWJjZDEyMzQ=";
-
     @Autowired
     private StudentProfileService mStudentProfileService;
     @Autowired
@@ -38,6 +36,7 @@ public class StudentController {
     private String channel;
 
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
+    @ResponseBody
     public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)String id, ModelMap map) {
         ModelAndView model = new ModelAndView();
         try {

@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
-import com.kingold.educationblockchain.util.Base64;
-import com.kingold.educationblockchain.util.EncrypDES;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -13,8 +11,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.crypto.NoSuchPaddingException;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -40,10 +36,11 @@ public class LoginController {
 
     @RequestMapping("/login")
     public String UserLogin(){
-        return "/login";
+        return "login";
     }
 
     @RequestMapping(value = "/loginVerify",method = RequestMethod.POST)
+    @ResponseBody
     public ModelAndView UserLoginVerify(String phonenumber, int role, ModelMap map){
         //role 為1，代表家長，為2，代表教師
         ModelAndView model = new ModelAndView();

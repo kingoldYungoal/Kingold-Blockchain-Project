@@ -37,6 +37,7 @@ public class ShowElectronicscertificateController {
     * 学生证书页面
     * */
     @RequestMapping(value = "/studentcertificate", method = RequestMethod.GET)
+    @ResponseBody
     public ModelAndView StudentCertificate(@RequestParam(value = "fileId", required = true)String fileId) {
         //获取证书Id逻辑
         ModelAndView model = new ModelAndView();

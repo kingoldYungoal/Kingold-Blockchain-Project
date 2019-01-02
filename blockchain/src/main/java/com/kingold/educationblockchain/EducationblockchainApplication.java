@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.WebApplicationInitializer;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Properties;
@@ -15,7 +16,7 @@ import java.util.Properties;
 @SpringBootApplication(scanBasePackages = {"com.kingold.educationblockchain.controller","com.kingold.educationblockchain.service.impl"})
 @MapperScan(basePackages = {"com.kingold.educationblockchain.dao"}) //要扫描的dao包
 @EnableSwagger2
-public class EducationblockchainApplication extends SpringBootServletInitializer {
+public class EducationblockchainApplication extends SpringBootServletInitializer implements WebApplicationInitializer {
 
     @Override//为了打包springboot项目
     protected SpringApplicationBuilder configure(

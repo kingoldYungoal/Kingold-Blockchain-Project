@@ -4,28 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>侨鑫教育平台</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">
-    <link rel="stylesheet" th:href="@{/css/childrenlist.css}" href="../static/css/childrenlist.css">
-    <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
+    <!--<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">-->
+    <!--<link rel="stylesheet" th:href="@{/css/childrenlist.css}" href="../static/css/childrenlist.css">-->
+    <!--<script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>-->
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}" href="css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{css/main.css}" href="css/main.css">
+    <link rel="stylesheet" th:href="@{css/childrenlist.css}" href="css/childrenlist.css">
+    <script type="text/javascript" th:src="@{javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
 </head>
 <body style="background-color: #f8f6fa;">
 <div class="pagewrap">
     <div id="header">
         <div id="imgbox">
-            <img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">
+            <!--<img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">-->
+            <img id="headimg" th:src="@{images/logo2.png}" src="images/logo2.png">
         </div>
         <input type="button" id="headbtn" value="返回" onclick="javascript:history.go(-1);" />
     </div>
     <div id="maindiv">
         <div id="infodiv">
             <div id="stuimgbox">
-                <img id="stuimg" th:src="@{/images/parentimg.png}" src="../static/images/parentimg.png">
+                <!--<img id="stuimg" th:src="@{/images/parentimg.png}" src="../static/images/parentimg.png">-->
+                <img id="stuimg" th:src="@{images/parentimg.png}" src="images/parentimg.png">
             </div>
             <div id="parentinfodiv">
                 <span id="namespan" th:text="${parentInformation.getKg_name()}"></span>
                 <div id="phonediv">
-                    <img id="phoneimg" th:src="@{/images/phoneicon.png}" src="../static/images/phoneicon.png">
+                    <!--<img id="phoneimg" th:src="@{/images/phoneicon.png}" src="../static/images/phoneicon.png">-->
+                    <img id="phoneimg" th:src="@{images/phoneicon.png}" src="images/phoneicon.png">
                     <span id="phonespan" th:text="${parentInformation.getKg_phonenumber()}"></span>
                 </div>
             </div>
@@ -63,7 +70,7 @@
 <script>
     function GoStudentInfo(obj) {
         var id = $(obj).attr("data-id");
-        window.location.href = "/student/studentinfo?id=" + id;
+        window.location.href = "../student/studentinfo?id=" + id;
     }
 </script>
 </html>
