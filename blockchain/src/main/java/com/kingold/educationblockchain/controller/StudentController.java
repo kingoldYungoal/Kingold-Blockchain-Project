@@ -51,7 +51,7 @@ public class StudentController {
                 DisplayInfo x=new DisplayInfo();
                 x.setDisplayCertInfo(cert);
                 try {
-                    x.setInfoDate(new SimpleDateFormat("yyyy-mm-dd").parse(cert.getCertIssueDate()));
+                    x.setInfoDate(new SimpleDateFormat("yyyy-MM-dd").parse(cert.getCertIssueDate()));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -59,13 +59,12 @@ public class StudentController {
             }
             Collections.sort(displayInfos);
             map.addAttribute("json", displayInfos);
-            model.setViewName("studentinfoandcerts");
         }
         catch (HttpClientErrorException ex)
         {
             String s = ex.getResponseBodyAsString();
         }
-
+        model.setViewName("studentinfoandcerts");
         return model;
     }
 

@@ -143,8 +143,8 @@ public class ElectronicscertificateController {
      * 生成证书
      * */
     private void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields ) throws Exception{
-//        Resource resource = new ClassPathResource("static/certificate-template.pdf");
         Resource resource = new ClassPathResource("certificate-template.pdf");
+        //Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(file.getPath()), new PdfWriter(certificateFilePath));
 

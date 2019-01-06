@@ -41,7 +41,7 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>ch.qos.logback</groupId>
+                    <groupId>ba.jamax.util </groupId>
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
                 <exclusion>
@@ -54,6 +54,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>1.9.22</version>
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>

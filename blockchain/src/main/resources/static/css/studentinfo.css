@@ -105,7 +105,7 @@
     line-height: 37px;
     color: #A1A6BB;
     background-color:#F7F9FD;
-    padding: 5px 5px 5px 5px;
+    padding: 5px 5px 5px 50px;
     margin-top:10px;
     margin-bottom: 10px;
 }
@@ -135,15 +135,17 @@
     margin-top: -50px;
 }
 .certicon{
-    font-size:50px;
-    margin-left: 18px;
-    margin-top: 20px;
-    display: list-item;
+    font-size:20px;
+    margin-left: -23px;
+    margin-top: 26px;
     color: #004A80;
-    list-style-type: disc;
 }
 .certtext{
     color: #566075;
+    padding:0px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .certdate
 {
@@ -157,6 +159,12 @@
     max-width: 90px;
 }
 
-.col-8{
-    white-space: nowrap;
+.info-block{
+    padding-left:0px;
+    padding-right:0px;
+    margin-left:10px;
+    margin-right:10px;
+}
+.cert-detail{
+    margin-left:20px;
 }

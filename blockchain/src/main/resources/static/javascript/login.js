@@ -40,7 +40,7 @@ $(function () {
         //获取手机号码是否在表中存在
         $.ajax({
             type:"post",
-            url:"/login/IsExistPhone",
+            url:"../login/IsExistPhone",
             data: JSON.stringify(datas),
             contentType : 'application/json',
             dataType : 'json',
@@ -50,7 +50,7 @@ $(function () {
                     //获取验证码
                     $.ajax({
                         type:"post",
-                        url:"/smscode/sendsmscode",
+                        url:"../smscode/sendsmscode",
                         data: JSON.stringify(datas),
                         contentType : 'application/json',
                         dataType : 'json',
@@ -159,7 +159,7 @@ $(function () {
 
          // $.ajax({
          //     type:"post",
-         //     url:"/login/IsExistPhoneByRole",
+         //     url:"../login/IsExistPhoneByRole",
          //     data: JSON.stringify(datas),
          //     contentType : 'application/json',
          //     dataType : 'json',
@@ -170,7 +170,7 @@ $(function () {
          //             //获取验证码
          //             $.ajax({
          //                 type:"post",
-         //                 url:"/smscode/getsmscode",
+         //                 url:"../smscode/getsmscode",
          //                 data: JSON.stringify(datas),
          //                 contentType : 'application/json',
          //                 dataType : 'json',

@@ -108,6 +108,6 @@ function initTable(classname) {
 
 function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
-    // window.location.href = "/student/studentinfo?id=" + id;
     window.location.href = "../student/studentinfo?id=" + id;
+    //window.location.href = "/student/studentinfo?id=" + id;
 }

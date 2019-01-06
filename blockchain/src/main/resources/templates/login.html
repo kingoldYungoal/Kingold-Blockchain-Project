@@ -11,22 +11,22 @@
     <!--<script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>-->
     <!--<script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="../static/javascript/alert.min.js"></script>-->
     <!--<script type="text/javascript" th:src="@{/javascript/login.js}" src="../static/javascript/login.js"></script>-->
-    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}" href="css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{css/alert.css}" href="css/alert.css">
-    <link rel="stylesheet" th:href="@{css/main.css}" href="css/main.css">
-    <link rel="stylesheet" th:href="@{css/login.css}" href="css/login.css">
-    <script type="text/javascript" th:src="@{javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" th:src="@{javascript/alert.min.js}" src="javascript/alert.min.js"></script>
-    <script type="text/javascript" th:src="@{javascript/login.js}" src="javascript/login.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/alert.css}" href="css/alert.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="css/main.css">
+    <link rel="stylesheet" th:href="@{/css/login.css}" href="css/login.css">
+    <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="javascript/alert.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/login.js}" src="javascript/login.js"></script>
 </head>
 <body>
 <div class="pagewrap">
     <!--<div class="container-login" th:style="'background:url(' + @{/images/loginbg.jpg} + ');'" style="background: url('images/loginbg.jpg')" >-->
-    <div class="container-login" th:style="'background:url(' + @{images/loginbg.jpg} + ');'" style="background: url('images/loginbg.jpg')" >
+    <div class="container-login" th:style="'background:url(' + @{/images/loginbg.jpg} + ');'" style="background: url('images/loginbg.jpg')" >
         <div class="wrap-login">
             <div class="login-form-logo">
                 <!--<img th:src="@{/images/logo.png}">-->
-                <img th:src="@{images/logo.png}">
+                <img th:src="@{/images/logo.png}">
             </div>
             <span class="login-form-title">学生教育成长平台</span>
             <form id="loginform" class="login-form" name="loginform" accept-charset="utf-8" th:action="@{/login/loginVerify}" action="/login/loginVerify" method="post">
