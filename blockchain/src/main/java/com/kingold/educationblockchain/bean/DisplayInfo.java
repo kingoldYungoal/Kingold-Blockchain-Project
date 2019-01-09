@@ -8,7 +8,7 @@ public class DisplayInfo implements Comparable<DisplayInfo>{
     public EventInfo  DisplayEventInfo=null;
 
     public int compareTo(DisplayInfo arg0) {
-        return this.InfoDate.compareTo(arg0.InfoDate);
+        return -this.InfoDate.compareTo(arg0.InfoDate);
     }
 
     public Date getInfoDate() {

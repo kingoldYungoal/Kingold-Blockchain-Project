@@ -120,6 +120,10 @@ public class ElectronicscertificateController {
                         certInfo.setCertOperationTime(mDateHandler.GetCurrentTime());
                         certInfo.setCertStatus("0");
                         certInfo.setRemark(cert.getKg_certitype());
+                        certInfo.setStuSchool(cert.getKg_schoolname());
+                        certInfo.setStuClass(cert.getKg_classname());
+                        certInfo.setStuTeacher(cert.getKg_teachername());
+                        certInfo.setStuStudygrade(cert.getKg_studygrade());
                         InsertCertinfo(certInfo,mChannel);
                     }
                 }
@@ -139,7 +143,8 @@ public class ElectronicscertificateController {
      * 生成证书
      * */
     private void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields ) throws Exception{
-        Resource resource = new ClassPathResource("static/certificate-template.pdf");
+        Resource resource = new ClassPathResource("certificate-template.pdf");
+        //Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(file.getPath()), new PdfWriter(certificateFilePath));
 
@@ -200,7 +205,7 @@ public class ElectronicscertificateController {
 
     private String getInsertCertJson(CertInfo cert)
     {
-        return  String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
+        return  String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
                 cert.getCertId() ,
                 cert.getStudentId(),
                 cert.getCertNo(),
@@ -214,6 +219,10 @@ public class ElectronicscertificateController {
                 cert.getCertIssueDate(),
                 cert.getCertOperationTime(),
                 cert.getCertStatus(),
-                cert.getRemark());
+                cert.getRemark(),
+                cert.getStuSchool(),
+                cert.getStuClass(),
+                cert.getStuTeacher(),
+                cert.getStuStudyGrade());
     }
 }

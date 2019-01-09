@@ -4,34 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>侨鑫教育平台</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">
-    <link rel="stylesheet" th:href="@{/css/alert.css}" href="../static/css/alert.css">
-    <link rel="stylesheet" th:href="@{/css/studentslist.css}" href="../static/css/studentslist.css">
-    <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" th:src="@{/javascript/bootstrap.min.js}" src="../static/javascript/bootstrap.min.js"></script>
-    <script type="text/javascript" th:src="@{/javascript/bootstrap-paginator.js}" src="../static/javascript/bootstrap-paginator.js"></script>
-    <script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="../static/javascript/alert.min.js"></script>
-    <script type="text/javascript" th:src="@{/javascript/studentslist.js}" src="../static/javascript/studentslist.js"></script>
+    <!--<link rel="stylesheet" th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css">-->
+    <!--<link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">-->
+    <!--<link rel="stylesheet" th:href="@{/css/alert.css}" href="../static/css/alert.css">-->
+    <!--<link rel="stylesheet" th:href="@{/css/studentslist.css}" href="../static/css/studentslist.css">-->
+    <!--<script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>-->
+    <!--<script type="text/javascript" th:src="@{/javascript/bootstrap.min.js}" src="../static/javascript/bootstrap.min.js"></script>-->
+    <!--<script type="text/javascript" th:src="@{/javascript/bootstrap-paginator.js}" src="../static/javascript/bootstrap-paginator.js"></script>-->
+    <!--<script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="../static/javascript/alert.min.js"></script>-->
+    <!--<script type="text/javascript" th:src="@{/javascript/studentslist.js}" src="../static/javascript/studentslist.js"></script>-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" href="css/bootstrap.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="css/main.css">
+    <link rel="stylesheet" th:href="@{/css/alert.css}" href="css/alert.css">
+    <link rel="stylesheet" th:href="@{/css/studentslist.css}" href="css/studentslist.css">
+    <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/bootstrap.min.js}" src="javascript/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/bootstrap-paginator.js}" src="javascript/bootstrap-paginator.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="javascript/alert.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/studentslist.js}" src="javascript/studentslist.js"></script>
 </head>
 <body style="background-color: #f8f6fa;">
 <input type="hidden" id="phone" name="phone" th:value="${teacherInformation.getKg_phonenumber()}">
 <div class="pagewrap">
     <div id="header">
         <div id="imgbox">
-            <img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">
+            <!--<img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">-->
+            <img id="headimg" th:src="@{/images/logo2.png}" src="images/logo2.png">
         </div>
         <input type="button" id="headbtn" value="返回" onclick="javascript:history.go(-1);" />
     </div>
     <div id="maindiv">
         <div id="infodiv">
             <div id="stuimgbox">
-                <img id="stuimg" th:src="@{/images/teacherimg.png}" src="../static/images/teacherimg.png">
+                <!--<img id="stuimg" th:src="@{/images/teacherimg.png}" src="../static/images/teacherimg.png">-->
+                <img id="stuimg" th:src="@{/images/teacherimg.png}" src="images/teacherimg.png">
             </div>
             <div id="parentinfodiv">
                 <span id="namespan" th:text="${teacherInformation.getKg_name()}"></span>
                 <div id="phonediv">
-                    <img id="phoneimg" th:src="@{/images/phoneicon.png}" src="../static/images/phoneicon.png">
+                    <!--<img id="phoneimg" th:src="@{/images/phoneicon.png}" src="../static/images/phoneicon.png">-->
+                    <img id="phoneimg" th:src="@{/images/phoneicon.png}" src="images/phoneicon.png">
                     <span id="phonespan" th:text="${teacherInformation.getKg_phonenumber()}"></span>
                 </div>
             </div>
@@ -67,9 +79,6 @@
         </div>
     </div>
 </div>
-<div class="overlay"></div>
-<div id="AjaxLoading" class="showbox">
-<div class="loadingWord"><img th:src="@{/images/waiting.gif}" src="../static/images/waiting.gif">加载中，请稍候...</div>
 </div>
 </body>
 </html>

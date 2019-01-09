@@ -140,6 +140,17 @@ public class CertInfo {
         Remark = remark;
     }
 
+    @SerializedName("cert_status")
+    public String CertStatus;
+    @SerializedName("remark")
+    public String Remark;
+
+    @SerializedName("stu_school")
+    public String StuSchool;
+
+    @SerializedName("stu_class")
+    public String StuClass;
+
     public String getStuSchool() {
         return StuSchool;
     }
@@ -153,7 +164,7 @@ public class CertInfo {
     }
 
     public void setStuClass(String stuClass) {
-        StuSchool = stuClass;
+        StuClass = stuClass;
     }
 
     public String getStuTeacher() {
@@ -161,27 +172,20 @@ public class CertInfo {
     }
 
     public void setStuTeacher(String stuTeacher) {
-        StuSchool = stuTeacher;
+        StuTeacher = stuTeacher;
     }
 
     public String getStuStudyGrade() {
         return StuStudyGrade;
     }
 
-    public void setStuStudyGrade(String stuStudyGrade) {
+    public void setStuStudygrade(String stuStudyGrade) {
         StuStudyGrade = stuStudyGrade;
     }
 
-    @SerializedName("cert_status")
-    public String CertStatus;
-    @SerializedName("remark")
-    public String Remark;
-    @SerializedName("stu_school")
-    public String StuSchool;
-    @SerializedName("stu_class")
-    public String StuClass;
     @SerializedName("stu_teacher")
     public String StuTeacher;
+
     @SerializedName("stu_studygrade")
     public String StuStudyGrade;
 }
