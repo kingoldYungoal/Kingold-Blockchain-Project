@@ -61,7 +61,7 @@ public class ShowElectronicscertificateController {
     public void ShowCertificate(@RequestParam(value = "fileid", required = true)String fileid,HttpServletResponse response) throws Exception{
         response.setContentType("application/jpg");
         response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "filename=certificate.jpg");
+        //response.setHeader("Content-Disposition", "filename=certificate.jpg");
         OutputStream outputStream = response.getOutputStream();
         //DownloadFileFromCECS(fileid, outputStream);
         GetJPGStreamFromCECS(fileid, outputStream);
@@ -134,23 +134,20 @@ public class ShowElectronicscertificateController {
      * 从CECS中获取文件流
      * */
     private InputStream DownloadFileFromCECS(String fileId) throws Exception{
-        SSLContextBuilder builder = new SSLContextBuilder();
+        //SSLContextBuilder builder = new SSLContextBuilder();
         HttpResponse response;
 
         try{
-            builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-                    builder.build());
-            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(150000).setSocketTimeout(150000).build();
-            CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(
-                    sslsf).setDefaultRequestConfig(requestConfig).build();
-
-            //CloseableHttpClient client = HttpClientBuilder.create().build();
+            //builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+            //SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+            //        builder.build());
+            //RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(150000).setSocketTimeout(150000).build();
             String url = mBaseUrl + fileId + "/data?version=1";
-            HttpGet get = new HttpGet(url);
-            get.addHeader("Authorization", mAuthorization);
-
-            response = client.execute(get);
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpGet httpget = new HttpGet(url);
+            httpget.addHeader("Authorization", mAuthorization);
+            httpget.addHeader("Connection", "keep-alive");
+            response = httpClient.execute(httpget);
 
             int statusCode = response.getStatusLine().getStatusCode();
             HttpEntity responseEntity = response.getEntity();

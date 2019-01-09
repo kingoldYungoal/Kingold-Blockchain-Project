@@ -4,6 +4,9 @@ $(function () {
     var re = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
     var $codebtn = $("#codebtn");
 
+    $("#authcode").val("");
+    $("input:radio[name='role']").eq(0).attr("checked", true);
+
     $("#codebtn").click(function () {
         var disabled = $("#codebtn").attr("disabled");
         if(disabled){
