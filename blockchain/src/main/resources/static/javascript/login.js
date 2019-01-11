@@ -5,7 +5,7 @@ $(function () {
     var $codebtn = $("#codebtn");
 
     $("#authcode").val("");
-    $("input:radio[name='role']").eq(0).attr("checked", true);
+    $("input:radio[name='role']").get(0).checked = true ;
 
     $("#codebtn").click(function () {
         var disabled = $("#codebtn").attr("disabled");
@@ -50,7 +50,8 @@ $(function () {
             async: false,
             success:function (data) {
                 if (data) {
-                    //获取验证码
+                    time();
+                    //发送验证码
                     $.ajax({
                         type:"post",
                         url:"../smscode/sendsmscode",
@@ -67,7 +68,6 @@ $(function () {
                                         'closeTime': 2000,
                                     })
                                     M.dialog13.show();
-                                    time();
                                 }
                                 if (data.result.result == 32){
                                     M.dialog13 = jqueryAlert({
