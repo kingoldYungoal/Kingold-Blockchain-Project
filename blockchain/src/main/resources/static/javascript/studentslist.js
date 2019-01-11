@@ -2,6 +2,7 @@ var pageNum = 1;
 var pageSize = 10;
 var classnames;
 var phone;
+var M = {};
 $(document).ready(function(){
     classnames = $("#selectDiv").val();
     phone = $("#phone").val();
@@ -19,7 +20,8 @@ function initTable(classname) {
         type: 'get',
         dataType : "json",
         async: false,
-        url: "/student/studentlist",//请求的action路径页面
+        //url: "/student/studentlist",//请求的action路径页面
+        url: "../student/studentlist",
         data:{"teacherphone":phone,"classname":classname, "pageNum":pageNum,"pageSize":pageSize},
         error: function () {//请求失败处理函数
             M.dialog13 = jqueryAlert({
@@ -71,7 +73,8 @@ function initTable(classname) {
                         // $(".showbox").animate({'margin-top':'300px','opacity':'1'});
                         var tbodys="";
                         $.ajax({
-                            url: "/student/studentlist",
+                            //url: "/student/studentlist",
+                            url: "../student/studentlist",
                             type: "get",
                             dataType : "json",
                             data:{"teacherphone":phone,"classname":classname, "pageNum":page,"pageSize":pageSize},
@@ -105,5 +108,6 @@ function initTable(classname) {
 
 function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
-    window.location.href = "/student/studentinfo?id=" + id;
+    window.location.href = "../student/studentinfo?id=" + id;
+    //window.location.href = "/student/studentinfo?id=" + id;
 }

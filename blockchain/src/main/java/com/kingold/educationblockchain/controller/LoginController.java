@@ -4,15 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
-import com.kingold.educationblockchain.util.Base64;
-import com.kingold.educationblockchain.util.EncrypDES;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.crypto.NoSuchPaddingException;
-import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -31,15 +31,17 @@ public class LoginController {
 
     private Gson gson;
 
-    private EncrypDES des;
+    @Value("${chainCode.channel}")
+    private String channel;
 
     @RequestMapping("/login")
     public String UserLogin(){
-        return "/login";
+        return "login";
     }
 
     @RequestMapping(value = "/loginVerify",method = RequestMethod.POST)
-    public ModelAndView UserLoginVerify(String phonenumber, int role){
+    @ResponseBody
+    public ModelAndView UserLoginVerify(String phonenumber, int role, ModelMap map){
         //role 為1，代表家長，為2，代表教師
         ModelAndView model = new ModelAndView();
         if (role == 1) {
@@ -59,7 +61,21 @@ public class LoginController {
                     }else{
                         StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentParents.get(0).getKg_studentprofileid());
                         model.addObject("studentprofile",studentprofile);
-                        model.addObject("backPage","login");
+                        CommonController commonController =new CommonController();
+                        List<DisplayInfo> displayInfos = new ArrayList<>();
+                        List<CertInfo> certJson =  commonController.QueryCertByCRMId(studentprofile.getKg_studentprofileid(),channel);
+                        for (CertInfo cert:certJson){
+                            DisplayInfo x=new DisplayInfo();
+                            x.setDisplayCertInfo(cert);
+                            try {
+                                x.setInfoDate(new SimpleDateFormat("yyyy-mm-dd").parse(cert.getCertIssueDate()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            displayInfos.add(x);
+                        }
+                        Collections.sort(displayInfos);
+                        map.addAttribute("json", displayInfos);
                         model.setViewName("studentinfoandcerts");
                         return model;
                     }
@@ -89,7 +105,21 @@ public class LoginController {
                     }else{
                         StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentTeachers.get(0).getKg_studentprofileid());
                         model.addObject("studentprofile",studentprofile);
-                        model.addObject("backPage","login");
+                        CommonController commonController =new CommonController();
+                        List<DisplayInfo> displayInfos = new ArrayList<>();
+                        List<CertInfo> certJson =  commonController.QueryCertByCRMId(studentprofile.getKg_studentprofileid(),channel);
+                        for (CertInfo cert:certJson){
+                            DisplayInfo x=new DisplayInfo();
+                            x.setDisplayCertInfo(cert);
+                            try {
+                                x.setInfoDate(new SimpleDateFormat("yyyy-mm-dd").parse(cert.getCertIssueDate()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            displayInfos.add(x);
+                        }
+                        Collections.sort(displayInfos);
+                        map.addAttribute("json", displayInfos);
                         model.setViewName("studentinfoandcerts");
                         return model;
                     }

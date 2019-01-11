@@ -287,7 +287,8 @@ public class CommonController {
     /*
     通过crmid查询学生所有证书
      */
-    public List<CertInfo> QueryCertByCRMId(String CrmId,String channelName) {
+    @RequestMapping(value = "/QueryCertByCRMId", method = RequestMethod.GET)
+    public List<CertInfo> QueryCertByCRMId(@RequestParam(value = "CrmId", required = true)String CrmId,@RequestParam(value = "channelName", required = true)String channelName) {
         try {
             JsonArray jsonArray = payload.GetPayload("queryCertByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
             Iterator<JsonElement> it =jsonArray.iterator();

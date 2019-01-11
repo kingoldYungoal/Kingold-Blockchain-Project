@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kingold.educationblockchain.controller.ChainCodeConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,12 +12,17 @@ import java.io.UnsupportedEncodingException;
 
 public class BlockChainPayload {
 
+    @Autowired
+    private RestTemplateConfig mRestTemplateConfig = new RestTemplateConfig();
     /*
     获取返回结果
      */
     public JsonElement GetPayload(String functionName, String argJson, String  channelName)
     {
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = mRestTemplateConfig.restTemplate();
+        //HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        //RestTemplate restTemplate = new RestTemplate(factory);
+        //RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         String requestStr = String.format("{\"channel\":\"%s\",\"chaincode\":\"%s\",\"method\":\"%s\",\"args\":[%s],\"chaincodeVer\":\"%s\"}",
                 channelName,
@@ -58,7 +64,7 @@ public class BlockChainPayload {
         }
         else {
             errMsg = response.getBody();
-        }
+    }
         throw new Error(errMsg);
     }
 }

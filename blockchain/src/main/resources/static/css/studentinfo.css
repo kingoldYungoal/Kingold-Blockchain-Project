@@ -40,7 +40,7 @@
 
 #infodiv{
     width: 90%;
-    height: 22%;
+    height: 18%;
     background-color: #fff;
     display: table;
     margin-top:20px;
@@ -72,7 +72,7 @@
     width:35%;height:90%;float:left;text-align: left;
 }
 .container ul{
-    width: 100%;height:100%;line-height:100%;overflow: hidden;
+    width: 100%;height:100%;line-height:100%;overflow: hidden;margin-top:15px;
 }
 .columnli{
     font-size: 15px;
@@ -158,6 +158,7 @@
     line-height: 22px;
     max-width: 90px;
 }
+
 .info-block{
     padding-left:0px;
     padding-right:0px;

@@ -1,6 +1,12 @@
 package com.kingold.educationblockchain.controller;
 
 import org.apache.http.ParseException;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
 import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -37,6 +45,7 @@ public class ShowElectronicscertificateController {
     * 学生证书页面
     * */
     @RequestMapping(value = "/studentcertificate", method = RequestMethod.GET)
+    @ResponseBody
     public ModelAndView StudentCertificate(@RequestParam(value = "fileId", required = true)String fileId) {
         //获取证书Id逻辑
         ModelAndView model = new ModelAndView();
@@ -124,21 +133,33 @@ public class ShowElectronicscertificateController {
     /*
      * 从CECS中获取文件流
      * */
-    private InputStream DownloadFileFromCECS(String fileId) throws ParseException, IOException{
-        CloseableHttpClient client = HttpClientBuilder.create().build();
+    private InputStream DownloadFileFromCECS(String fileId) throws Exception{
+        SSLContextBuilder builder = new SSLContextBuilder();
+        HttpResponse response;
 
-        String url = mBaseUrl + fileId + "/data?version=1";
-        HttpGet get = new HttpGet(url);
-        get.addHeader("Authorization", mAuthorization);
+        try{
+            builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                    builder.build());
+            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(150000).setSocketTimeout(150000).build();
+            CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(
+                    sslsf).setDefaultRequestConfig(requestConfig).build();
 
-        HttpResponse response = client.execute(get);
+            //CloseableHttpClient client = HttpClientBuilder.create().build();
+            String url = mBaseUrl + fileId + "/data?version=1";
+            HttpGet get = new HttpGet(url);
+            get.addHeader("Authorization", mAuthorization);
 
-        int statusCode = response.getStatusLine().getStatusCode();
-        HttpEntity responseEntity = response.getEntity();
-        if ((200 <= statusCode && statusCode < 300) && responseEntity != null) {
-            return responseEntity.getContent();
+            response = client.execute(get);
+
+            int statusCode = response.getStatusLine().getStatusCode();
+            HttpEntity responseEntity = response.getEntity();
+            if ((200 <= statusCode && statusCode < 300) && responseEntity != null) {
+                return responseEntity.getContent();
+            }
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
         }
-
-        return null;
+        throw new Exception(response.toString());
     }
 }

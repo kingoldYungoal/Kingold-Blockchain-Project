@@ -162,6 +162,16 @@ public class Electronicscertificate {
 
     private int kg_state;
 
+    private String kg_studygrade;
+
+    public String getKg_studygrade() {
+        return kg_studygrade;
+    }
+
+    public void setKg_studygrade(String kg_studygrade) {
+        this.kg_studygrade = kg_studygrade;
+    }
+
     public Electronicscertificate(){
     }
 }
