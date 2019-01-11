@@ -1,9 +1,17 @@
 package com.kingold.educationblockchain.controller;
 
 import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.PdfPageFormCopier;
+import com.itextpdf.forms.fields.PdfFormField;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
@@ -12,10 +20,13 @@ import com.kingold.educationblockchain.util.BlockChainPayload;
 import com.kingold.educationblockchain.util.DateHandler;
 import com.kingold.educationblockchain.util.RetResult;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,6 +49,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
+import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
 import static com.kingold.educationblockchain.util.ResultResponse.makeErrRsp;
 import static com.kingold.educationblockchain.util.ResultResponse.makeOKRsp;
 
@@ -58,6 +70,9 @@ public class ElectronicscertificateController {
 
     @Value("${CECS.CertificateFileParentId}")
     private String mCertificateFileParentId;
+
+    @Value("${CECS.SignPath}")
+    private String mSignPath;
 
     @Value("${chainCode.channel}")
     private String mChannel;
@@ -87,11 +102,20 @@ public class ElectronicscertificateController {
                             .append(certificateName).toString() ;
 
                     Map<String,String> map = new HashMap();
-                    map.put("name",cert.getKg_studentname());
-                    map.put("classname",cert.getKg_classname());
+                    //map.put("name",cert.getKg_studentname());
+                    //map.put("classname",cert.getKg_classname());
                     //map.put("teachername",cert.getKg_teachername());
                     //map.put("certificatedate",cert.getKg_certificatedate());
-                    GeneratePdfCertificate(certificateFilePath, map);
+                    map.put("name",cert.getKg_studentname());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+                    Date dateTo=sdf.parse(cert.getKg_endtime());
+                    Date dateFrom=sdf.parse(cert.getKg_starttime());
+                    map.put("yearTo",String.valueOf(dateTo.getYear()));
+                    map.put("yearFrom",String.valueOf(dateFrom.getYear()));
+                    map.put("monthFrom","9");
+                    map.put("monthTo","6");
+                    map.put("certId",cert.getKg_electronicscertificateid());
+                    GeneratePdfCertificate(certificateFilePath, map,mSignPath);
 
                     String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
                     certid = fileId;
@@ -138,24 +162,32 @@ public class ElectronicscertificateController {
         }
     }
 
-
+    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields) throws Exception {
+        GeneratePdfCertificate(certificateFilePath,fields,"");
+    }
     /*
      * 生成证书
      * */
-    private void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields ) throws Exception{
-        Resource resource = new ClassPathResource("certificate-template.pdf");
-        //Resource resource = new ClassPathResource("static/certificate-template.pdf");
+    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,String signPath ) throws Exception{
+        //Resource resource = new ClassPathResource("certificate-template.pdf");
+        Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(file.getPath()), new PdfWriter(certificateFilePath));
-
-        PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDoc, true);
+        PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
+        PdfDocument pdfDocWrite =new PdfDocument( new PdfWriter(certificateFilePath));
+        pdfDocRead.copyPagesTo(1,1,pdfDocWrite,new PdfPageFormCopier());
+        PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
 
         for(String fieldName: fields.keySet()){
-            form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true).setFontSize(15);
+            form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
         }
-
-        pdfDoc.close();
+        Image sign = new Image(ImageDataFactory.create(signPath));
+        sign.scaleToFit(150, 75);
+        sign.setFixedPosition(75,230);
+        Document doc= new Document(pdfDocWrite);
+        doc.add(sign);
+        pdfDocWrite.close();
+        pdfDocRead.close();
     }
 
     /*
