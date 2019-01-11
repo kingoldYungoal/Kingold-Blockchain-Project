@@ -1,9 +1,13 @@
 package com.kingold.educationblockchain.controller;
 
 import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.PdfPageFormCopier;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
@@ -16,9 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -68,6 +71,8 @@ public class ElectronicscertificateController {
     private DateHandler mDateHandler;
     private BlockChainPayload mPayload = new BlockChainPayload();
 
+    private String mSignPath = "static/31ada9d0-f12d-45b3-9031-cfb001d38340.png";
+
     /*
      * 证书生成api
      * */
@@ -87,11 +92,28 @@ public class ElectronicscertificateController {
                             .append(certificateName).toString() ;
 
                     Map<String,String> map = new HashMap();
-                    map.put("name",cert.getKg_studentname());
-                    map.put("classname",cert.getKg_classname());
+                    //map.put("name",cert.getKg_studentname());
+                    //map.put("classname",cert.getKg_classname());
                     //map.put("teachername",cert.getKg_teachername());
                     //map.put("certificatedate",cert.getKg_certificatedate());
-                    GeneratePdfCertificate(certificateFilePath, map);
+                    //GeneratePdfCertificate(certificateFilePath, map);
+                    map.put("name",cert.getKg_studentname());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date dateTo = sdf.parse(cert.getKg_endtime());
+                    Date dateFrom = sdf.parse(cert.getKg_starttime());
+
+                    Calendar calendarFrom = Calendar.getInstance();
+                    calendarFrom.setTime(dateFrom);
+                    map.put("yearFrom",String.valueOf(calendarFrom.get(Calendar.YEAR)));
+                    map.put("monthFrom",String.valueOf(calendarFrom.get(Calendar.MONTH) + 1));
+
+                    Calendar calendarTo = Calendar.getInstance();
+                    calendarTo.setTime(dateTo);
+                    map.put("yearTo",String.valueOf(calendarTo.get(Calendar.YEAR)));
+                    map.put("monthTo",String.valueOf(calendarTo.get(Calendar.MONTH) + 1));
+
+                    map.put("certId",cert.getKg_certificateno());
+                    GeneratePdfCertificate(certificateFilePath, map, mSignPath);
 
                     String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
                     certid = fileId;
@@ -138,24 +160,34 @@ public class ElectronicscertificateController {
         }
     }
 
-
     /*
      * 生成证书
      * */
-    private void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields ) throws Exception{
+    private void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields, String signPath) throws Exception{
         //Resource resource = new ClassPathResource("certificate-template.pdf");
         Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(file.getPath()), new PdfWriter(certificateFilePath));
+        //PdfDocument pdfDoc = new PdfDocument(new PdfReader(file.getPath()), new PdfWriter(certificateFilePath));
 
-        PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDoc, true);
+        //PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDoc, true);
+        PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
+        PdfDocument pdfDocWrite =new PdfDocument(new PdfWriter(certificateFilePath));
+        pdfDocRead.copyPagesTo(1,1,pdfDocWrite,new PdfPageFormCopier());
+        PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
 
         for(String fieldName: fields.keySet()){
             form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true).setFontSize(15);
         }
 
-        pdfDoc.close();
+        //pdfDoc.close();
+        Image sign = new Image(ImageDataFactory.create(signPath));
+        sign.scaleToFit(150, 75);
+        sign.setFixedPosition(75,230);
+        Document doc= new Document(pdfDocWrite);
+        doc.add(sign);
+        pdfDocWrite.close();
+        pdfDocRead.close();
     }
 
     /*
