@@ -42,7 +42,6 @@
                         <li><span class="columnspan">出生日期</span><span class="showspan" th:text="${studentprofile.getKg_birthday()}"></span></li>
                         <li><span class="columnspan">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄</span><span class="showspan" th:text="${studentprofile.getKg_age()} + ' 岁'"></span></li>
                         <li><span class="columnspan">户口所在地</span><span class="showspan" th:text="${studentprofile.getKg_registeredresidence()}"></span></li>
-
                     </ul>
                 </div>
                 <div style="width:3%;height:90%;float:left;"></div>
@@ -50,7 +49,7 @@
                     <ul>
                         <li><span class="columnspan">护照/身份证号</span><span class="showspan" th:text="${studentprofile.getKg_passportnumberoridnumber()}"></span></li>
                         <li><span class="columnspan">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span><span class="showspan" th:text="${studentprofile.getKg_studentnumber()}"></span></li>
-                        <li><span class="columnspan">学&nbsp;&nbsp;&nbsp;籍&nbsp;&nbsp;&nbsp;号</span><span class="showspan" th:text="${studentprofile.getKg_educationnumber()}"></span></li>
+                        <li><span class="columnspan2">学籍号</span><span class="showspan" th:text="${studentprofile.getKg_educationnumber()}"></span></li>
                     </ul>
                 </div>
             </div>
@@ -60,7 +59,7 @@
                 <div class="certinfo_title">成长信息</div>
                 <hr id="colhr">
                 <div class="certinfo" th:each="cert,index:${json}">
-                    <div class="" th:class="${index.first}and ${!index.last}? 'timelinefirst row' : (${index.last} and ${!index.first}? 'timelinelast row' : 'timeline row' )">
+                    <div class="" th:class="${index.first} and ${!index.last}? 'timelinefirst row' : (${index.last} and ${!index.first}? 'timelinelast row' : 'timeline row' )">
                     <div  class="col-12 innerdiv" th:if="${cert.DisplayCertInfo}">
                         <div class="row timelinelastline float-left" th:if="${index.last} and ${!index.first}"></div>
                         <div class="float-left certicon">&#9673</div>
@@ -80,7 +79,7 @@
                         <div class="col-2 float-left info-block">
                             <div class="row">
                                 <div class="col-12 info-block"><div class="col-5 float-left">证书名称</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.CertName}" th:text="${cert.DisplayCertInfo.CertName}"></div></div>
-                                <div class="col-12 info-block"><div class="col-5 float-left">证书类别</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.CertName}" th:text="${cert.DisplayCertInfo.CertType}"></div></div>
+                                <div class="col-12 info-block"><div class="col-5 float-left">证书类别</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.CertType}" th:text="${cert.DisplayCertInfo.CertType}"></div></div>
                             </div>
                         </div>
                         <div class="col-2 float-left info-block">

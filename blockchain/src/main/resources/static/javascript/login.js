@@ -4,6 +4,9 @@ $(function () {
     var re = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
     var $codebtn = $("#codebtn");
 
+    $("#authcode").val("");
+    $("input:radio[name='role']").get(0).checked = true ;
+
     $("#codebtn").click(function () {
         var disabled = $("#codebtn").attr("disabled");
         if(disabled){
@@ -47,7 +50,8 @@ $(function () {
             async: false,
             success:function (data) {
                 if (data) {
-                    //获取验证码
+                    time();
+                    //发送验证码
                     $.ajax({
                         type:"post",
                         url:"../smscode/sendsmscode",
@@ -64,7 +68,6 @@ $(function () {
                                         'closeTime': 2000,
                                     })
                                     M.dialog13.show();
-                                    time();
                                 }
                                 if (data.result.result == 32){
                                     M.dialog13 = jqueryAlert({
