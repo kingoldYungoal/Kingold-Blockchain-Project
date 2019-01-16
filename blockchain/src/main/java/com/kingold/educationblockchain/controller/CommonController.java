@@ -9,12 +9,16 @@ import com.kingold.educationblockchain.bean.EventInfo;
 import com.kingold.educationblockchain.util.Base64;
 import com.kingold.educationblockchain.util.BlockChainPayload;
 import com.kingold.educationblockchain.util.DateHandler;
+import com.kingold.educationblockchain.util.RetResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
+
+import static com.kingold.educationblockchain.util.ResultResponse.makeErrRsp;
+import static com.kingold.educationblockchain.util.ResultResponse.makeOKRsp;
 
 
 @RestController
@@ -36,37 +40,57 @@ public class CommonController {
     private BlockChainPayload payload = new BlockChainPayload();
     private Gson gson;
 
-//    private Logger logger = Logger.getLogger(CommonController.class);
-
     @RequestMapping(value = "/Insert", method = RequestMethod.POST)
-    public String Insert(@RequestBody String jsonParam, @RequestParam(value = "tablename", required = true)String tablename,@RequestParam(value = "synctype", required = true)String synctype) {
-        gson = new Gson();
-        if(tablename.trim().length() == 0 || synctype.trim().length() == 0){
-            return gson.toJson(false);
+    public RetResult Insert(@RequestBody String jsonParam) {
+        try{
+            JSONObject jsonx = JSONObject.parseObject(jsonParam);
+            String tablename = jsonx.getString("table_name");
+            String synctype = jsonx.getString("sync_type");
+            String fields = jsonx.getString("fields");
+            if(tablename.trim().length() == 0 || synctype.trim().length() == 0){
+                return makeErrRsp("表名或者同步类型不能为空");
+            }
+            Map map = new HashMap();
+            switch(synctype.trim()){
+                case "insert":
+                    map = InsertData(tablename, fields);
+                    break;
+                case "update":
+                    map = UpdateData(tablename, fields);
+                    break;
+            }
+            boolean flag = (boolean)map.get("flag");
+            String message = map.get("message").toString();
+            if(flag){
+                return makeOKRsp(message);
+            }else {
+                return makeErrRsp(message);
+            }
+        }catch(Exception ex){
+            return makeErrRsp(ex.getMessage());
         }
-        boolean flag = false;
-        switch(synctype.trim()){
-            case "insert":
-                flag = InsertData(tablename, jsonParam);
-                break;
-            case "update":
-                flag = UpdateData(tablename, jsonParam);
-                break;
-        }
-        return gson.toJson(flag);
     }
 
     @RequestMapping(value = "/Delete", method = RequestMethod.GET)
-    public String Delete(@RequestParam(value = "id", required = true)String id, @RequestParam(value = "tablename", required = true)String tablename) {
-        gson = new Gson();
+    public RetResult Delete(@RequestParam(value = "id", required = true)String id, @RequestParam(value = "tablename", required = true)String tablename) {
         if(tablename.trim().length() == 0 || id.trim().length() == 0){
-            return gson.toJson(false);
+            return makeErrRsp("表名或者同步类型不能为空");
         }
-        return gson.toJson(DeleteData(id, tablename));
+        Map map = new HashMap();
+        map = DeleteData(id, tablename);
+        boolean flag = (boolean)map.get("flag");
+        String message = map.get("message").toString();
+        if(flag){
+            return makeOKRsp(message);
+        }else {
+            return makeErrRsp(message);
+        }
     }
 
-    public boolean InsertData(String tableName,String jsonParam){
+    public Map InsertData(String tableName,String jsonParam){
+        Map map = new HashMap();
         boolean flag = false;
+        String message = "";
         switch(tableName.trim()){
             case "kg_studentprofile":
                 StudentProfile studentProfile = JSONObject.parseObject(jsonParam,StudentProfile.class);
@@ -76,7 +100,6 @@ public class CommonController {
                 if(studentProfileList == null || studentProfileList.size() <= 0){
                     //将学生信息添加到数据库
                     try{
-
                         boolean tableflag = mStudentProfileService.AddStudentProfile(studentProfile);
                         if(tableflag){
                             //将学生信息上链
@@ -91,14 +114,16 @@ public class CommonController {
                             studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
                             //studentJson.setRemark();
                             InitStudent(studentJson, channel);
-
                             flag = true;
+                            message = "学生信息添加成功";
                         }
                     }catch (HttpClientErrorException e1) {
                         //删除表中新增的数据
                         mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
+                        message = e1.getMessage();
                     }catch (Exception ex){
                         mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
+                        message = ex.getMessage();
                         //throw ex;
                     }
                 }
@@ -110,8 +135,16 @@ public class CommonController {
                     // 判断教师信息是否存在
                     if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) == null) {
                         flag = mTeacherInfomationService.AddTeacherInformation(teacherInformation);
+                        if(flag){
+                            message = "教师信息添加成功";
+                        }else{
+                            message = "教师信息添加失败";
+                        }
+                    }else{
+                        message = "该教师手机号已存在，无法再次添加";
                     }
                 }catch(Exception ex){
+                    message = ex.getMessage();
                     throw ex;
                 }
                 break;
@@ -122,8 +155,16 @@ public class CommonController {
                     // 判断家长信息是否存在
                     if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
                         flag = mParentInfomationService.AddParentInformation(parentInformation);
+                        if(flag){
+                            message = "家长信息添加成功";
+                        }else{
+                            message = "家长信息添加失败";
+                        }
+                    }else{
+                        message = "该家长手机号已存在，无法再次添加";
                     }
                 }catch(Exception ex){
+                    message = ex.getMessage();
                     throw ex;
                 }
                 break;
@@ -138,9 +179,19 @@ public class CommonController {
                         StudentParent sp = mStudentParentService.FindStudentParent(studentParent.getKg_parentinformationid(), studentParent.getKg_studentprofileid());
                         if(sp == null){
                             flag = mStudentParentService.AddStudentParent(studentParent);
+                            if(flag){
+                                message = "家长学生信息添加成功";
+                            }else{
+                                message = "家长学生信息添加失败";
+                            }
+                        }else{
+                            message = "已存在该家长和该学生关系信息，无法添加";
                         }
+                    }else{
+                        message = "暂无该家长或该学生信息，无法添加";
                     }
                 }catch(Exception ex){
+                    message = ex.getMessage();
                     throw ex;
                 }
                 break;
@@ -155,18 +206,32 @@ public class CommonController {
                         StudentTeacher st = mStudentTeacherService.FindStudentTeacher(studentTeacher.getKg_teacherinformationid(), studentTeacher.getKg_studentprofileid());
                         if(st == null){
                             flag = mStudentTeacherService.AddStudentTeacher(studentTeacher);
+                            if(flag){
+                                message = "教师学生信息添加成功";
+                            }else{
+                                message = "教师学生信息添加失败";
+                            }
+                        }else{
+                            message = "已存在该教师和该学生关系信息，无法添加";
                         }
+                    }else{
+                        message = "暂无该教师或该学生信息，无法添加";
                     }
                 }catch(Exception ex){
+                    message = ex.getMessage();
                     throw ex;
                 }
                 break;
         }
-        return flag;
+        map.put("flag", flag);
+        map.put("message", message);
+        return map;
     }
 
-    public boolean UpdateData(String tableName,String jsonParam){
+    public Map UpdateData(String tableName,String jsonParam){
+        Map map = new HashMap();
         boolean flag = false;
+        String message = "";
         // 只会对 学生信息表，教师信息表，家长信息表进行更新操作，对于 状态更新，为删除操作
         switch(tableName.trim()){
             case "kg_studentprofile":
@@ -175,7 +240,16 @@ public class CommonController {
                 if(studentProfile.getKg_studentprofileid().trim().length() > 0){
                     if(mStudentProfileService.GetStudentProfileById(studentProfile.getKg_studentprofileid()) != null){
                         flag = mStudentProfileService.UpdateStudentProfile(studentProfile);
+                        if(flag){
+                            message = "学生信息更新成功";
+                        }else{
+                            message = "学生信息更新失败";
+                        }
+                    }else{
+                        message = "该学生不存在,无法进行更新操作";
                     }
+                }else{
+                    message = "该学生crmid不能为空,无法进行更新操作";
                 }
                 break;
             case "kg_teacherinformation":
@@ -184,7 +258,16 @@ public class CommonController {
                 if(teacherInformation.getKg_teacherinformationid().trim().length() > 0){
                     if(mTeacherInfomationService.FindTeacherInformationById(teacherInformation.getKg_teacherinformationid()) != null){
                         flag = mTeacherInfomationService.UpdateTeacherInformation(teacherInformation);
+                        if(flag){
+                            message = "教师信息更新成功";
+                        }else{
+                            message = "教师信息更新失败";
+                        }
+                    }else{
+                        message = "该教师不存在,无法进行更新操作";
                     }
+                }else {
+                    message = "教师crmid不能为空,无法进行更新操作";
                 }
                 break;
             case "kg_parentinformation":
@@ -193,15 +276,28 @@ public class CommonController {
                 if(parentInformation.getKg_parentinformationid().trim().length() > 0){
                     if(mParentInfomationService.FindParentInformationById(parentInformation.getKg_parentinformationid()) != null){
                         flag = mParentInfomationService.UpdateParentInformation(parentInformation);
+                        if(flag){
+                            message = "家长信息更新成功";
+                        }else{
+                            message = "家长信息更新失败";
+                        }
+                    }else{
+                        message = "该家长不存在,无法进行更新操作";
                     }
+                }else{
+                    message = "家长crmid不能为空,无法进行更新操作";
                 }
                 break;
         }
-        return flag;
+        map.put("flag", flag);
+        map.put("message", message);
+        return map;
     }
 
-    public boolean DeleteData(String id,String tableName){
+    public Map DeleteData(String id,String tableName){
+        Map map = new HashMap();
         boolean flag = false;
+        String message = "";
         if(id.trim().length() > 0){
             switch(tableName.trim()){
                 case "kg_studentprofile":
@@ -222,7 +318,12 @@ public class CommonController {
                                 }
                             }
                             flag = true;
+                            message = "学生信息删除成功";
+                        }else{
+                            message = "学生信息删除失败";
                         }
+                    }else{
+                        message = "学生信息不存在，无法删除";
                     }
                     break;
                 case "kg_teacherinformation":
@@ -237,7 +338,12 @@ public class CommonController {
                                 }
                             }
                             flag = true;
+                            message = "教师信息删除成功";
+                        }else{
+                            message = "教师信息删除失败";
                         }
+                    }else{
+                        message = "教师信息不存在，无法删除";
                     }
                     break;
                 case "kg_parentinformation":
@@ -252,12 +358,21 @@ public class CommonController {
                                 }
                             }
                             flag = true;
+                            message = "家长信息删除成功";
+                        }else{
+                            message = "家长信息删除失败";
                         }
+                    }else {
+                        message = "家长信息不存在，无法删除";
                     }
                     break;
             }
+        }else{
+            message = "id不能为空";
         }
-        return flag;
+        map.put("flag", flag);
+        map.put("message",message);
+        return map;
     }
 
     //--------------------blockchain api----------------------------------

@@ -3,6 +3,8 @@ package com.kingold.educationblockchain.controller;
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.PdfPageFormCopier;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -71,7 +73,11 @@ public class ElectronicscertificateController {
     private DateHandler mDateHandler;
     private BlockChainPayload mPayload = new BlockChainPayload();
 
-    private String mSignPath = "static/31ada9d0-f12d-45b3-9031-cfb001d38340.png";
+    // for local
+    //private String mSignPath = "static/31ada9d0-f12d-45b3-9031-cfb001d38340.png";
+
+    // for weblogic
+    private String mSignPath = "31ada9d0-f12d-45b3-9031-cfb001d38340.png";
 
     /*
      * 证书生成api
@@ -154,7 +160,7 @@ public class ElectronicscertificateController {
         }catch (HttpClientErrorException e1) {
             //删除表中新增的数据
             mElectronicscertificateService.DeleteCertificate(certid);
-            return makeErrRsp("证书上链失败");
+            return makeErrRsp(e1.getMessage());
         }catch (Exception ex){
             return makeErrRsp(ex.getMessage());
         }
@@ -164,8 +170,10 @@ public class ElectronicscertificateController {
      * 生成证书
      * */
     private void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields, String signPath) throws Exception{
-        //Resource resource = new ClassPathResource("certificate-template.pdf");
-        Resource resource = new ClassPathResource("static/certificate-template.pdf");
+        // for weblogic
+        Resource resource = new ClassPathResource("certificate-template.pdf");
+        // for local
+        //Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
         //PdfDocument pdfDoc = new PdfDocument(new PdfReader(file.getPath()), new PdfWriter(certificateFilePath));
 
@@ -175,16 +183,19 @@ public class ElectronicscertificateController {
         pdfDocRead.copyPagesTo(1,1,pdfDocWrite,new PdfPageFormCopier());
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
-
+        PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
         for(String fieldName: fields.keySet()){
-            form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true).setFontSize(15);
+            form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true).setFont(font).setFontSize(15);
         }
 
         //pdfDoc.close();
-        Image sign = new Image(ImageDataFactory.create(signPath));
-        sign.scaleToFit(150, 75);
+        Resource imgResource = new ClassPathResource(signPath);
+        File imgFile = imgResource.getFile();
+        Image sign = new Image(ImageDataFactory.create(imgFile.getPath()));
+        sign.scaleToFit(80, 150);
         sign.setFixedPosition(75,230);
         Document doc= new Document(pdfDocWrite);
+        //BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/SIMYOU.TTF",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
         doc.add(sign);
         pdfDocWrite.close();
         pdfDocRead.close();
@@ -256,5 +267,32 @@ public class ElectronicscertificateController {
                 cert.getStuClass(),
                 cert.getStuTeacher(),
                 cert.getStuStudyGrade());
+    }
+
+    /*
+     * 证书撤销api
+     * */
+    @RequestMapping(value = "/revokecertificate", method = RequestMethod.POST)
+    public RetResult RevokeCertificate (@RequestBody String jsonParam){
+        try{
+            JSONObject jsonx = JSONObject.parseObject(jsonParam);
+
+            String certificateno = jsonx.getString("kg_certificateno");
+            String studentid = jsonx.getString("kg_studentid");
+            if(certificateno.trim().length() == 0 || studentid.trim().length() == 0){
+                return makeErrRsp("证书编号或者学生档案号不能为空");
+            }
+            //查询对应的证书
+            Electronicscertificate cert = mElectronicscertificateService.GetCertificateByStudentIdAndCertno(certificateno, studentid);
+            if(cert == null){
+                return makeErrRsp("证书不存在");
+            }else{
+                //执行撤销操作
+                mElectronicscertificateService.DeleteCertificate(cert.getKg_electronicscertificateid());
+                return makeOKRsp("证书撤销成功");
+            }
+        }catch (Exception ex){
+            return makeErrRsp(ex.getMessage());
+        }
     }
 }

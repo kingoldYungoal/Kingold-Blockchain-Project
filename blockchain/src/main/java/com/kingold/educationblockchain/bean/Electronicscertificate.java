@@ -164,6 +164,56 @@ public class Electronicscertificate {
 
     private String kg_studygrade;
 
+    private String kg_teacherid;
+
+    private String kg_thirdpartname;
+
+    private String kg_president;
+
+    public String getKg_teacherid() {
+        return kg_teacherid;
+    }
+
+    public void setKg_teacherid(String kg_teacherid) {
+        this.kg_teacherid = kg_teacherid;
+    }
+
+    public String getKg_thirdpartname() {
+        return kg_thirdpartname;
+    }
+
+    public void setKg_thirdpartname(String kg_thirdpartname) {
+        this.kg_thirdpartname = kg_thirdpartname;
+    }
+
+    public String getKg_president() {
+        return kg_president;
+    }
+
+    public void setKg_president(String kg_president) {
+        this.kg_president = kg_president;
+    }
+
+    public String getKg_schoolmaster() {
+        return kg_schoolmaster;
+    }
+
+    public void setKg_schoolmaster(String kg_schoolmaster) {
+        this.kg_schoolmaster = kg_schoolmaster;
+    }
+
+    public String getKg_studentenglishname() {
+        return kg_studentenglishname;
+    }
+
+    public void setKg_studentenglishname(String kg_studentenglishname) {
+        this.kg_studentenglishname = kg_studentenglishname;
+    }
+
+    private String kg_schoolmaster;
+
+    private String kg_studentenglishname;
+
     public String getKg_studygrade() {
         return kg_studygrade;
     }

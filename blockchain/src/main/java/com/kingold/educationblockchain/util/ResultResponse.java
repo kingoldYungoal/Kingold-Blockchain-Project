@@ -6,6 +6,8 @@ package com.kingold.educationblockchain.util;
 public class ResultResponse {
     private final static String SUCCESS = "success";
 
+    private final static String Fail = "fail";
+
     public static <T> RetResult<T> makeOKRsp() {
         return new RetResult<T>().setCode(ResultCode.SUCCESS).setMsg(SUCCESS);
     }
@@ -14,8 +16,8 @@ public class ResultResponse {
         return new RetResult<T>().setCode(ResultCode.SUCCESS).setMsg(SUCCESS).setData(data);
     }
 
-    public static <T> RetResult<T> makeErrRsp(String message) {
-        return new RetResult<T>().setCode(ResultCode.FAIL).setMsg(SUCCESS);
+    public static <T> RetResult<T> makeErrRsp(T message) {
+        return new RetResult<T>().setCode(ResultCode.FAIL).setMsg(Fail).setData(message);
     }
 
     public static <T> RetResult<T> makeRsp(int code, String msg) {

@@ -34,6 +34,14 @@ public class ElectronicscertificateServiceImpl implements Electronicscertificate
     }
 
     /**
+     * 根據crmid和certno查詢某个学生的某个证书信息
+     */
+    @Override
+    public Electronicscertificate GetCertificateByStudentIdAndCertno(String certificateno, String studentId){
+        return mElectronicscertificateMapper.GetCertificateByStudentIdAndCertno(certificateno,studentId);
+    }
+
+    /**
      * 证书信息新增
      */
     @Override
