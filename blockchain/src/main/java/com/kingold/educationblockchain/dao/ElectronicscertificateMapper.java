@@ -20,6 +20,12 @@ public interface ElectronicscertificateMapper {
     List<Electronicscertificate> GetCertificatesByStudentId(String studentId);
 
     /**
+     * 根據crmid和certno查詢某个学生的某个证书信息
+     */
+    @Select("select kg_electronicscertificateid,kg_certificateno,kg_studentprofileid,kg_studentname,kg_sex,to_char(kg_certificatedate,'yyyy-mm-dd') kg_certificatedate,kg_classname,kg_certitype,kg_schoolname,kg_teachername,to_char(kg_starttime,'yyyy-mm-dd') kg_starttime,to_char(kg_endtime,'yyyy-mm-dd') kg_endtime,kg_classstype,kg_explain,kg_name,kg_state from KG_ELECTRONICSCERTIFICATE where kg_studentprofileid=#{studentId} and KG_CERTIFICATENO=#{certificateno} and kg_state = 0")
+    Electronicscertificate GetCertificateByStudentIdAndCertno(String certificateno, String studentId);
+
+    /**
      * 新增电子证书数据
      */
     @Insert("insert into KG_ELECTRONICSCERTIFICATE(kg_electronicscertificateid,kg_certificateno,kg_studentprofileid,kg_studentname,kg_sex,kg_certificatedate,kg_classname,kg_certitype,kg_schoolname,kg_teachername,kg_starttime,kg_endtime,kg_classstype,kg_explain,kg_name,kg_state) values (#{kg_electronicscertificateid},#{kg_certificateno},#{kg_studentprofileid},#{kg_studentname},#{kg_sex},to_date(#{kg_certificatedate},'yyyy-mm-dd'),#{kg_classname},#{kg_certitype},#{kg_schoolname},#{kg_teachername},to_date(#{kg_starttime},'yyyy-mm-dd'),to_date(#{kg_endtime},'yyyy-mm-dd'),#{kg_classstype},#{kg_explain},#{kg_name},#{kg_state})")

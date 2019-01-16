@@ -21,6 +21,11 @@ public interface ElectronicscertificateService {
     List<Electronicscertificate> GetCertificatesByStudentId(String studentId);
 
     /**
+     * 根據crmid和certno查詢某个学生的某个证书信息
+     */
+    Electronicscertificate GetCertificateByStudentIdAndCertno(String certificateno, String studentId);
+
+    /**
      * 新增电子证书数据
      */
     boolean AddCertificate(Electronicscertificate electronicscertificate);

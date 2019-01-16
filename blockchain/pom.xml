@@ -180,9 +180,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--<configuration>-->
-                    <!--<mainClass>com.kingold.educationblockchain.EducationblockchainApplication</mainClass>-->
-                <!--</configuration>-->
             </plugin>
         </plugins>
     </build>
