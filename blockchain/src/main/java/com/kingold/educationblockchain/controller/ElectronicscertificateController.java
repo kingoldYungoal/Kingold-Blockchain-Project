@@ -2,14 +2,18 @@ package com.kingold.educationblockchain.controller;
 
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.PdfPageFormCopier;
+import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
@@ -18,12 +22,17 @@ import com.kingold.educationblockchain.util.BlockChainPayload;
 import com.kingold.educationblockchain.util.DateHandler;
 import com.kingold.educationblockchain.util.RetResult;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -43,6 +52,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
+import static com.itextpdf.io.font.PdfEncodings.IDENTITY_H;
+import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
 import static com.kingold.educationblockchain.util.ResultResponse.makeErrRsp;
 import static com.kingold.educationblockchain.util.ResultResponse.makeOKRsp;
 
@@ -64,6 +75,9 @@ public class ElectronicscertificateController {
     @Value("${CECS.CertificateFileParentId}")
     private String mCertificateFileParentId;
 
+    @Value("${CECS.SignPath}")
+    private String mSignPath;
+
     @Value("${chainCode.channel}")
     private String mChannel;
 
@@ -72,12 +86,6 @@ public class ElectronicscertificateController {
 
     private DateHandler mDateHandler;
     private BlockChainPayload mPayload = new BlockChainPayload();
-
-    // for local
-    //private String mSignPath = "static/31ada9d0-f12d-45b3-9031-cfb001d38340.png";
-
-    // for weblogic
-    private String mSignPath = "31ada9d0-f12d-45b3-9031-cfb001d38340.png";
 
     /*
      * 证书生成api
@@ -102,24 +110,34 @@ public class ElectronicscertificateController {
                     //map.put("classname",cert.getKg_classname());
                     //map.put("teachername",cert.getKg_teachername());
                     //map.put("certificatedate",cert.getKg_certificatedate());
-                    //GeneratePdfCertificate(certificateFilePath, map);
                     map.put("name",cert.getKg_studentname());
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date dateTo = sdf.parse(cert.getKg_endtime());
-                    Date dateFrom = sdf.parse(cert.getKg_starttime());
+                    map.put("certType",cert.getKg_certitype());
+                    map.put("schoolName",cert.getKg_schoolname());
+                    if(cert.getKg_certitype()=="毕业证书") {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+                        Date dateTo = sdf.parse(cert.getKg_endtime());
+                        Date dateFrom = sdf.parse(cert.getKg_starttime());
+                        map.put("yearTo", String.valueOf(dateTo.getYear()));
+                        map.put("yearFrom", String.valueOf(dateFrom.getYear()));
+                        map.put("monthFrom", String.valueOf(dateFrom.getMonth()));
+                        map.put("monthTo", String.valueOf(dateTo.getMonth()));
+                        map.put("certId", cert.getKg_certificateno());
+                        GeneratePdfCertificate(certificateFilePath, map,mSignPath);
+                    }
+                    if(cert.getKg_certitype()=="课程证书") {
+                        map.put("issueDate", cert.getKg_certificatedate());
+                        map.put("certName",cert.getKg_name());
+                        GeneratePdfCertificate(certificateFilePath, map,mSignPath);
+                    }
 
-                    Calendar calendarFrom = Calendar.getInstance();
-                    calendarFrom.setTime(dateFrom);
-                    map.put("yearFrom",String.valueOf(calendarFrom.get(Calendar.YEAR)));
-                    map.put("monthFrom",String.valueOf(calendarFrom.get(Calendar.MONTH) + 1));
+                    if(cert.getKg_certitype()=="录取通知书") {
+                        map.put("issueDate", cert.getKg_certificatedate());
+                        map.put("certNo",cert.getKg_certificateno());
+                        map.put("nameEn",cert.getKg_studentenglishname());
+                        map.put("registrationTime",cert.getKg_starttime());
+                        GeneratePdfCertificate(certificateFilePath, map,mSignPath);
+                    }
 
-                    Calendar calendarTo = Calendar.getInstance();
-                    calendarTo.setTime(dateTo);
-                    map.put("yearTo",String.valueOf(calendarTo.get(Calendar.YEAR)));
-                    map.put("monthTo",String.valueOf(calendarTo.get(Calendar.MONTH) + 1));
-
-                    map.put("certId",cert.getKg_certificateno());
-                    GeneratePdfCertificate(certificateFilePath, map, mSignPath);
 
                     String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
                     certid = fileId;
@@ -160,42 +178,77 @@ public class ElectronicscertificateController {
         }catch (HttpClientErrorException e1) {
             //删除表中新增的数据
             mElectronicscertificateService.DeleteCertificate(certid);
-            return makeErrRsp(e1.getMessage());
+            return makeErrRsp("证书上链失败");
         }catch (Exception ex){
             return makeErrRsp(ex.getMessage());
         }
     }
 
+    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields) throws Exception {
+        GeneratePdfCertificate(certificateFilePath,fields,"");
+    }
     /*
      * 生成证书
      * */
-    private void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields, String signPath) throws Exception{
-        // for weblogic
-        Resource resource = new ClassPathResource("certificate-template.pdf");
-        // for local
-        //Resource resource = new ClassPathResource("static/certificate-template.pdf");
+    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,String signPath ) throws Exception{
+        //Resource resource = new ClassPathResource("certificate-template.pdf");
+        Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
-        //PdfDocument pdfDoc = new PdfDocument(new PdfReader(file.getPath()), new PdfWriter(certificateFilePath));
-
-        //PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDoc, true);
         PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
-        PdfDocument pdfDocWrite =new PdfDocument(new PdfWriter(certificateFilePath));
-        pdfDocRead.copyPagesTo(1,1,pdfDocWrite,new PdfPageFormCopier());
+        PdfDocument pdfDocWrite =new PdfDocument( new PdfWriter(certificateFilePath));
+        pdfDocWrite.setTagged();
+        int page=1;
+        if(fields.get("certType")=="录取通知书")
+        {
+            if(fields.get("schoolName").endsWith("小学")){
+                page=5;
+            }
+            else{
+                page=4;
+            }
+        }
+        else if(fields.get("certType")=="课程证书"){
+            page=3;
+        }
+        else if(fields.get("certType")=="毕业证书") {
+            if(fields.get("schoolName").endsWith("小学")){
+                page=1;
+            }
+            else{
+                page=2;
+            }
+        }
+        pdfDocRead.copyPagesTo(page,page,pdfDocWrite,new PdfPageFormCopier());
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
-        PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
+        PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
+        PdfFont fontUtopia = PdfFontFactory.createFont("static/font/Utopia Regular.ttf", IDENTITY_H ,false);
+        PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
+        //PdfFont font = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf");
         for(String fieldName: fields.keySet()){
-            form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true).setFont(font).setFontSize(15);
+            if(form.getField(fieldName)==null)
+                continue;
+            if(fieldName=="name") {
+                form.getField(fieldName).setFontAndSize(fontYuWei,41);
+            }
+            else if(fieldName=="nameEn") {
+                form.getField(fieldName).setFontAndSize(fontUtopia,14);
+            }
+            else if(fieldName=="certName"){
+                form.getField(fieldName).setFontAndSize(fontYuWei,18);
+            }
+            else if(fieldName=="registrationTime"||fieldName=="certNo"){
+                form.getField(fieldName).setFontAndSize(fontRuiYun,11);
+            }
+            else {
+                form.getField(fieldName).setFontAndSize(fontRuiYun,14);
+            }
+                form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
         }
-
-        //pdfDoc.close();
-        Resource imgResource = new ClassPathResource(signPath);
-        File imgFile = imgResource.getFile();
-        Image sign = new Image(ImageDataFactory.create(imgFile.getPath()));
-        sign.scaleToFit(80, 150);
+        Image sign = new Image(ImageDataFactory.create(signPath));
+        sign.scaleToFit(150, 75);
         sign.setFixedPosition(75,230);
         Document doc= new Document(pdfDocWrite);
-        //BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/SIMYOU.TTF",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
         doc.add(sign);
         pdfDocWrite.close();
         pdfDocRead.close();
@@ -267,32 +320,5 @@ public class ElectronicscertificateController {
                 cert.getStuClass(),
                 cert.getStuTeacher(),
                 cert.getStuStudyGrade());
-    }
-
-    /*
-     * 证书撤销api
-     * */
-    @RequestMapping(value = "/revokecertificate", method = RequestMethod.POST)
-    public RetResult RevokeCertificate (@RequestBody String jsonParam){
-        try{
-            JSONObject jsonx = JSONObject.parseObject(jsonParam);
-
-            String certificateno = jsonx.getString("kg_certificateno");
-            String studentid = jsonx.getString("kg_studentid");
-            if(certificateno.trim().length() == 0 || studentid.trim().length() == 0){
-                return makeErrRsp("证书编号或者学生档案号不能为空");
-            }
-            //查询对应的证书
-            Electronicscertificate cert = mElectronicscertificateService.GetCertificateByStudentIdAndCertno(certificateno, studentid);
-            if(cert == null){
-                return makeErrRsp("证书不存在");
-            }else{
-                //执行撤销操作
-                mElectronicscertificateService.DeleteCertificate(cert.getKg_electronicscertificateid());
-                return makeOKRsp("证书撤销成功");
-            }
-        }catch (Exception ex){
-            return makeErrRsp(ex.getMessage());
-        }
     }
 }
