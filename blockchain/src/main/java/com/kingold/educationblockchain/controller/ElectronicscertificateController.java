@@ -5,6 +5,7 @@ import com.itextpdf.forms.PdfPageFormCopier;
 import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
@@ -12,6 +13,7 @@ import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
@@ -24,6 +26,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,6 +52,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
+import static com.itextpdf.io.font.PdfEncodings.IDENTITY_H;
 import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
 import static com.kingold.educationblockchain.util.ResultResponse.makeErrRsp;
 import static com.kingold.educationblockchain.util.ResultResponse.makeOKRsp;
@@ -107,15 +111,31 @@ public class ElectronicscertificateController {
                     //map.put("teachername",cert.getKg_teachername());
                     //map.put("certificatedate",cert.getKg_certificatedate());
                     map.put("name",cert.getKg_studentname());
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
-                    Date dateTo=sdf.parse(cert.getKg_endtime());
-                    Date dateFrom=sdf.parse(cert.getKg_starttime());
-                    map.put("yearTo",String.valueOf(dateTo.getYear()));
-                    map.put("yearFrom",String.valueOf(dateFrom.getYear()));
-                    map.put("monthFrom","9");
-                    map.put("monthTo","6");
-                    map.put("certId",cert.getKg_electronicscertificateid());
-                    GeneratePdfCertificate(certificateFilePath, map,mSignPath);
+                    map.put("certType",cert.getKg_certitype());
+                    map.put("schoolName",cert.getKg_schoolname());
+                    if(cert.getKg_certitype()=="毕业证书") {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+                        Date dateTo = sdf.parse(cert.getKg_endtime());
+                        Date dateFrom = sdf.parse(cert.getKg_starttime());
+                        map.put("yearTo", String.valueOf(dateTo.getYear()));
+                        map.put("yearFrom", String.valueOf(dateFrom.getYear()));
+                        map.put("monthFrom", "9");
+                        map.put("monthTo", "6");
+                        map.put("certId", cert.getKg_electronicscertificateid());
+                        GeneratePdfCertificate(certificateFilePath, map,mSignPath);
+                    }
+                    if(cert.getKg_certitype()=="课程证书") {
+                        map.put("issueDate", cert.getKg_certificatedate());
+                        map.put("certName",cert.getKg_name());
+                        GeneratePdfCertificate(certificateFilePath, map,mSignPath);
+                    }
+
+                    if(cert.getKg_certitype()=="录取通知书") {
+                        map.put("issueDate", cert.getKg_certificatedate());
+                        map.put("certNo",cert.getKg_certificateno());
+                        GeneratePdfCertificate(certificateFilePath, map,mSignPath);
+                    }
+
 
                     String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
                     certid = fileId;
@@ -174,12 +194,26 @@ public class ElectronicscertificateController {
         File file = resource.getFile();
         PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
         PdfDocument pdfDocWrite =new PdfDocument( new PdfWriter(certificateFilePath));
+        pdfDocWrite.setTagged();
+
         pdfDocRead.copyPagesTo(1,1,pdfDocWrite,new PdfPageFormCopier());
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
-
+        PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
+        PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
+        //PdfFont font = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf");
         for(String fieldName: fields.keySet()){
-            form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
+            if(fieldName=="name") {
+                form.getField(fieldName).setFontAndSize(fontYuWei,41);
+            }
+            else if(fieldName=="certName"){
+                form.getField(fieldName).setFontAndSize(fontYuWei,18);
+            }
+            else {
+                form.getField(fieldName).setFont(fontRuiYun);
+            }
+            if(form.getField(fieldName)!=null)
+                form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
         }
         Image sign = new Image(ImageDataFactory.create(signPath));
         sign.scaleToFit(150, 75);
