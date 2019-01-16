@@ -133,6 +133,8 @@ public class ElectronicscertificateController {
                     if(cert.getKg_certitype()=="录取通知书") {
                         map.put("issueDate", cert.getKg_certificatedate());
                         map.put("certNo",cert.getKg_certificateno());
+                        map.put("nameEn",cert.getKg_studentenglishname());
+                        map.put("registrationTime",cert.getKg_starttime());
                         GeneratePdfCertificate(certificateFilePath, map,mSignPath);
                     }
 
@@ -220,6 +222,7 @@ public class ElectronicscertificateController {
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
         PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
+        PdfFont fontUtopia = PdfFontFactory.createFont("static/font/Utopia Regular.ttf", IDENTITY_H ,false);
         PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
         //PdfFont font = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf");
         for(String fieldName: fields.keySet()){
@@ -228,8 +231,14 @@ public class ElectronicscertificateController {
             if(fieldName=="name") {
                 form.getField(fieldName).setFontAndSize(fontYuWei,41);
             }
+            else if(fieldName=="nameEn") {
+                form.getField(fieldName).setFontAndSize(fontUtopia,14);
+            }
             else if(fieldName=="certName"){
                 form.getField(fieldName).setFontAndSize(fontYuWei,18);
+            }
+            else if(fieldName=="registrationTime"||fieldName=="certNo"){
+                form.getField(fieldName).setFontAndSize(fontRuiYun,11);
             }
             else {
                 form.getField(fieldName).setFontAndSize(fontRuiYun,14);

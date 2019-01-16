@@ -46,6 +46,8 @@ public class EducationblockchainApplicationTests {
 
         if(certType=="录取通知书") {
             map.put("issueDate",  "2019-1-16");
+            map.put("nameEn","Xiao Feng");
+            map.put("registrationTime","2019-8-29");
             map.put("certNo","1234567");
         }
         //map.put("teachername",cert.getKg_teachername());
