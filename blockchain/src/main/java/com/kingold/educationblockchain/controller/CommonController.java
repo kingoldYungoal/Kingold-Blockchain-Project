@@ -94,7 +94,7 @@ public class CommonController {
         switch(tableName.trim()){
             case "kg_studentprofile":
                 StudentProfile studentProfile = JSONObject.parseObject(jsonParam,StudentProfile.class);
-                studentProfile.setKg_studentprofileid(UUID.randomUUID().toString());
+                //studentProfile.setKg_studentprofileid(UUID.randomUUID().toString());
                 // 判断学号，学籍号 是否已存在
                 List<StudentProfile> studentProfileList = mStudentProfileService.GetStudentProfileByNumber(studentProfile.getKg_educationnumber(),studentProfile.getKg_studentnumber());
                 if(studentProfileList == null || studentProfileList.size() <= 0){
@@ -131,7 +131,7 @@ public class CommonController {
             case "kg_teacherinformation":
                 try{
                     TeacherInformation teacherInformation = JSONObject.parseObject(jsonParam,TeacherInformation.class);
-                    teacherInformation.setKg_teacherinformationid(UUID.randomUUID().toString());
+                    //teacherInformation.setKg_teacherinformationid(UUID.randomUUID().toString());
                     // 判断教师信息是否存在
                     if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) == null) {
                         flag = mTeacherInfomationService.AddTeacherInformation(teacherInformation);
@@ -151,7 +151,7 @@ public class CommonController {
             case "kg_parentinformation":
                 try{
                     ParentInformation parentInformation = JSONObject.parseObject(jsonParam,ParentInformation.class);
-                    parentInformation.setKg_parentinformationid(UUID.randomUUID().toString());
+                    //parentInformation.setKg_parentinformationid(UUID.randomUUID().toString());
                     // 判断家长信息是否存在
                     if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
                         flag = mParentInfomationService.AddParentInformation(parentInformation);
