@@ -119,9 +119,9 @@ public class ElectronicscertificateController {
                         Date dateFrom = sdf.parse(cert.getKg_starttime());
                         map.put("yearTo", String.valueOf(dateTo.getYear()));
                         map.put("yearFrom", String.valueOf(dateFrom.getYear()));
-                        map.put("monthFrom", "9");
-                        map.put("monthTo", "6");
-                        map.put("certId", cert.getKg_electronicscertificateid());
+                        map.put("monthFrom", String.valueOf(dateFrom.getMonth()));
+                        map.put("monthTo", String.valueOf(dateTo.getMonth()));
+                        map.put("certId", cert.getKg_certificateno());
                         GeneratePdfCertificate(certificateFilePath, map,mSignPath);
                     }
                     if(cert.getKg_certitype()=="课程证书") {
@@ -195,14 +195,36 @@ public class ElectronicscertificateController {
         PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
         PdfDocument pdfDocWrite =new PdfDocument( new PdfWriter(certificateFilePath));
         pdfDocWrite.setTagged();
-
-        pdfDocRead.copyPagesTo(1,1,pdfDocWrite,new PdfPageFormCopier());
+        int page=1;
+        if(fields.get("certType")=="录取通知书")
+        {
+            if(fields.get("schoolName").endsWith("小学")){
+                page=5;
+            }
+            else{
+                page=4;
+            }
+        }
+        else if(fields.get("certType")=="课程证书"){
+            page=3;
+        }
+        else if(fields.get("certType")=="毕业证书") {
+            if(fields.get("schoolName").endsWith("小学")){
+                page=1;
+            }
+            else{
+                page=2;
+            }
+        }
+        pdfDocRead.copyPagesTo(page,page,pdfDocWrite,new PdfPageFormCopier());
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
         PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
         PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
         //PdfFont font = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf");
         for(String fieldName: fields.keySet()){
+            if(form.getField(fieldName)==null)
+                continue;
             if(fieldName=="name") {
                 form.getField(fieldName).setFontAndSize(fontYuWei,41);
             }
@@ -210,9 +232,8 @@ public class ElectronicscertificateController {
                 form.getField(fieldName).setFontAndSize(fontYuWei,18);
             }
             else {
-                form.getField(fieldName).setFont(fontRuiYun);
+                form.getField(fieldName).setFontAndSize(fontRuiYun,14);
             }
-            if(form.getField(fieldName)!=null)
                 form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
         }
         Image sign = new Image(ImageDataFactory.create(signPath));
