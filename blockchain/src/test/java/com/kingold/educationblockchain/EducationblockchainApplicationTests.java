@@ -28,7 +28,7 @@ public class EducationblockchainApplicationTests {
                 .append(certificateName).toString() ;
 
         Map<String,String> map = new HashMap();
-        String certType="录取通知书";
+        String certType="毕业证书";
         map.put("name","萧峰");
         map.put("certType",certType);
         map.put("schoolName","XX小学");
@@ -54,7 +54,7 @@ public class EducationblockchainApplicationTests {
         //map.put("certificatedate",cert.getKg_certificatedate());
         ElectronicscertificateController electronicscertificateController=new ElectronicscertificateController();
         try {
-            electronicscertificateController.GeneratePdfCertificate(certificateFilePath, map,"src/main/resources/static/schoolmaster.png","src/main/resources/static/president.png");
+            electronicscertificateController.GeneratePdfCertificate(certificateFilePath, map,"static/schoolmaster.png","static/president.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
