@@ -54,11 +54,10 @@ public class EducationblockchainApplicationTests {
         //map.put("certificatedate",cert.getKg_certificatedate());
         ElectronicscertificateController electronicscertificateController=new ElectronicscertificateController();
         try {
-            electronicscertificateController.GeneratePdfCertificate(certificateFilePath, map,"src/main/resources/static/31ada9d0-f12d-45b3-9031-cfb001d38340.png");
+            electronicscertificateController.GeneratePdfCertificate(certificateFilePath, map,"src/main/resources/static/schoolmaster.png","src/main/resources/static/president.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 }
