@@ -28,6 +28,14 @@ public class StudentProfile {
 
     private String kg_passportnumberoridnumber;
 
+    public String getKg_entrancestate() {
+        return kg_entrancestate;
+    }
+
+    public void setKg_entrancestate(String kg_entrancestate) {
+        this.kg_entrancestate = kg_entrancestate;
+    }
+
     private String kg_entrancestate;
 
     private int kg_state;
@@ -152,14 +160,6 @@ public class StudentProfile {
 
     public void setKg_passportnumberoridnumber(String kg_passportnumberoridnumber) {
         this.kg_passportnumberoridnumber = kg_passportnumberoridnumber;
-    }
-
-    public String getKg_entrancestate() {
-        return kg_entrancestate;
-    }
-
-    public void setKg_entrancestate(String kg_entrancestate) {
-        this.kg_entrancestate = kg_entrancestate;
     }
 
     public StudentProfile(){

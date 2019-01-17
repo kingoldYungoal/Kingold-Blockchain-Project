@@ -43,7 +43,7 @@ public interface StudentTeacherMapper {
     /**
      * 學生教師關係新增
      */
-    @Insert("insert into kg_student_teacher(kg_studentprofileid,kg_teacherinformationid,kg_state) values (#{kg_studentprofileid},#{kg_teacherinformationid},#{kg_state})")
+    @Insert("insert into kg_student_teacher(kg_studentprofileid,kg_teacherinformationid,kg_state) values (#{kg_studentprofileid},#{kg_teacherinformationid},0)")
     void AddStudentTeacher(StudentTeacher studentTeacher);
 
     /**

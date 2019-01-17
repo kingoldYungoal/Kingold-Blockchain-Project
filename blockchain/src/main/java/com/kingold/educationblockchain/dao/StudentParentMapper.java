@@ -43,7 +43,7 @@ public interface StudentParentMapper {
     /**
      * 學生家長關係新增
      */
-    @Insert("insert into kg_student_parent(kg_studentprofileid,kg_parentinformationid,kg_state) values (#{kg_studentprofileid},#{kg_parentinformationid},#{kg_state})")
+    @Insert("insert into kg_student_parent(kg_studentprofileid,kg_parentinformationid,kg_state) values (#{kg_studentprofileid},#{kg_parentinformationid},0)")
     void AddStudentParent(StudentParent studentParent);
 
     /**

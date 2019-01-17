@@ -21,10 +21,12 @@ import com.kingold.educationblockchain.util.RetResult;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.kingold.educationblockchain.util.StreamCommon;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -76,18 +78,7 @@ public class ElectronicscertificateController {
 
     private DateHandler mDateHandler;
     private BlockChainPayload mPayload = new BlockChainPayload();
-
-    // for local
-    //private String mSchoolMasterSignPath = "static/schoolmaster.png";
-
-    // for weblogic
-    private String mSchoolMasterSignPath = "schoolmaster.png";
-
-    // for local
-    //private String mPresidentSignPath = "static/president.png";
-
-    // for weblogic
-    private String mPresidentSignPath = "president.png";
+    private StreamCommon mStreamCommon = new StreamCommon();
 
     /*
      * 证书生成api
@@ -115,6 +106,17 @@ public class ElectronicscertificateController {
                     map.put("name",cert.getKg_studentname());
                     map.put("certType",cert.getKg_certitype());
                     map.put("schoolName",cert.getKg_schoolname());
+
+                    Resource schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
+                    //File schoolMasterFile = schoolMasterResource.getFile();
+                    InputStream schoolMasterInputStream = schoolMasterResource.getInputStream();
+                    byte[] schoolMasterBytes = mStreamCommon.read(schoolMasterInputStream);
+
+                    Resource presidentResource = new ClassPathResource("static/president.png");
+                    //File presidentFile = presidentResource.getFile();
+                    InputStream presidentInputStream = presidentResource.getInputStream();
+                    byte[] presidentBytes = mStreamCommon.read(presidentInputStream);
+
                     if(cert.getKg_certitype().equals("毕业证书")) {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Date dateFrom = sdf.parse(cert.getKg_starttime());
@@ -131,12 +133,13 @@ public class ElectronicscertificateController {
                         map.put("monthTo",String.valueOf(calendarTo.get(Calendar.MONTH) + 1));
 
                         map.put("certId", cert.getKg_certificateno());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
+
+                        GeneratePdfCertificate(certificateFilePath, map, schoolMasterBytes, presidentBytes);
                     }
                     if(cert.getKg_certitype().equals("课程证书")) {
                         map.put("issueDate", cert.getKg_certificatedate());
                         map.put("certName",cert.getKg_name());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
+                        GeneratePdfCertificate(certificateFilePath, map, schoolMasterBytes, presidentBytes);
                     }
 
                     if(cert.getKg_certitype().equals("录取通知书")) {
@@ -144,7 +147,7 @@ public class ElectronicscertificateController {
                         map.put("certNo",cert.getKg_certificateno());
                         map.put("nameEn",cert.getKg_studentenglishname());
                         map.put("registrationTime",cert.getKg_starttime());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
+                        GeneratePdfCertificate(certificateFilePath, map, schoolMasterBytes, presidentBytes);
                     }
 
                     String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
@@ -196,11 +199,11 @@ public class ElectronicscertificateController {
     /*
      * 生成证书
      * */
-    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,String schoolMasterSignPath, String presidentSignPath) throws Exception{
+    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,byte[] schoolMasterBytes, byte[] presidentBytes) throws Exception{
         // for weblogic
-        Resource resource = new ClassPathResource("certificate-template.pdf");
+        //Resource resource = new ClassPathResource("certificate-template.pdf");
         // for local
-        //Resource resource = new ClassPathResource("static/certificate-template.pdf");
+        Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
         PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
         PdfDocument pdfDocWrite = new PdfDocument( new PdfWriter(certificateFilePath));
@@ -230,14 +233,14 @@ public class ElectronicscertificateController {
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
         // for local
-        //PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
-        //PdfFont fontUtopia = PdfFontFactory.createFont("static/font/Utopia Regular.ttf", IDENTITY_H ,false);
-        //PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
+        PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
+        PdfFont fontUtopia = PdfFontFactory.createFont("static/font/Utopia Regular.ttf", IDENTITY_H ,false);
+        PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
 
         //for weblogic
-        PdfFont fontRuiYun = PdfFontFactory.createFont("font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
-        PdfFont fontUtopia = PdfFontFactory.createFont("font/Utopia Regular.ttf", IDENTITY_H ,false);
-        PdfFont fontYuWei = PdfFontFactory.createFont("font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
+        //PdfFont fontRuiYun = PdfFontFactory.createFont("font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
+        //PdfFont fontUtopia = PdfFontFactory.createFont("font/Utopia Regular.ttf", IDENTITY_H ,false);
+        //PdfFont fontYuWei = PdfFontFactory.createFont("font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
 
         for(String fieldName: fields.keySet()){
             if(form.getField(fieldName)==null)
@@ -259,13 +262,18 @@ public class ElectronicscertificateController {
             }
                 form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
         }
-        Resource imgResource = new ClassPathResource(schoolMasterSignPath);
-        File imgFile = imgResource.getFile();
-        Image sign = new Image(ImageDataFactory.create(imgFile.getPath()));
-        sign.scaleToFit(100, 140);
-        sign.setFixedPosition(75,230);
+//        Resource imgResource1 = new ClassPathResource(schoolMasterSignPath);
+//        File imgFile1 = imgResource1.getFile();
+        Image sign1 = new Image(ImageDataFactory.create(schoolMasterBytes));
+        sign1.scaleToFit(100, 140);
+        sign1.setFixedPosition(75,230);
+//        Resource imgResource2 = new ClassPathResource(presidentSignPath);
+//        File imgFile2 = imgResource2.getFile();
+        Image sign2 = new Image(ImageDataFactory.create(presidentBytes));
+        sign2.scaleToFit(100, 140);
+        sign2.setFixedPosition(75,230);
         Document doc= new Document(pdfDocWrite);
-        doc.add(sign);
+        //doc.add(sign);
         pdfDocWrite.close();
         pdfDocRead.close();
     }

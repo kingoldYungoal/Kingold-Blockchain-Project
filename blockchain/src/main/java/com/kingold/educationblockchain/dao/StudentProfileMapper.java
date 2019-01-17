@@ -88,13 +88,13 @@ public interface StudentProfileMapper {
     /**
      * 新增學生信息
      */
-    @Insert("insert into KG_STUDENTPROFILE(kg_studentprofileid, kg_classname,kg_schoolname,kg_educationnumber,kg_studentnumber,kg_name,kg_fullname,kg_sex,kg_age,kg_countryname,kg_birthday,kg_registeredresidence,kg_passportnumberoridnumber,kg_entrancestate,kg_state,kg_jointime) values (#{kg_studentprofileid},#{kg_classname},#{kg_schoolname},#{kg_educationnumber},#{kg_studentnumber},#{kg_name},#{kg_fullname},#{kg_sex},#{kg_age},#{kg_countryname},to_date(#{kg_birthday},'yyyy-mm-dd'),#{kg_registeredresidence},#{kg_passportnumberoridnumber},#{kg_entrancestate},#{kg_state},to_date(#{kg_jointime},'yyyy-mm-dd'))")
+    @Insert("insert into KG_STUDENTPROFILE(kg_studentprofileid, kg_classname,kg_schoolname,kg_educationnumber,kg_studentnumber,kg_name,kg_fullname,kg_sex,kg_age,kg_countryname,kg_birthday,kg_registeredresidence,kg_passportnumberoridnumber,kg_entrancestate,kg_state,kg_jointime) values (#{kg_studentprofileid},#{kg_classname},#{kg_schoolname},#{kg_educationnumber},#{kg_studentnumber},#{kg_name},#{kg_fullname},#{kg_sex},#{kg_age},#{kg_countryname},to_date(#{kg_birthday},'yyyy-mm-dd'),#{kg_registeredresidence},#{kg_passportnumberoridnumber},#{kg_entrancestate},0,to_date(#{kg_jointime},'yyyy-mm-dd'))")
     void AddStudentProfile(StudentProfile studentProfile);
 
     /**
      * 更新學生信息
      */
-    @Update("update KG_STUDENTPROFILE set kg_classname=#{kg_classname},kg_schoolname=#{kg_schoolname},kg_educationnumber=#{kg_educationnumber},kg_studentnumber=#{kg_studentnumber},kg_name=#{kg_name},kg_fullname=#{kg_fullname},kg_sex=#{kg_sex},kg_age=#{kg_age},kg_countryname=#{kg_countryname},kg_birthday=to_date(#{kg_birthday},'yyyy-mm-dd'),kg_registeredresidence=#{kg_registeredresidence},kg_passportnumberoridnumber=#{kg_passportnumberoridnumber},#{kg_entrancestate},kg_jointime=to_date(#{kg_jointime},'yyyy-mm-dd') where kg_studentprofileid=#{kg_studentprofileid} and kg_state=0)")
+    @Update("update KG_STUDENTPROFILE set KG_CLASSNAME=#{kg_classname},KG_SCHOOLNAME=#{kg_schoolname},KG_EDUCATIONNUMBER=#{kg_educationnumber},KG_STUDENTNUMBER=#{kg_studentnumber},KG_NAME=#{kg_name},KG_FULLNAME=#{kg_fullname},KG_SEX=#{kg_sex},KG_AGE=#{kg_age},KG_COUNTRYNAME=#{kg_countryname},KG_BIRTHDAY=to_date(#{kg_birthday},'yyyy-mm-dd'),KG_REGISTEREDRESIDENCE=#{kg_registeredresidence},KG_PASSPORTNUMBERORIDNUMBER=#{kg_passportnumberoridnumber},KG_ENTRANCESTATE=#{kg_entrancestate},KG_JOINTIME=to_date(#{kg_jointime},'yyyy-mm-dd') where kg_studentprofileid=#{kg_studentprofileid} and kg_state=0")
     void UpdateStudentProfile(StudentProfile studentProfile);
 
     /**
