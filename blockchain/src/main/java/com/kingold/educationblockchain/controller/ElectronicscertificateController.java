@@ -2,12 +2,14 @@ package com.kingold.educationblockchain.controller;
 
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.PdfPageFormCopier;
+import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.kingold.educationblockchain.bean.CertInfo;
@@ -206,8 +208,8 @@ public class ElectronicscertificateController {
         Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
         PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
-        PdfDocument pdfDocWrite = new PdfDocument( new PdfWriter(certificateFilePath));
-        pdfDocWrite.setTagged();
+        PdfWriter pdfWriter=new PdfWriter(certificateFilePath);
+        PdfDocument pdfDocWrite = new PdfDocument(pdfWriter);
         int page=1;
         if(fields.get("certType").equals("录取通知书"))
         {
@@ -260,19 +262,28 @@ public class ElectronicscertificateController {
             else {
                 form.getField(fieldName).setFontAndSize(fontRuiYun,14);
             }
-                form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
+            form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
         }
 //        Resource imgResource1 = new ClassPathResource(schoolMasterSignPath);
 //        File imgFile1 = imgResource1.getFile();
-        Image sign1 = new Image(ImageDataFactory.create(schoolMasterBytes));
-        sign1.scaleToFit(100, 140);
-        sign1.setFixedPosition(75,230);
-//        Resource imgResource2 = new ClassPathResource(presidentSignPath);
-//        File imgFile2 = imgResource2.getFile();
-        Image sign2 = new Image(ImageDataFactory.create(presidentBytes));
-        sign2.scaleToFit(100, 140);
-        sign2.setFixedPosition(75,230);
-        Document doc= new Document(pdfDocWrite);
+        PdfCanvas canvas = new PdfCanvas(pdfDocWrite.getPage(1).newContentStreamAfter(), pdfDocWrite.getPage(1).getResources(),pdfDocWrite);
+        ImageData sign1 = ImageDataFactory.create(schoolMasterBytes);
+
+        if(fields.get("certType").equals("毕业证书")) {
+            canvas.addImage(sign1,75, 230,100,false);
+            ImageData teacherSign = ImageDataFactory.create(presidentBytes);
+            canvas.addImage(teacherSign,400, 230,100,false);
+        }
+        else if(fields.get("certType").equals("录取通知书")) {
+            canvas.addImage(sign1,100, 240,100,false);
+        }
+        else if(fields.get("certType").equals("课程证书")) {
+            canvas.addImage(sign1,250, 170,100,false);
+            ImageData teacherSign = ImageDataFactory.create(presidentBytes);
+            canvas.addImage(teacherSign,75, 170,100,false);
+        }
+
+        //Document doc= new Document(pdfDocWrite);
         //doc.add(sign);
         pdfDocWrite.close();
         pdfDocRead.close();

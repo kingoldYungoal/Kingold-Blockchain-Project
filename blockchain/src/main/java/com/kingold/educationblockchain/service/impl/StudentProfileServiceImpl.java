@@ -2,7 +2,9 @@ package com.kingold.educationblockchain.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.kingold.educationblockchain.bean.*;
+import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
 import com.kingold.educationblockchain.dao.StudentProfileMapper;
+import com.kingold.educationblockchain.service.ElectronicscertificateService;
 import com.kingold.educationblockchain.service.ParentInformationService;
 import com.kingold.educationblockchain.service.StudentParentService;
 import com.kingold.educationblockchain.service.StudentProfileService;
@@ -10,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService {
@@ -25,6 +26,9 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
     @Autowired
     private StudentParentService mStudentParentService;
+
+    @Autowired
+    private ElectronicscertificateService mElectronicscertificateService;
 
     /**
      * 根據id查詢學生信息
@@ -65,13 +69,40 @@ public class StudentProfileServiceImpl implements StudentProfileService {
      */
     @Override
     public PageBean<StudentInfo> GetStudentsByClassAndTeacher(String teacherId, String classname,int currentPage,int pageSize){
-        //设置分页信息，分别是当前页数和每页显示的总记录数
-        List<StudentProfile> allItems = mStudentProfileMapper.GetStudentsByClassAndTeacher(teacherId,classname);
+        // 设置分页信息，分别是当前页数和每页显示的总记录数
         PageHelper.startPage(currentPage, pageSize);
         List<StudentProfile> pageItems = mStudentProfileMapper.GetStudentsByClassAndTeacher(teacherId,classname);
-        //studentinfo封装
+        // studentinfo封装
         List<StudentInfo> infoList = GetStudentInfoList(pageItems);
-        int countNums = allItems.size();            //总记录数
+        int countNums = pageItems.size();            //总记录数
+        PageBean<StudentInfo> pageData = new PageBean<>(currentPage, pageSize, countNums);
+        pageData.setItems(infoList);
+        return pageData;
+    }
+
+    /**
+     * 根据教師信息id，从证书表取出学生id，获取学生信息
+     */
+    @Override
+    public PageBean<StudentInfo> GetStudentsByParam(String teacherId, String classname,int year, int currentPage, int pageSize){
+        // 设置分页信息，分别是当前页数和每页显示的总记录数
+        PageHelper.startPage(currentPage, pageSize);
+        CertificateParam param = new CertificateParam();
+        param.setTeacherId(teacherId);
+        param.setYear(year);
+        param.setClassName(classname);
+        List<StudentProfile> pageItems = new ArrayList<>();
+        List<Electronicscertificate> certs = mElectronicscertificateService.GetCertificatesByParam(param);
+        if(certs.size() > 0){
+            ArrayList<Electronicscertificate> newCerts = RemoveDuplicateStudent(certs);
+            for(Electronicscertificate newCert: newCerts){
+                pageItems.add(mStudentProfileMapper.GetStudentProfileById(newCert.getKg_studentprofileid()));
+            }
+        }
+
+        // studentinfo封装
+        List<StudentInfo> infoList = GetStudentInfoList(pageItems);
+        int countNums = pageItems.size();            //总记录数
         PageBean<StudentInfo> pageData = new PageBean<>(currentPage, pageSize, countNums);
         pageData.setItems(infoList);
         return pageData;
@@ -176,5 +207,18 @@ public class StudentProfileServiceImpl implements StudentProfileService {
             }
         }
         return infoList;
+    }
+
+    // 对学生id重复的去重
+    public ArrayList<Electronicscertificate> RemoveDuplicateStudent(List<Electronicscertificate> certs){
+        Set<Electronicscertificate> set = new TreeSet<Electronicscertificate>(new Comparator<Electronicscertificate>() {
+            @Override
+            public int compare(Electronicscertificate e1, Electronicscertificate e2) {
+                //字符串,则按照asicc码升序排列
+                return e1.getKg_studentprofileid().compareTo(e2.getKg_studentprofileid());
+            }
+        });
+        set.addAll(certs);
+        return new ArrayList<Electronicscertificate>(set);
     }
 }

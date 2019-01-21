@@ -1,28 +1,26 @@
 var pageNum = 1;
 var pageSize = 10;
-var classnames;
+var classname;
+var year;
 var phone;
 var M = {};
 $(document).ready(function(){
-    classnames = $("#selectDiv").val();
+    classname = $("#classSelect").val();
+    year = $("#yearSelect").val();
     phone = $("#phone").val();
-    // $(".overlay").css({'display':'block','opacity':'0.8'});
-    // $(".showbox").animate({'margin-top':'300px','opacity':'1'});
-    initTable(classnames);
+    initTable(year, classname);
 });
 
 //ajax获取后台数据
-function initTable(classname) {
+function initTable(year, classname) {
     var tbody="";
-    // $(".overlay").css({'display':'block','opacity':'0.8'});
-    // $(".showbox").animate({'margin-top':'300px','opacity':'1'});
     $.ajax({
         type: 'get',
         dataType : "json",
         async: false,
-        //url: "/student/studentlist",//请求的action路径页面
+        //url: "/student/studentlist",
         url: "../student/studentlist",
-        data:{"teacherphone":phone,"classname":classname, "pageNum":pageNum,"pageSize":pageSize},
+        data:{"teacherphone":phone,"year": year, "classname":classname, "pageNum":pageNum,"pageSize":pageSize},
         error: function () {//请求失败处理函数
             M.dialog13 = jqueryAlert({
                 'icon': '../images/alertimgs/warning.png',
@@ -41,8 +39,6 @@ function initTable(classname) {
             }
 
             $("#datadiv table tbody").html(tbody);
-            // $(".showbox").stop(true);
-            // $(".overlay").css({'display':'none','opacity':'0'});
 
             if (data.totalPage > 1){
                 var pageCount = data.totalPage; //取到pageCount的值
@@ -69,15 +65,13 @@ function initTable(classname) {
                     },//点击事件，用于通过Ajax来刷新整个list列表
                     onPageClicked: function (event, originalEvent, type, page) {
                         $("#datadiv table tbody").html("");
-                        // $(".overlay").css({'display':'block','opacity':'0.8'});
-                        // $(".showbox").animate({'margin-top':'300px','opacity':'1'});
                         var tbodys="";
                         $.ajax({
                             //url: "/student/studentlist",
                             url: "../student/studentlist",
                             type: "get",
                             dataType : "json",
-                            data:{"teacherphone":phone,"classname":classname, "pageNum":page,"pageSize":pageSize},
+                            data:{"teacherphone":phone,"year": year, "classname":classname, "pageNum":page,"pageSize":pageSize},
                             success: function (data) {
                                 if (data.items.length > 0){
                                     for (var i = 0;i <data.items.length;i++){
@@ -86,8 +80,6 @@ function initTable(classname) {
                                         tbodys+=trs;
                                     }
                                 }
-                                // $(".showbox").stop(true);
-                                // $(".overlay").css({'display':'none','opacity':'0'});
                                 $("#datadiv table tbody").html(tbodys);
                             }
                         });
@@ -106,8 +98,13 @@ function initTable(classname) {
     });
 }
 
+function BatchPrintPDF(){
+    //alert("123");
+}
+
 function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
-    window.location.href = "../student/studentinfo?id=" + id;
+    var roleid = $("#teacherid").val();
+    window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2";
     //window.location.href = "/student/studentinfo?id=" + id;
 }

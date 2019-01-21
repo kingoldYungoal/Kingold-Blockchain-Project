@@ -1,6 +1,7 @@
 package com.kingold.educationblockchain.service.impl;
 
 import com.kingold.educationblockchain.bean.Electronicscertificate;
+import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
 import com.kingold.educationblockchain.dao.ElectronicscertificateMapper;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,15 @@ public class ElectronicscertificateServiceImpl implements Electronicscertificate
     public Electronicscertificate GetCertificateByStudentIdAndCertno(String certificateno, String studentId){
         return mElectronicscertificateMapper.GetCertificateByStudentIdAndCertno(certificateno,studentId);
     }
+
+    /**
+     * 根據多个参数查詢多个证书信息
+     */
+    @Override
+    public List<Electronicscertificate> GetCertificatesByParam(CertificateParam param){
+        return mElectronicscertificateMapper.GetCertificatesByParam(param);
+    }
+
 
     /**
      * 证书信息新增

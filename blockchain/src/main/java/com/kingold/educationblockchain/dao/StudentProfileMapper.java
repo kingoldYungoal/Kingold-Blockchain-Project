@@ -88,7 +88,7 @@ public interface StudentProfileMapper {
     /**
      * 新增學生信息
      */
-    @Insert("insert into KG_STUDENTPROFILE(kg_studentprofileid, kg_classname,kg_schoolname,kg_educationnumber,kg_studentnumber,kg_name,kg_fullname,kg_sex,kg_age,kg_countryname,kg_birthday,kg_registeredresidence,kg_passportnumberoridnumber,kg_entrancestate,kg_state,kg_jointime) values (#{kg_studentprofileid},#{kg_classname},#{kg_schoolname},#{kg_educationnumber},#{kg_studentnumber},#{kg_name},#{kg_fullname},#{kg_sex},#{kg_age},#{kg_countryname},to_date(#{kg_birthday},'yyyy-mm-dd'),#{kg_registeredresidence},#{kg_passportnumberoridnumber},#{kg_entrancestate},0,to_date(#{kg_jointime},'yyyy-mm-dd'))")
+    @Insert("insert into KG_STUDENTPROFILE(kg_studentprofileid, kg_classname,kg_schoolname,kg_educationnumber,kg_studentnumber,kg_name,kg_fullname,kg_sex,kg_age,kg_countryname,kg_birthday,kg_registeredresidence,kg_passportnumberoridnumber,kg_entrancestate,kg_jointime) values (#{kg_studentprofileid},#{kg_classname},#{kg_schoolname},#{kg_educationnumber},#{kg_studentnumber},#{kg_name},#{kg_fullname},#{kg_sex},#{kg_age},#{kg_countryname},to_date(#{kg_birthday},'yyyy-mm-dd'),#{kg_registeredresidence},#{kg_passportnumberoridnumber},#{kg_entrancestate},to_date(#{kg_jointime},'yyyy-mm-dd'))")
     void AddStudentProfile(StudentProfile studentProfile);
 
     /**
