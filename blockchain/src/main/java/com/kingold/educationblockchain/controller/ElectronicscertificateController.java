@@ -7,6 +7,7 @@ import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -88,6 +89,9 @@ public class ElectronicscertificateController {
     // for local
     //private String mPresidentSignPath = "static/president.png";
 
+    // for local
+    private String mLogoPath = "static/logo/logo-01.png";
+
     // for weblogic
     private String mPresidentSignPath = "president.png";
 
@@ -121,7 +125,6 @@ public class ElectronicscertificateController {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Date dateFrom = sdf.parse(cert.getKg_starttime());
                         Date dateTo = sdf.parse(cert.getKg_endtime());
-
                         Calendar calendarFrom = Calendar.getInstance();
                         calendarFrom.setTime(dateFrom);
                         map.put("yearFrom",String.valueOf(calendarFrom.get(Calendar.YEAR)));
@@ -133,12 +136,13 @@ public class ElectronicscertificateController {
                         map.put("monthTo",String.valueOf(calendarTo.get(Calendar.MONTH) + 1));
 
                         map.put("certId", cert.getKg_certificateno());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
+                        map.put("schoolName",cert.getKg_schoolname());
+                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath,mLogoPath);
                     }
                     if(cert.getKg_certitype().equals("课程证书")) {
                         map.put("issueDate", cert.getKg_certificatedate());
                         map.put("certName",cert.getKg_name());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
+                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath,mLogoPath);
                     }
 
                     if(cert.getKg_certitype().equals("录取通知书")) {
@@ -146,7 +150,7 @@ public class ElectronicscertificateController {
                         map.put("certNo",cert.getKg_certificateno());
                         map.put("nameEn",cert.getKg_studentenglishname());
                         map.put("registrationTime",cert.getKg_starttime());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
+                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath,mLogoPath);
                     }
 
                     String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
@@ -198,12 +202,13 @@ public class ElectronicscertificateController {
     /*
      * 生成证书
      * */
-    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,String schoolMasterSignPath, String presidentSignPath) throws Exception{
+    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,String schoolMasterSignPath, String presidentSignPath, String logoPath) throws Exception{
         // for weblogic
         //Resource resource = new ClassPathResource("certificate-template.pdf");
         // for local
         Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
+        PdfReader pdfReader=new PdfReader(file.getPath());
         PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
         PdfWriter pdfWriter=new PdfWriter(certificateFilePath);
         PdfDocument pdfDocWrite = new PdfDocument( pdfWriter);
@@ -232,9 +237,14 @@ public class ElectronicscertificateController {
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
         // for local
-        PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
+        PdfFont fontRuiYun = PdfFontFactory.createFont(
+                "static/font/锐字云字库小标宋体GBK.TTF",
+                IDENTITY_H ,false);
         PdfFont fontUtopia = PdfFontFactory.createFont("static/font/Utopia Regular.ttf", IDENTITY_H ,false);
-        PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
+        PdfFont fontYuWei = PdfFontFactory.createFont(
+                "static/font/禹卫书法行书繁体（优化版）.ttf",
+                IDENTITY_H ,
+                false);
 
         //for weblogic
         //PdfFont fontRuiYun = PdfFontFactory.createFont("font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
@@ -247,7 +257,7 @@ public class ElectronicscertificateController {
             if(fieldName=="name") {
                 form.getField(fieldName).setFontAndSize(fontYuWei,41);
             }
-            else if(fieldName=="nameEn") {
+            else if(fieldName=="nameEn"||fieldName=="schoolNameEn") {
                 form.getField(fieldName).setFontAndSize(fontUtopia,14);
             }
             else if(fieldName=="certName"){
@@ -259,12 +269,20 @@ public class ElectronicscertificateController {
             else {
                 form.getField(fieldName).setFontAndSize(fontRuiYun,14);
             }
-                form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
+            form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
         }
+        PdfPage pdfPage=pdfDocWrite.getPage(1);
+        PdfCanvas canvas = new PdfCanvas(
+                pdfPage.newContentStreamAfter(),
+                pdfPage.getResources(),
+                pdfDocWrite);
         Resource imgResource = new ClassPathResource(schoolMasterSignPath);
-        PdfCanvas canvas = new PdfCanvas(pdfDocWrite.getPage(1).newContentStreamAfter(), pdfDocWrite.getPage(1).getResources(),pdfDocWrite);
         File imgFile = imgResource.getFile();
         ImageData sign = ImageDataFactory.create(imgFile.getPath());
+        Resource logoResource = new ClassPathResource(logoPath);
+        File logoFile = logoResource.getFile();
+        ImageData logo = ImageDataFactory.create(logoFile.getPath());
+        canvas.addImage(logo,225, 700,150,false);
         if(fields.get("certType").equals("毕业证书")) {
             canvas.addImage(sign,75, 230,100,false);
             Resource teacherImgResource = new ClassPathResource(presidentSignPath);
