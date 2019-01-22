@@ -53,7 +53,7 @@
             <span>学生列表</span>
             <div class="classdiv">
                 <select onchange="initTable()" id="yearSelect" name="yearSelect">
-                    <option value="">--年份筛选--</option>
+                    <option value="0">--年份筛选--</option>
                     <option th:each="year:${yearList}" th:value="${year}" th:text="${year}"></option>
                 </select>
             </div>
@@ -88,6 +88,8 @@
             <div style="text-align:center;" id="pages">
             </div>
         </div>
+    </div>
+    <div id="certIframe">
     </div>
 </div>
 </div>

@@ -1,6 +1,9 @@
 package com.kingold.educationblockchain.dao;
 
+import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.bean.StudentProfile;
+import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
+import com.kingold.educationblockchain.util.SqlProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -84,6 +87,26 @@ public interface StudentProfileMapper {
      */
     @Select("select * from KG_STUDENTPROFILE where kg_studentprofileid in (SELECT kg_studentprofileid FROM kg_student_teacher where kg_teacherinformationid=#{teacherId} and kg_state=0) and kg_classname=#{classname} and kg_state=0")
     List<StudentProfile> GetStudentsByClassAndTeacher(String teacherId, String classname);
+
+    /**
+     * 根據多个参数查詢多个学生信息
+     */
+    @Select("<script>"
+            + "SELECT * from kg_studentprofile"
+            + " Where kg_studentprofileid in ("
+            + "select distinct kg_studentprofileid from KG_ELECTRONICSCERTIFICATE where 1=1"
+            + "<if test='teacherId!=\"\" and teacherId != null'>"
+            + " and kg_teacherid=#{teacherId}"
+            + "</if>"
+            + "<if test='className!=\"\" and className != null'>"
+            + " and kg_classname=#{className}"
+            + "</if>"
+            + "<if test='year>0'>"
+            + " and to_number(to_char(kg_certificatedate,'yyyy'))=#{year}"
+            + "</if>"
+            + " and kg_state=0) and kg_state=0"
+            + "</script>")
+    List<StudentProfile> GetStudentsByParam(String teacherId, String className, int year);
 
     /**
      * 新增學生信息

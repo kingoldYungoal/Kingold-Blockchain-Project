@@ -85,24 +85,15 @@ public class StudentProfileServiceImpl implements StudentProfileService {
      */
     @Override
     public PageBean<StudentInfo> GetStudentsByParam(String teacherId, String classname,int year, int currentPage, int pageSize){
+        List<StudentProfile> stus = mStudentProfileMapper.GetStudentsByParam(teacherId,classname,year);
+
         // 设置分页信息，分别是当前页数和每页显示的总记录数
         PageHelper.startPage(currentPage, pageSize);
-        CertificateParam param = new CertificateParam();
-        param.setTeacherId(teacherId);
-        param.setYear(year);
-        param.setClassName(classname);
-        List<StudentProfile> pageItems = new ArrayList<>();
-        List<Electronicscertificate> certs = mElectronicscertificateService.GetCertificatesByParam(param);
-        if(certs.size() > 0){
-            ArrayList<Electronicscertificate> newCerts = RemoveDuplicateStudent(certs);
-            for(Electronicscertificate newCert: newCerts){
-                pageItems.add(mStudentProfileMapper.GetStudentProfileById(newCert.getKg_studentprofileid()));
-            }
-        }
+        List<StudentProfile> pageItems = mStudentProfileMapper.GetStudentsByParam(teacherId,classname,year);
 
         // studentinfo封装
         List<StudentInfo> infoList = GetStudentInfoList(pageItems);
-        int countNums = pageItems.size();            //总记录数
+        int countNums = stus.size();            //总记录数
         PageBean<StudentInfo> pageData = new PageBean<>(currentPage, pageSize, countNums);
         pageData.setItems(infoList);
         return pageData;

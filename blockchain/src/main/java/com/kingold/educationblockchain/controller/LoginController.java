@@ -103,26 +103,17 @@ public class LoginController {
                         model.addObject("yearList",GetAllYears());
 
                         // 根据教师id获取证书表中的所有的classname
-                        CertificateParam param = new CertificateParam();
-                        param.setTeacherId(teacherInformation.getKg_teacherinformationid());
                         List<Electronicscertificate> electronicscertificateList = GetAllCertificates(teacherInformation.getKg_teacherinformationid());
                         List<String> classes = new ArrayList<>();
-                        List<String> studentIds = new ArrayList<>();
                         if(electronicscertificateList.size() > 0){
                             for(Electronicscertificate cert: electronicscertificateList) {
                                 if(!classes.contains(cert.getKg_classname())){
                                     classes.add(cert.getKg_classname());
                                 }
-                                if(!studentIds.contains(cert.getKg_studentprofileid())){
-                                    studentIds.add(cert.getKg_studentprofileid());
-                                }
                             }
                         }
-                        // 根据教师id获取所有证书表的学生id，获取学生信息
-                        List<StudentInfo> StudentInfoList = GetStudentList(studentIds);
 
                         model.addObject("classList",classes);
-                        model.addObject("studentList",StudentInfoList);
                         model.addObject("teacherInformation", teacherInformation);
                         model.setViewName("studentlist");
                         return model;
@@ -205,25 +196,18 @@ public class LoginController {
             // 获取所有的year
             model.addObject("yearList",GetAllYears());
 
-            // 根据教师id获取证书表中的所有的classname 和 学生ids
+            // 根据教师id获取证书表中的所有的classname
             List<Electronicscertificate> electronicscertificateList = GetAllCertificates(teacherInformation.getKg_teacherinformationid());
             List<String> classes = new ArrayList<>();
-            List<String> studentIds = new ArrayList<>();
             if(electronicscertificateList.size() > 0){
                 for(Electronicscertificate cert: electronicscertificateList) {
                     if(!classes.contains(cert.getKg_classname())){
                         classes.add(cert.getKg_classname());
                     }
-                    if(!studentIds.contains(cert.getKg_studentprofileid())){
-                        studentIds.add(cert.getKg_studentprofileid());
-                    }
                 }
             }
-            // 根据教师id获取所有证书表的学生id，获取学生信息
-            List<StudentInfo> StudentInfoList = GetStudentList(studentIds);
 
             model.addObject("classList",classes);
-            model.addObject("studentList",StudentInfoList);
             model.addObject("teacherInformation", teacherInformation);
             model.setViewName("studentlist");
             return model;

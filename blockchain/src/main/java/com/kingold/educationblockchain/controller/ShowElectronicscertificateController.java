@@ -1,12 +1,15 @@
 package com.kingold.educationblockchain.controller;
 
-import org.apache.http.ParseException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.kingold.educationblockchain.bean.Electronicscertificate;
+import com.kingold.educationblockchain.bean.PageBean;
+import com.kingold.educationblockchain.bean.StudentInfo;
+import com.kingold.educationblockchain.bean.TeacherInformation;
+import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
+import com.kingold.educationblockchain.service.ElectronicscertificateService;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +17,12 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.io.IOException;
 import java.awt.image.BufferedImage;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
+import java.util.*;
 import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -32,6 +32,9 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 @Controller
 @RequestMapping("/electronicscertificate")
 public class ShowElectronicscertificateController {
+    @Autowired
+    private ElectronicscertificateService mElectronicscertificateService;
+
     @Value("${CECS.BaseUrl}")
     private String mBaseUrl;
 
@@ -40,6 +43,8 @@ public class ShowElectronicscertificateController {
 
     @Value("${CECS.CertificateFileParentId}")
     private String mCertificateFileParentId;
+
+    private Gson gson;
 
     /*
     * 学生证书页面
@@ -52,6 +57,33 @@ public class ShowElectronicscertificateController {
         model.addObject("certificateid",fileId);
         model.setViewName("studentcertdetail");
         return model;
+    }
+
+    @RequestMapping(value = "/certificatelist", method = RequestMethod.POST)
+    @ResponseBody
+    public String GetCertificateList(@RequestBody JSONObject params) {
+        gson = new Gson();
+        String className = params.getString("className");
+        int year = params.getInteger("year");
+        ArrayList<String> studentIdList = (ArrayList) params.get("stuIds");
+        List<String> certIds = new ArrayList<>();
+        if(studentIdList.size() > 0){
+            List<Electronicscertificate> allCertList = new ArrayList<>();
+            CertificateParam param = new CertificateParam();
+            param.setClassName(className);
+            param.setYear(year);
+            for(String stuId: studentIdList){
+                param.setStudentId(stuId);
+                // 进行查询
+                List<Electronicscertificate> certList = mElectronicscertificateService.GetCertificatesByParam(param);
+                allCertList.addAll(certList);
+            }
+            List<Electronicscertificate> newCerts = RemoveDuplicateCert(allCertList);
+            for(Electronicscertificate cert : newCerts){
+                certIds.add(cert.getKg_electronicscertificateid());
+            }
+        }
+        return gson.toJson(certIds);
     }
 
     /*
@@ -158,5 +190,18 @@ public class ShowElectronicscertificateController {
             throw new Exception(ex.getMessage());
         }
         throw new Exception(response.toString());
+    }
+
+    // 对学生id重复的去重
+    public ArrayList<Electronicscertificate> RemoveDuplicateCert(List<Electronicscertificate> certs){
+        Set<Electronicscertificate> set = new TreeSet<Electronicscertificate>(new Comparator<Electronicscertificate>() {
+            @Override
+            public int compare(Electronicscertificate e1, Electronicscertificate e2) {
+                //字符串,则按照asicc码升序排列
+                return e1.getKg_electronicscertificateid().compareTo(e2.getKg_electronicscertificateid());
+            }
+        });
+        set.addAll(certs);
+        return new ArrayList<Electronicscertificate>(set);
     }
 }

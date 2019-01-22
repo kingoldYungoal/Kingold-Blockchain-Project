@@ -103,11 +103,6 @@ public class StudentController {
             teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(teacherphone);
             if(teacherInformation != null){
                 studentInfoPage = mStudentProfileService.GetStudentsByParam(teacherInformation.getKg_teacherinformationid(),classname,year,pageNum,pageSize);
-//                if(classname.trim().length() > 0){
-//                    studentInfoPage = mStudentProfileService.GetStudentsByClassAndTeacher(teacherInformation.getKg_teacherinformationid(),classname,pageNum,pageSize);
-//                }else{
-//                    studentInfoPage = mStudentProfileService.GetStudentsByTeacherId(teacherInformation.getKg_teacherinformationid(),pageNum,pageSize);
-//                }
             }
         }
         return gson.toJson(studentInfoPage);

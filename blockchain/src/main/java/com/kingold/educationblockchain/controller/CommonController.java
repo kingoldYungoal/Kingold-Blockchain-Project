@@ -417,7 +417,7 @@ public class CommonController {
             JsonArray jsonArray = payload.GetPayload("queryCertByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
             Iterator<JsonElement> it =jsonArray.iterator();
             gson = new Gson();
-            List<CertInfo> certInfoList=new ArrayList<CertInfo>();
+            List<CertInfo> certInfoList=new ArrayList<>();
             while(it.hasNext())
             {
                 String str =  it.next().getAsJsonObject().get("valueJson").getAsString();

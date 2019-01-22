@@ -3,6 +3,9 @@ package com.kingold.educationblockchain.service;
 import com.kingold.educationblockchain.bean.PageBean;
 import com.kingold.educationblockchain.bean.StudentInfo;
 import com.kingold.educationblockchain.bean.StudentProfile;
+import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
+import com.kingold.educationblockchain.util.SqlProvider;
+import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;
 
