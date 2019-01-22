@@ -98,7 +98,6 @@ public class CommonController {
                 // 判断学号，学籍号 是否已存在
                 List<StudentProfile> studentProfileList = mStudentProfileService.GetStudentProfileByNumber(studentProfile.getKg_educationnumber(),studentProfile.getKg_studentnumber());
                 if(studentProfileList == null || studentProfileList.size() <= 0){
-                    studentProfile.setKg_state(0);
                     //将学生信息添加到数据库
                     try{
                         boolean tableflag = mStudentProfileService.AddStudentProfile(studentProfile);
@@ -135,7 +134,6 @@ public class CommonController {
                     //teacherInformation.setKg_teacherinformationid(UUID.randomUUID().toString());
                     // 判断教师信息是否存在
                     if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) == null) {
-                        teacherInformation.setKg_state(0);
                         flag = mTeacherInfomationService.AddTeacherInformation(teacherInformation);
                         if(flag){
                             message = "教师信息添加成功";
@@ -156,7 +154,6 @@ public class CommonController {
                     //parentInformation.setKg_parentinformationid(UUID.randomUUID().toString());
                     // 判断家长信息是否存在
                     if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
-                        parentInformation.setKg_state(0);
                         flag = mParentInfomationService.AddParentInformation(parentInformation);
                         if(flag){
                             message = "家长信息添加成功";
@@ -181,7 +178,6 @@ public class CommonController {
                         //判断 之前并不存在 家长和学生关系信息
                         StudentParent sp = mStudentParentService.FindStudentParent(studentParent.getKg_parentinformationid(), studentParent.getKg_studentprofileid());
                         if(sp == null){
-                            studentParent.setKg_state(0);
                             flag = mStudentParentService.AddStudentParent(studentParent);
                             if(flag){
                                 message = "家长学生信息添加成功";
@@ -209,7 +205,6 @@ public class CommonController {
                         //判断 之前并不存在 教师和学生关系信息
                         StudentTeacher st = mStudentTeacherService.FindStudentTeacher(studentTeacher.getKg_teacherinformationid(), studentTeacher.getKg_studentprofileid());
                         if(st == null){
-                            studentTeacher.setKg_state(0);
                             flag = mStudentTeacherService.AddStudentTeacher(studentTeacher);
                             if(flag){
                                 message = "教师学生信息添加成功";
@@ -258,20 +253,20 @@ public class CommonController {
                 }
                 break;
             case "kg_teacherinformation":
-                TeacherInformation teacherInformation= JSONObject.parseObject(jsonParam,TeacherInformation.class);
+                TeacherInformation teacherInformation = JSONObject.parseObject(jsonParam,TeacherInformation.class);
                 //判断教师信息是否存在
                 if(teacherInformation.getKg_teacherinformationid().trim().length() > 0){
                     if(mTeacherInfomationService.FindTeacherInformationById(teacherInformation.getKg_teacherinformationid()) != null){
                         //判断要更新的教师手机号是否存在
-                        if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) == null){
+                        if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) != null && !mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()).getKg_teacherinformationid().equals(teacherInformation.getKg_teacherinformationid())){
+                            message = "教师手机号已存在，无法重复添加";
+                        }else{
                             flag = mTeacherInfomationService.UpdateTeacherInformation(teacherInformation);
                             if(flag){
                                 message = "教师信息更新成功";
                             }else{
                                 message = "教师信息更新失败";
                             }
-                        }else{
-                            message = "教师手机号已存在，无法重复添加";
                         }
                     }else{
                         message = "该教师不存在,无法进行更新操作";
@@ -281,19 +276,19 @@ public class CommonController {
                 }
                 break;
             case "kg_parentinformation":
-                ParentInformation parentInformation= JSONObject.parseObject(jsonParam,ParentInformation.class);
+                ParentInformation parentInformation = JSONObject.parseObject(jsonParam,ParentInformation.class);
                 //判断教师信息是否存在
                 if(parentInformation.getKg_parentinformationid().trim().length() > 0){
                     if(mParentInfomationService.FindParentInformationById(parentInformation.getKg_parentinformationid()) != null){
-                        if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
+                        if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) != null && !mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()).getKg_parentinformationid().equals(parentInformation.getKg_parentinformationid())){
+                            message = "家长手机号已存在，无法重复添加";
+                        }else{
                             flag = mParentInfomationService.UpdateParentInformation(parentInformation);
                             if(flag){
                                 message = "家长信息更新成功";
                             }else{
                                 message = "家长信息更新失败";
                             }
-                        }else{
-                            message = "家长手机号已存在，无法重复添加";
                         }
                     }else{
                         message = "该家长不存在,无法进行更新操作";

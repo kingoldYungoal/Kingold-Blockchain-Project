@@ -13,14 +13,17 @@
     <link rel="stylesheet" th:href="@{/css/studentinfo.css}" href="css/studentinfo.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
 </head>
-<body style="background-color: #f8f6fa;">
+<body style="background-color: #f8f6fa;min-width: 1200px;">
 <div class="pagewrap">
+    <input id="stuid" type="hidden" name="stuid" th:value="${stuid}">
+    <input id="roleid" type="hidden" name="roleid" th:value="${roleid}">
+    <input id="role" type="hidden" name="role" th:value="${role}">
     <div id="header">
         <div id="imgbox">
             <!--<img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">-->
             <img id="headimg" th:src="@{/images/logo2.png}" src="images/logo2.png">
         </div>
-        <input type="button" id="headbtn" value="返回" onclick="javascript:history.go(-1);" />
+        <input type="button" id="headbtn" value="返回" onclick="GoBack();" />
     </div>
     <div id="maindiv">
         <div id="infodiv">
@@ -110,7 +113,22 @@
 <script>
     function GoCertDetail(obj) {
         var fileId = $(obj).attr("data-certId");
-        window.location.href = "../electronicscertificate/studentcertificate?fileId=" + fileId;
+        window.open("../electronicscertificate/studentcertificate?fileId=" + fileId);
+    }
+
+    function GoBack() {
+        var stuid = $("#stuid").val();
+        var roleid = $("#roleid").val();
+        var role = $("#role").val();
+        if (role == 0){
+            window.location.href = "../login/login";
+        }else{
+            if (role == 1){
+                window.location.href = "../login/BackListPage?roleid=" + roleid + "&role=" + role;
+            } else{
+                window.location.href = "../login/BackListPage?roleid=" + roleid + "&role=" + role;
+            }
+        }
     }
 </script>
 </html>

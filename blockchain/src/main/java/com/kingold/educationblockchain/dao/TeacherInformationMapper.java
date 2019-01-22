@@ -36,7 +36,7 @@ public interface TeacherInformationMapper {
     /**
      * 教師数据新增
      */
-    @Insert("insert into kg_teacherinformation(kg_teacherinformationid,kg_name,kg_phonenumber,kg_schoolname,kg_state) values (#{kg_teacherinformationid},#{kg_name},#{kg_phonenumber},#{kg_schoolname},#{kg_state})")
+    @Insert("insert into kg_teacherinformation(kg_teacherinformationid,kg_name,kg_phonenumber,kg_schoolname,kg_state) values (#{kg_teacherinformationid},#{kg_name},#{kg_phonenumber},#{kg_schoolname},0)")
     void AddTeacherInformation(TeacherInformation teacherInformation);
 
     /**

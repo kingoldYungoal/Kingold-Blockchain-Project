@@ -1,6 +1,8 @@
 package com.kingold.educationblockchain.dao;
 
 import com.kingold.educationblockchain.bean.Electronicscertificate;
+import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
+import com.kingold.educationblockchain.util.SqlProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -26,15 +28,21 @@ public interface ElectronicscertificateMapper {
     Electronicscertificate GetCertificateByStudentIdAndCertno(String certificateno, String studentId);
 
     /**
+     * 根據多个参数查詢多个证书信息
+     */
+    @SelectProvider(type = SqlProvider.class, method = "QueryCertByParam")
+    List<Electronicscertificate> GetCertificatesByParam(CertificateParam param);
+
+    /**
      * 新增电子证书数据
      */
-    @Insert("insert into KG_ELECTRONICSCERTIFICATE(kg_electronicscertificateid,kg_certificateno,kg_studentprofileid,kg_studentname,kg_sex,kg_certificatedate,kg_classname,kg_certitype,kg_schoolname,kg_teachername,kg_starttime,kg_endtime,kg_classstype,kg_explain,kg_name,kg_state) values (#{kg_electronicscertificateid},#{kg_certificateno},#{kg_studentprofileid},#{kg_studentname},#{kg_sex},to_date(#{kg_certificatedate},'yyyy-mm-dd'),#{kg_classname},#{kg_certitype},#{kg_schoolname},#{kg_teachername},to_date(#{kg_starttime},'yyyy-mm-dd'),to_date(#{kg_endtime},'yyyy-mm-dd'),#{kg_classstype},#{kg_explain},#{kg_name},#{kg_state})")
+    @Insert("insert into KG_ELECTRONICSCERTIFICATE(kg_electronicscertificateid,kg_certificateno,kg_studentprofileid,kg_studentname,kg_sex,kg_certificatedate,kg_classname,kg_certitype,kg_schoolname,kg_teachername,kg_starttime,kg_endtime,kg_classstype,kg_explain,kg_name,kg_state,kg_teacherid) values (#{kg_electronicscertificateid},#{kg_certificateno},#{kg_studentprofileid},#{kg_studentname},#{kg_sex},to_date(#{kg_certificatedate},'yyyy-mm-dd'),#{kg_classname},#{kg_certitype},#{kg_schoolname},#{kg_teachername},to_date(#{kg_starttime},'yyyy-mm-dd'),to_date(#{kg_endtime},'yyyy-mm-dd'),#{kg_classstype},#{kg_explain},#{kg_name},#{kg_state},#{kg_teacherid})")
     void AddCertificate(Electronicscertificate electronicscertificate);
 
     /**
      * 更新电子证书数据
      */
-    @Update("update KG_ELECTRONICSCERTIFICATE set kg_certificateno=#{kg_certificateno},kg_studentprofileid=#{kg_studentprofileid},kg_studentname=#{kg_studentname},kg_sex=#{kg_sex},kg_certificatedate=to_date(#{kg_certificatedate},'yyyy-mm-dd'),kg_classname=#{kg_classname},kg_certitype=#{kg_certitype},kg_schoolname=#{kg_schoolname},kg_teachername=#{kg_teachername},kg_starttime=to_date(#{kg_starttime},'yyyy-mm-dd'),kg_endtime=to_date(#{kg_endtime},'yyyy-mm-dd'),kg_classstype=#{kg_classstype},kg_explain=#{kg_explain},kg_name=#{kg_name} where kg_electronicscertificateid=#{kg_electronicscertificateid} and kg_state=0)")
+    @Update("update KG_ELECTRONICSCERTIFICATE set kg_certificateno=#{kg_certificateno},kg_studentprofileid=#{kg_studentprofileid},kg_studentname=#{kg_studentname},kg_sex=#{kg_sex},kg_certificatedate=to_date(#{kg_certificatedate},'yyyy-mm-dd'),kg_classname=#{kg_classname},kg_certitype=#{kg_certitype},kg_schoolname=#{kg_schoolname},kg_teachername=#{kg_teachername},kg_starttime=to_date(#{kg_starttime},'yyyy-mm-dd'),kg_endtime=to_date(#{kg_endtime},'yyyy-mm-dd'),kg_classstype=#{kg_classstype},kg_explain=#{kg_explain},kg_name=#{kg_name},kg_teacherid=#{kg_teacherid} where kg_electronicscertificateid=#{kg_electronicscertificateid} and kg_state=0)")
     void UpdateCertificate(Electronicscertificate certificates);
 
     /**

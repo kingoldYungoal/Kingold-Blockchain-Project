@@ -36,7 +36,7 @@ public interface ParentInformationMapper {
     /**
      * 家长数据新增
      */
-    @Insert("insert into kg_parentinformation(kg_parentinformationid,kg_name,kg_phonenumber,kg_parentrelationship,kg_countryname,kg_state) values (#{kg_parentinformationid},#{kg_name},#{kg_phonenumber},#{kg_parentrelationship},#{kg_countryname},#{kg_state})")
+    @Insert("insert into kg_parentinformation(kg_parentinformationid,kg_name,kg_phonenumber,kg_parentrelationship,kg_countryname,kg_state) values (#{kg_parentinformationid},#{kg_name},#{kg_phonenumber},#{kg_parentrelationship},#{kg_countryname},0)")
     void AddParentInformation(ParentInformation parentInformation);
 
     /**

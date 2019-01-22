@@ -29,6 +29,11 @@ public interface StudentProfileService {
     PageBean<StudentInfo> GetStudentsByClassAndTeacher(String teacherId, String classname, int currentPage, int pageSize);
 
     /**
+     * 根据教師信息id，从证书表取出学生id，获取学生信息
+     */
+    PageBean<StudentInfo> GetStudentsByParam(String teacherId, String classname,int year, int currentPage, int pageSize);
+
+    /**
      * 學生信息新增
      */
     boolean AddStudentProfile(StudentProfile studentProfile);
