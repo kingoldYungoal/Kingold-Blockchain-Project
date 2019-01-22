@@ -89,8 +89,6 @@ public class ElectronicscertificateController {
     // for local
     //private String mPresidentSignPath = "static/president.png";
 
-    // for local
-    private String mLogoPath = "static/logo/logo-01.png";
 
     // for weblogic
     private String mPresidentSignPath = "president.png";
@@ -137,12 +135,12 @@ public class ElectronicscertificateController {
 
                         map.put("certId", cert.getKg_certificateno());
                         map.put("schoolName",cert.getKg_schoolname());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath,mLogoPath);
+                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
                     }
                     if(cert.getKg_certitype().equals("课程证书")) {
                         map.put("issueDate", cert.getKg_certificatedate());
                         map.put("certName",cert.getKg_name());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath,mLogoPath);
+                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
                     }
 
                     if(cert.getKg_certitype().equals("录取通知书")) {
@@ -150,7 +148,7 @@ public class ElectronicscertificateController {
                         map.put("certNo",cert.getKg_certificateno());
                         map.put("nameEn",cert.getKg_studentenglishname());
                         map.put("registrationTime",cert.getKg_starttime());
-                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath,mLogoPath);
+                        GeneratePdfCertificate(certificateFilePath, map, mSchoolMasterSignPath, mPresidentSignPath);
                     }
 
                     String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
@@ -202,7 +200,30 @@ public class ElectronicscertificateController {
     /*
      * 生成证书
      * */
-    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,String schoolMasterSignPath, String presidentSignPath, String logoPath) throws Exception{
+    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,String schoolMasterSignPath, String presidentSignPath) throws Exception{
+        String logoPath="static/logo/";
+        switch(fields.get("schoolName")){
+            case "侨鑫汇景新城实验小学" :
+                logoPath+="logo-01.png";
+                fields.put("schoolNameEn","FAVORVIEW PALACE KINGOLD PRIMARY SCHOOL");
+                break;
+            case "侨鑫汇景新城幼儿园" :
+                logoPath+="logo-02.png";
+                fields.put("schoolNameEn","FAVORVIEW PALACE KINGOLD INTERNATIONAL KINDERGARTEN");
+                break;
+            case "侨鑫汇悦天启幼儿园" :
+                logoPath+="logo-03.png";
+                fields.put("schoolNameEn","THE BAYVIEW KINGOLD INTERNATIONAL KINDERGARTEN");
+                break;
+            case "侨鑫增城温可儿幼儿园" :
+                logoPath+="logo-04.png";
+                fields.put("schoolNameEn","WINNER ZENGCHENG KINGOLD INTERNATIONAL KINDERGARTEN");
+                break;
+            case "KIDS KING" :
+                logoPath+="logo-05.png";
+                fields.put("schoolNameEn","KINGOLD NURSERY");
+                break;
+        }
         // for weblogic
         //Resource resource = new ClassPathResource("certificate-template.pdf");
         // for local
@@ -282,7 +303,7 @@ public class ElectronicscertificateController {
         Resource logoResource = new ClassPathResource(logoPath);
         File logoFile = logoResource.getFile();
         ImageData logo = ImageDataFactory.create(logoFile.getPath());
-        canvas.addImage(logo,225, 700,150,false);
+        canvas.addImage(logo,225, 650,150,false);
         if(fields.get("certType").equals("毕业证书")) {
             canvas.addImage(sign,75, 230,100,false);
             Resource teacherImgResource = new ClassPathResource(presidentSignPath);

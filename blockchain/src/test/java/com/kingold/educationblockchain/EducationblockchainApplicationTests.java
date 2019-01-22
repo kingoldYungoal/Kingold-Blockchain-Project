@@ -31,7 +31,7 @@ public class EducationblockchainApplicationTests {
         String certType="毕业证书";
         map.put("name","萧峰");
         map.put("certType",certType);
-        map.put("schoolName","XX小学");
+        map.put("schoolName","侨鑫汇景新城幼儿园");
         if(certType=="毕业证书") {
             map.put("yearFrom","2015");
             map.put("yearTo","2018");
