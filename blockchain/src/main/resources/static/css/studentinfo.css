@@ -44,6 +44,7 @@
     background-color: #fff;
     display: table;
     margin-top:20px;
+    min-width: 1500px;
 }
 
 #stuimgbox{
@@ -61,15 +62,16 @@
     width: 80%;
     display: table-cell;
     vertical-align: middle;
+    height: 150px;
 }
 .columndiv{
-    width:26%;height:90%;float:left;text-align: left;border-right: 1px solid #cad3e7;
+    width:26%;height:90%;float:left;text-align: left;border-right: 1px solid #cad3e7;min-width: 380px;
 }
 .columndiv2{
-    width:30%;height:90%;float:left;text-align: left;border-right: 1px solid #cad3e7;
+    width:30%;height:90%;float:left;text-align: left;border-right: 1px solid #cad3e7;min-width: 380px;
 }
 .columndiv3{
-    width:35%;height:90%;float:left;text-align: left;
+    width:35%;height:90%;float:left;text-align: left;min-width: 380px;
 }
 .container ul{
     width: 100%;height:100%;line-height:100%;overflow: hidden;margin-top:15px;

@@ -10,8 +10,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Image;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
@@ -202,6 +200,29 @@ public class ElectronicscertificateController {
      * 生成证书
      * */
     public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,byte[] schoolMasterBytes, byte[] presidentBytes) throws Exception{
+        String logoPath = "static/logo";
+        switch(fields.get("schoolName")){
+            case "侨鑫汇景新城实验小学" :
+                logoPath+="logo-01.png";
+                fields.put("schoolNameEn","FAVORVIEW PALACE KINGOLD PRIMARY SCHOOL");
+                break;
+            case "侨鑫汇景新城幼儿园" :
+                logoPath+="logo-02.png";
+                fields.put("schoolNameEn","FAVORVIEW PALACE KINGOLD INTERNATIONAL KINDERGARTEN");
+                break;
+            case "侨鑫汇悦天启幼儿园" :
+                logoPath+="logo-03.png";
+                fields.put("schoolNameEn","THE BAYVIEW KINGOLD INTERNATIONAL KINDERGARTEN");
+                break;
+            case "侨鑫增城温可儿幼儿园" :
+                logoPath+="logo-04.png";
+                fields.put("schoolNameEn","WINNER ZENGCHENG KINGOLD INTERNATIONAL KINDERGARTEN");
+                break;
+            case "KIDS KING" :
+                logoPath+="logo-05.png";
+                fields.put("schoolNameEn","KINGOLD NURSERY");
+                break;
+        }
         // for weblogic
         //Resource resource = new ClassPathResource("certificate-template.pdf");
         // for local
@@ -267,6 +288,10 @@ public class ElectronicscertificateController {
 //        Resource imgResource1 = new ClassPathResource(schoolMasterSignPath);
 //        File imgFile1 = imgResource1.getFile();
         PdfCanvas canvas = new PdfCanvas(pdfDocWrite.getPage(1).newContentStreamAfter(), pdfDocWrite.getPage(1).getResources(),pdfDocWrite);
+        Resource logoResource = new ClassPathResource(logoPath);
+        File logoFile = logoResource.getFile();
+        ImageData logo = ImageDataFactory.create(logoFile.getPath());
+        canvas.addImage(logo,225, 650,150,false);
         ImageData sign1 = ImageDataFactory.create(schoolMasterBytes);
 
         if(fields.get("certType").equals("毕业证书")) {
