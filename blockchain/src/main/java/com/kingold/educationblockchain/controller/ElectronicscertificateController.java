@@ -7,6 +7,7 @@ import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -271,7 +272,7 @@ public class ElectronicscertificateController {
             if(fieldName=="name") {
                 form.getField(fieldName).setFontAndSize(fontYuWei,41);
             }
-            else if(fieldName=="nameEn") {
+            else if(fieldName=="nameEn" || fieldName == "schoolNameEn") {
                 form.getField(fieldName).setFontAndSize(fontUtopia,14);
             }
             else if(fieldName=="certName"){
@@ -287,11 +288,16 @@ public class ElectronicscertificateController {
         }
 //        Resource imgResource1 = new ClassPathResource(schoolMasterSignPath);
 //        File imgFile1 = imgResource1.getFile();
-        PdfCanvas canvas = new PdfCanvas(pdfDocWrite.getPage(1).newContentStreamAfter(), pdfDocWrite.getPage(1).getResources(),pdfDocWrite);
+        PdfPage pdfPage = pdfDocWrite.getPage(1);
+        PdfCanvas canvas = new PdfCanvas(
+                pdfPage.newContentStreamAfter(),
+                pdfPage.getResources(),
+                pdfDocWrite);
         Resource logoResource = new ClassPathResource(logoPath);
         File logoFile = logoResource.getFile();
         ImageData logo = ImageDataFactory.create(logoFile.getPath());
         canvas.addImage(logo,225, 650,150,false);
+
         ImageData sign1 = ImageDataFactory.create(schoolMasterBytes);
 
         if(fields.get("certType").equals("毕业证书")) {
