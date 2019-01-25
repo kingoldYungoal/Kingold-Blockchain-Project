@@ -173,3 +173,7 @@
 .cert-detail{
     margin-left:20px;
 }
+
+.certfield{
+    min-width: 220px;
+}
