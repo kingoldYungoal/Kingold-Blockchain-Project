@@ -19,14 +19,12 @@ $(function () {
             $codebtn.attr('disabled',false);
             $codebtn.val("获取验证码");
             wait = 0;
-            if (M.dialog13) {
-                return M.dialog13.show();
-            }
             M.dialog13 = jqueryAlert({
                 'icon': '../images/alertimgs/warning.png',
                 'content': '请输入手机号码',
                 'closeTime': 2000,
             })
+            M.dialog13.show();
             $("#phonenumber").focus();
             return false;
         }
@@ -67,7 +65,7 @@ $(function () {
                         data: JSON.stringify(datas),
                         contentType : 'application/json',
                         dataType : 'json',
-                        async: false,
+                        //async: false,
                         success:function (data) {
                             if (data.success){
                                 if (data.result.result == 0){
@@ -114,7 +112,6 @@ $(function () {
                                 'closeTime': 2000,
                             })
                             M.dialog13.show();
-                            reutrn;
                         }
                     });
                 }else{
@@ -149,14 +146,13 @@ $(function () {
          var authcode = $("#authcode").val();
          var role = $("input[name='role']:checked").val();
          if ($.trim(phonenumber) == "") {
-             if (M.dialog13) {
-                 return M.dialog13.show();
-             }
              M.dialog13 = jqueryAlert({
                  'icon': '../images/alertimgs/warning.png',
                  'content': '请输入手机号码',
                  'closeTime': 2000,
              })
+             M.dialog13.show();
+
              $("#phonenumber").focus();
              return false;
          }
@@ -194,7 +190,7 @@ $(function () {
          //     data: JSON.stringify(datas),
          //     contentType : 'application/json',
          //     dataType : 'json',
-         //     async: false,
+         //     //async: false,
          //     success:function (data) {
          //         if (data){
          //             // 验证码是否正确判断
@@ -205,7 +201,7 @@ $(function () {
          //                 data: JSON.stringify(datas),
          //                 contentType : 'application/json',
          //                 dataType : 'json',
-         //                 async: false,
+         //                 //async: false,
          //                 success:function (data) {
          //                     if (data.success){
          //                         var verifycodes = data.result.result;

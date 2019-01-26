@@ -93,10 +93,22 @@ public class ShowElectronicscertificateController {
     public void ShowCertificate(@RequestParam(value = "fileid", required = true)String fileid,HttpServletResponse response) throws Exception{
         response.setContentType("application/jpg");
         response.setCharacterEncoding("utf-8");
-        //response.setHeader("Content-Disposition", "filename=certificate.jpg");
+        response.setHeader("Content-Disposition", "filename=certificate.jpg");
         OutputStream outputStream = response.getOutputStream();
-        //DownloadFileFromCECS(fileid, outputStream);
         GetJPGStreamFromCECS(fileid, outputStream);
+    }
+
+    /*
+     * 展示pdf证书
+     * */
+    @RequestMapping(value = "/certificate/showPdf", produces="application/pdf")
+    public void ShowPDFCertificate(@RequestParam(value = "fileid", required = true)String fileid,HttpServletResponse response) throws Exception{
+        String certificateName = "certificate.pdf";
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Content-Disposition", "filename="+certificateName);
+        OutputStream outputStream = response.getOutputStream();
+        GetPDFStreamFromCECS(fileid, outputStream);
     }
 
     /*

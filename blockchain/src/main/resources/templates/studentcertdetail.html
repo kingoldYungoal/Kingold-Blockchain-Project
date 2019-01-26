@@ -4,33 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>侨鑫教育平台</title>
-    <!--<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">-->
-    <!--<link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">-->
-    <!--<link rel="stylesheet" th:href="@{/css/studentcert.css}" href="../static/css/studentcert.css">-->
-    <!--<script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>-->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}" href="css/main.css">
     <link rel="stylesheet" th:href="@{/css/studentcert.css}" href="css/studentcert.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/jquery.PrintArea.min.js}" src="javascript/jquery.PrintArea.min.js"></script>
 </head>
 <body style="background-color: #f8f6fa;">
     <div class="pagewrap">
         <div id="header">
             <div id="imgbox">
-                <!--<img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">-->
                 <img id="headimg" th:src="@{/images/logo2.png}" src="images/logo2.png">
             </div>
-            <!--<input type="button" id="headbtn" value="返回" onclick="javascript:history.go(-1);" />-->
+            <input type="button" id="headbtn" value="返回" />
         </div>
         <div id="maindiv">
             <div id="certdiv">
-                <!--<embed width="100%" height="100%" type="application/pdf" style="margin-top: 30px;" th:src="@{/electronicscertificate/certificate/show?fileid={certificateid}(certificateid=${certificateid})}"> </embed>-->
                 <img th:src="@{/electronicscertificate/certificate/show?fileid={certificateid}(certificateid=${certificateid})}">
             </div>
             <div id="downloaddiv">
                 <input id="downloadbtn" class="button" type="button" value="下载电子证书 PDF" th:attr="data-certId=${certificateid}" onclick="DownCertPDF(this)">
             </div>
+            <div id="printdiv">
+                <input id="printbtn" class="button" type="button" value="打印电子证书 PDF" onclick="PrintCertPDF(this)">
+            </div>
         </div>
+        <iframe frameborder='0' style='width: 600px;height: 800px;' id='printIframe' th:src="@{/electronicscertificate/certificate/show?fileid={certificateid}(certificateid=${certificateid})}">
+        </iframe>
     </div>
 </body>
 <script>
@@ -38,5 +38,10 @@
         var certId = $(obj).attr("data-certId");
         window.location.href = "../electronicscertificate/certificate/download?fileid=" + certId;
     }
+
+    function PrintCertPDF() {
+        $("#printIframe").printArea();
+    }
+
 </script>
 </html>

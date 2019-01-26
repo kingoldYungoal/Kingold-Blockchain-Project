@@ -86,11 +86,6 @@ function initTable() {
                     }
                 };
                 $('#pages').bootstrapPaginator(options);
-                // $("#pages ul li").hasClass('active')
-                // {
-                //     $("#pages ul li a").removeAttr('href');
-                //     $("#pages ul li a").removeAttr('onclick');
-                // }
             }else{
                 $("#pages").html('');
             }
@@ -126,14 +121,21 @@ function BatchPrintPDF(){
             async: false,
             success:function (data) {
                 if (data != null && data.length > 0){
+                    $("#printIframe").attr("display","block");
                     for (var i = 0;i <data.length;i++){
                         var iframe = "";
-                        iframe += "<iframe style='display:none' id='printIframe"+ i +"' src='/electronicscertificate/certificate/show?fileid="+ data[i] +"'></iframe>";
+                        //iframes += "<img src='/electronicscertificate/certificate/show?fileid=' + data[0] style='width: 600px;height: 1000px;page-break-after:always;'>";
+                        iframe += "<iframe frameborder='0' style='width: 600px;height: 800px;' id='printIframe"+ i +"' src='../electronicscertificate/certificate/showPdf?fileid=" + data[i] + "'>"
+                        iframe += "</iframe>";
                         iframes+=iframe;
                     }
+                    //$("#printIframe").html(iframes);
+                    //$("#printIframe").printArea();
                     $("#certIframe").html(iframes);
                     for (var i = 0;i <data.length;i++){
-                        $("#printIframe"+ i)[0].contentWindow.print();
+                        //$("#printIframe"+ i)[0].contentWindow.print();
+                        //$("#printIframe"+ i)[0].printArea();
+                        $("#printIframe"+ i).printArea();
                     }
                 }
             },error: function () {//请求失败处理函数
@@ -160,5 +162,4 @@ function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
     var roleid = $("#teacherid").val();
     window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2";
-    //window.location.href = "/student/studentinfo?id=" + id;
 }

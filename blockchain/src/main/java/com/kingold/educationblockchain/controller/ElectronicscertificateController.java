@@ -201,7 +201,7 @@ public class ElectronicscertificateController {
      * 生成证书
      * */
     public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,byte[] schoolMasterBytes, byte[] presidentBytes) throws Exception{
-        String logoPath = "static/logo";
+        String logoPath = "static/logo/";
         switch(fields.get("schoolName")){
             case "侨鑫汇景新城实验小学" :
                 logoPath+="logo-01.png";
