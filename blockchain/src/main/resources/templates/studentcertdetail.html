@@ -8,7 +8,6 @@
     <link rel="stylesheet" th:href="@{/css/main.css}" href="css/main.css">
     <link rel="stylesheet" th:href="@{/css/studentcert.css}" href="css/studentcert.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" th:src="@{/javascript/jquery.PrintArea.min.js}" src="javascript/jquery.PrintArea.min.js"></script>
 </head>
 <body style="background-color: #f8f6fa;">
     <div class="pagewrap">
@@ -26,10 +25,10 @@
                 <input id="downloadbtn" class="button" type="button" value="下载电子证书 PDF" th:attr="data-certId=${certificateid}" onclick="DownCertPDF(this)">
             </div>
             <div id="printdiv">
-                <input id="printbtn" class="button" type="button" value="打印电子证书 PDF" onclick="PrintCertPDF(this)">
+                <input id="printbtn" class="button" type="button" value="打印电子证书 PDF" onclick="PrintCertPDF()">
             </div>
         </div>
-        <iframe frameborder='0' style='width: 600px;height: 800px;' id='printIframe' th:src="@{/electronicscertificate/certificate/show?fileid={certificateid}(certificateid=${certificateid})}">
+        <iframe frameborder='0' style='width: 0px;height: 0px;' id='printIframe' th:src="@{/electronicscertificate/certificate/showPdf?fileid={certificateid}(certificateid=${certificateid})}">
         </iframe>
     </div>
 </body>
@@ -40,7 +39,7 @@
     }
 
     function PrintCertPDF() {
-        $("#printIframe").printArea();
+        $("#printIframe")[0].contentWindow.print();
     }
 
 </script>

@@ -4,6 +4,8 @@ var classname;
 var year;
 var phone;
 var M = {};
+jQuery.support.cors=true;
+
 $(document).ready(function(){
     phone = $("#phone").val();
     initTable();
@@ -121,22 +123,19 @@ function BatchPrintPDF(){
             async: false,
             success:function (data) {
                 if (data != null && data.length > 0){
-                    $("#printIframe").attr("display","block");
-                    for (var i = 0;i <data.length;i++){
-                        var iframe = "";
-                        //iframes += "<img src='/electronicscertificate/certificate/show?fileid=' + data[0] style='width: 600px;height: 1000px;page-break-after:always;'>";
-                        iframe += "<iframe frameborder='0' style='width: 600px;height: 800px;' id='printIframe"+ i +"' src='../electronicscertificate/certificate/showPdf?fileid=" + data[i] + "'>"
-                        iframe += "</iframe>";
-                        iframes+=iframe;
-                    }
-                    //$("#printIframe").html(iframes);
-                    //$("#printIframe").printArea();
+                    // iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../electronicscertificate/certificate/showPdf?fileid=" + data[0] + "'>";
+                    // iframes += "</iframe>";
+                    // for (var i = 1;i <data.length;i++){
+                    //     iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe"+ i +"' src='../electronicscertificate/certificate/showPdf?fileid=" + data[i] + "'>";
+                    //     iframes += "</iframe>";
+                    // }
+                    iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../test.pdf'>";
+                    iframes += "</iframe>";
                     $("#certIframe").html(iframes);
-                    for (var i = 0;i <data.length;i++){
-                        //$("#printIframe"+ i)[0].contentWindow.print();
-                        //$("#printIframe"+ i)[0].printArea();
-                        $("#printIframe"+ i).printArea();
-                    }
+                    $("#printIframe0")[0].contentWindow.print();
+                    // for (var i = 0;i<data.length;i++){
+                    //     $("#printIframe"+ i)[0].contentWindow.print();
+                    // }
                 }
             },error: function () {//请求失败处理函数
                 M.dialog13 = jqueryAlert({
