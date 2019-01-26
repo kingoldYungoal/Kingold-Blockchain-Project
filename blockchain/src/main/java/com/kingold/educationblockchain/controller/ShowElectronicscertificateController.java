@@ -2,6 +2,9 @@ package com.kingold.educationblockchain.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.bean.PageBean;
 import com.kingold.educationblockchain.bean.StudentInfo;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
 import java.util.*;
 import javax.imageio.ImageIO;
 
@@ -59,9 +63,9 @@ public class ShowElectronicscertificateController {
         return model;
     }
 
-    @RequestMapping(value = "/certificatelist", method = RequestMethod.POST)
+    @RequestMapping(value = "/certificatelist", produces="application/pdf", method = RequestMethod.POST)
     @ResponseBody
-    public String GetCertificateList(@RequestBody JSONObject params) {
+    public String GetCertificateList(@RequestBody JSONObject params,HttpServletResponse response) throws Exception{
         gson = new Gson();
         String className = params.getString("className");
         int year = params.getInteger("year");
@@ -83,6 +87,10 @@ public class ShowElectronicscertificateController {
                 certIds.add(cert.getKg_electronicscertificateid());
             }
         }
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Content-Disposition", "filename=certificatelist.pdf");
+        GetPDFListStreamFromCECS(certIds,response.getOutputStream());
         return gson.toJson(certIds);
     }
 
@@ -141,6 +149,22 @@ public class ShowElectronicscertificateController {
             outputStream.write(intByte);
         }
         outputStream.close();
+    }
+
+    /*
+     * 从CECS中获取文件流
+     * */
+    private void GetPDFListStreamFromCECS(List<String> fileids, OutputStream outputStream) throws Exception{
+        if(!fileids.isEmpty()) {
+            PdfDocument pdfDocWriter = new PdfDocument(new PdfWriter(outputStream));
+            for (String fileid : fileids) {
+                InputStream inputStream = DownloadFileFromCECS(fileid);
+                PdfDocument pdfDocReader = new PdfDocument(new PdfReader(inputStream));
+                pdfDocReader.copyPagesTo(1, 1, pdfDocWriter);
+                pdfDocReader.close();
+            }
+            pdfDocWriter.close();
+        }
     }
 
     /*
