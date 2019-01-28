@@ -4,12 +4,34 @@ var classname;
 var year;
 var phone;
 var M = {};
-jQuery.support.cors=true;
+// 判断浏览器类型
+var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
 
 $(document).ready(function(){
     phone = $("#phone").val();
+    var printA ="";
+    if (userAgent.indexOf("Chrome") > -1) {
+        printA += "<a class='print-preview' id='printbtn' onclick='BatchPrintPDF()'>证书批量打印</a>";
+    }else{
+        printA += "<a class='print-preview' id='printbtn'>证书批量打印</a>";
+    }
+    $("#printdiv").html(printA);
+    if (userAgent.indexOf("Chrome") <= -1){
+        $('a.print-preview').printPreview();
+    }
     initTable();
 });
+
+if (userAgent.indexOf("Chrome") <= -1) {
+    $(document).bind('keydown', function(e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 80 && !$('#print-modal').length) {
+            $.printPreview.loadPrintPreview();
+            return false;
+        }
+    });
+}
+
 
 //ajax获取后台数据
 function initTable() {
@@ -123,19 +145,10 @@ function BatchPrintPDF(){
             async: false,
             success:function (data) {
                 if (data != null && data.length > 0){
-                    // iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../electronicscertificate/certificate/showPdf?fileid=" + data[0] + "'>";
-                    // iframes += "</iframe>";
-                    // for (var i = 1;i <data.length;i++){
-                    //     iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe"+ i +"' src='../electronicscertificate/certificate/showPdf?fileid=" + data[i] + "'>";
-                    //     iframes += "</iframe>";
-                    // }
-                    iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../test.pdf'>";
+                    iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../electronicscertificate/certificate/showPdf'>";
                     iframes += "</iframe>";
                     $("#certIframe").html(iframes);
                     $("#printIframe0")[0].contentWindow.print();
-                    // for (var i = 0;i<data.length;i++){
-                    //     $("#printIframe"+ i)[0].contentWindow.print();
-                    // }
                 }
             },error: function () {//请求失败处理函数
                 M.dialog13 = jqueryAlert({

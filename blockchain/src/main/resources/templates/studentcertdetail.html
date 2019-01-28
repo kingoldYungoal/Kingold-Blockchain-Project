@@ -24,12 +24,7 @@
             <div id="downloaddiv">
                 <input id="downloadbtn" class="button" type="button" value="下载电子证书 PDF" th:attr="data-certId=${certificateid}" onclick="DownCertPDF(this)">
             </div>
-            <div id="printdiv">
-                <input id="printbtn" class="button" type="button" value="打印电子证书 PDF" onclick="PrintCertPDF()">
-            </div>
         </div>
-        <iframe frameborder='0' style='width: 0px;height: 0px;' id='printIframe' th:src="@{/electronicscertificate/certificate/showPdf?fileid={certificateid}(certificateid=${certificateid})}">
-        </iframe>
     </div>
 </body>
 <script>
@@ -37,10 +32,5 @@
         var certId = $(obj).attr("data-certId");
         window.location.href = "../electronicscertificate/certificate/download?fileid=" + certId;
     }
-
-    function PrintCertPDF() {
-        $("#printIframe")[0].contentWindow.print();
-    }
-
 </script>
 </html>

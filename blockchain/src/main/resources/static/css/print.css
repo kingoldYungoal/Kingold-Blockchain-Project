@@ -152,12 +152,13 @@
 }
 
 #printbtn{
-    display: inline-block;
-    width: 170px;
+    display: block;
+    width: 160px;
+    height:100%;
+    font-size: 18px;
+    margin: 0 auto;
     color: #004a80;
     background: #fff;
-    text-align:center;
-    line-height:37px;
     border: 1px solid #004a80;
     border-radius: 20px;
     -moz-border-radius: 20px;
@@ -204,4 +205,16 @@
 
 #certIframe{
     display:none;
+}
+
+#print-modal {
+    background: #FFF;
+    position: absolute;
+    left: 50%;
+    margin: 0 0 0 -465px;
+    padding: 0 68px;
+    width: 794px;
+    box-shadow: 0 0 20px #000;
+    -moz-box-shadow: 0 0 20px #000;
+    -webkit-box-shadow: 0 0 10px #000;
 }

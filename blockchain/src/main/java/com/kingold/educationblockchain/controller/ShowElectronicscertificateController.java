@@ -2,6 +2,9 @@ package com.kingold.educationblockchain.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.bean.PageBean;
 import com.kingold.educationblockchain.bean.StudentInfo;
@@ -46,6 +49,8 @@ public class ShowElectronicscertificateController {
 
     private Gson gson;
 
+    private List<String> certIdArray = new ArrayList<>();
+
     /*
     * 学生证书页面
     * */
@@ -61,7 +66,7 @@ public class ShowElectronicscertificateController {
 
     @RequestMapping(value = "/certificatelist", method = RequestMethod.POST)
     @ResponseBody
-    public String GetCertificateList(@RequestBody JSONObject params) {
+    public String GetCertificateList(@RequestBody JSONObject params){
         gson = new Gson();
         String className = params.getString("className");
         int year = params.getInteger("year");
@@ -82,7 +87,9 @@ public class ShowElectronicscertificateController {
             for(Electronicscertificate cert : newCerts){
                 certIds.add(cert.getKg_electronicscertificateid());
             }
+            certIdArray = certIds;
         }
+
         return gson.toJson(certIds);
     }
 
@@ -102,13 +109,14 @@ public class ShowElectronicscertificateController {
      * 展示pdf证书
      * */
     @RequestMapping(value = "/certificate/showPdf", produces="application/pdf")
-    public void ShowPDFCertificate(@RequestParam(value = "fileid", required = true)String fileid,HttpServletResponse response) throws Exception{
+    public void ShowPDFCertificate(HttpServletResponse response) throws Exception{
         String certificateName = "certificate.pdf";
         response.setContentType("application/pdf");
         response.setCharacterEncoding("utf-8");
         response.setHeader("Content-Disposition", "filename="+certificateName);
-        OutputStream outputStream = response.getOutputStream();
-        GetPDFStreamFromCECS(fileid, outputStream);
+        if(certIdArray.size() > 0){
+            GetPDFListStreamFromCECS(certIdArray,response.getOutputStream());
+        }
     }
 
     /*
@@ -142,6 +150,23 @@ public class ShowElectronicscertificateController {
         }
         outputStream.close();
     }
+
+    /*
+     * 从CECS中获取文件流
+     * */
+    private void GetPDFListStreamFromCECS(List<String> fileids, OutputStream outputStream) throws Exception{
+        if(!fileids.isEmpty()) {
+            PdfDocument pdfDocWriter = new PdfDocument(new PdfWriter(outputStream));
+            for (String fileid : fileids) {
+                InputStream inputStream = DownloadFileFromCECS(fileid);
+                PdfDocument pdfDocReader = new PdfDocument(new PdfReader(inputStream));
+                pdfDocReader.copyPagesTo(1, 1, pdfDocWriter);
+                pdfDocReader.close();
+            }
+            pdfDocWriter.close();
+        }
+    }
+
 
     /*
      * 从CECS中获取JPG文件流
