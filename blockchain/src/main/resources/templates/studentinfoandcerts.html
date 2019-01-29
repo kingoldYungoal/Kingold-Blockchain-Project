@@ -28,7 +28,6 @@
     <div id="maindiv">
         <div id="infodiv">
             <div id="stuimgbox">
-                <!--<img id="stuimg" th:src="@{/images/stuimg.png}" src="../static/images/logo2.png">-->
                 <img id="stuimg" th:src="@{/images/stuimg.png}" src="images/logo2.png">
             </div>
             <div class="container">
@@ -117,17 +116,12 @@
     }
 
     function GoBack() {
-        var stuid = $("#stuid").val();
         var roleid = $("#roleid").val();
         var role = $("#role").val();
         if (role == 0){
             window.location.href = "../login/login";
         }else{
-            if (role == 1){
-                window.location.href = "../login/BackListPage?roleid=" + roleid + "&role=" + role;
-            } else{
-                window.location.href = "../login/BackListPage?roleid=" + roleid + "&role=" + role;
-            }
+            window.location.href = "../login/BackListPage?roleid=" + roleid + "&role=" + role;
         }
     }
 </script>

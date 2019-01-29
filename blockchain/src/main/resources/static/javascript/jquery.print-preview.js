@@ -11,7 +11,7 @@
 (function($) { 
     var iframeHtml = "";
 	// Initialization
-	$.fn.printPreview = function(className, year) {
+	$.fn.printPreview = function() {
 		this.each(function() {
 			$(this).bind('click', function(e) {
 			    e.preventDefault();
@@ -29,12 +29,14 @@
         loadPrintPreview: function() {
             // Declare DOM objects
             print_modal = $('<div id="print-modal"></div>');
-            print_controls = $('<div id="print-modal-controls">' + 
-                                    '<a href="#" class="print" title="Print page">Print page</a>' +
-                                    '<a href="#" class="close" title="Close print preview">Close</a>').hide();
-            var print_frame = $('<iframe id="print-modal-content" scrolling="no" border="0" frameborder="0" name="print-frame" />');
-
-            // Raise print preview window from the dead, zooooooombies
+            // print_controls = $('<div id="print-modal-controls">' +
+            //                         '<a href="#" class="print" title="Print page">Print page</a>' +
+            //                         '<a href="#" class="close" title="Close print preview">Close</a>').hide();
+            print_controls = $('<div id="print-modal-controls">' +
+                '<a href="#" class="close" title="Close">关闭</a>').hide();
+            $.printPreview.GetIframeHtml();
+            var print_frame = $(iframeHtml);
+            iframeHtml = "";
             print_modal
                 .hide()
                 .append(print_controls)
@@ -42,40 +44,40 @@
                 .appendTo('body');
 
             // The frame lives
-            for (var i=0; i < window.frames.length; i++) {
-                if (window.frames[i].name == "print-frame") {    
-                    var print_frame_ref = window.frames[i].document;
-                    break;
-                }
-            }
-            print_frame_ref.open();
-            print_frame_ref.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
-                '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">' + 
-                '<head><title>' + document.title + '</title></head>' +
-                '<body></body>' +
-                '</html>');
-            print_frame_ref.close();
+            //for (var i=0; i < window.frames.length; i++) {
+                //if (window.frames[i].name == "print-frame") {
+            var print_frame_ref = $("#print-modal-content").document;
+                //    break;
+                //}
+            //}
+            // print_frame_ref.open();
+            // print_frame_ref.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
+            //     '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">' +
+            //     '<head><title>' + document.title + '</title></head>' +
+            //     '<body></body>' +
+            //     '</html>');
+            // print_frame_ref.close();
             
-            // Grab contents and apply stylesheet
-            var $iframe_head = $('head link[media*=print], head link[media=all]').clone(),
-                $iframe_body = $('body > *:not(#print-modal):not(script)').clone();
-            $iframe_head.each(function() {
-                $(this).attr('media', 'all');
-            });
-            if (!$.browser.msie && !($.browser.version < 7) ) {
-                $('head', print_frame_ref).append($iframe_head);
-                $('body', print_frame_ref).append($iframe_body);
-            }
-            else {
-                $('body > *:not(#print-modal):not(script)').clone().each(function() {
-                    $('body', print_frame_ref).append(this.outerHTML);
-                });
-                $('head link[media*=print], head link[media=all]').each(function() {
-                    $('head', print_frame_ref).append($(this).clone().attr('media', 'all')[0].outerHTML);
-                });
-            }
+            //var $iframe_head = $('head link[media*=print], head link[media=all]').clone();
+            // 拼接
+            //$iframe_body = $(iframeHtml);
+            // $iframe_head.each(function() {
+            //     $(this).attr('media', 'all');
+            // });
+
+            // if (!$.browser.msie && !($.browser.version < 7) ) {
+            //     $('head', print_frame_ref).append($iframe_head);
+            //     $('body', print_frame_ref).append($iframe_body);
+            // }
+            // else {
+            //     $('body > *:not(#print-modal):not(script)').clone().each(function() {
+            //         $('body', print_frame_ref).append($iframe_body);
+            //     });
+                // $('head link[media*=print], head link[media=all]').each(function() {
+                //     $('head', print_frame_ref).append($(this).clone().attr('media', 'all')[0].outerHTML);
+                // });
+            //}
             
-            // Disable all links
             $('a', print_frame_ref).bind('click.printPreview', function(e) {
                 e.preventDefault();
             });
@@ -86,23 +88,16 @@
                     '/* -- Print Preview --*/' +
                     '#print-modal-mask,' +
                     '#print-modal {' +
+                        'page-break-after: always;' +
+                    '}' +
+                    '.pagewrap {' +
                         'display: none !important;' +
                     '}' +
                 '}' +
                 '</style>'
             );
-
-            // Load mask
             $.printPreview.loadMask();
-
-            // Disable scrolling
             $('body').css({overflowY: 'hidden', height: '100%'});
-            print_frame.height($('body', print_frame.contents())[0].scrollHeight);
-            // $('img', print_frame_ref).load(function() {
-            //     print_frame.height($('body', print_frame.contents())[0].scrollHeight);
-            // });
-            
-            // Position modal            
             starting_position = $(window).height() + $(window).scrollTop();
             var css = {
                     top:         starting_position,
@@ -116,13 +111,14 @@
                 .animate({ top: $(window).scrollTop()}, 400, 'linear', function() {
                     print_controls.fadeIn('slow').focus();
                 });
-            print_frame.height($('body', print_frame.contents())[0].scrollHeight);
-            
+
             // Bind closure
             $('a', print_controls).bind('click', function(e) {
                 e.preventDefault();
                 if ($(this).hasClass('print')) { window.print(); }
-                else { $.printPreview.distroyPrintPreview(); }
+                else {
+                    $.printPreview.distroyPrintPreview();
+                }
             });
     	},
     	
@@ -191,39 +187,34 @@
         },
 
         GetIframeHtml: function (){
-            var trList = $("#datadiv table tbody").children("tr");
-            if (trList.length > 0){
-                var stuList = new Array();
-                for(var i = 0;i < trList.length;i++){
-                    stuList.push(trList.eq(i).attr("data-id"));
-                }
-                // ajax 请求获取证书id
-                var datas = {
-                    'className' : classname,
-                    'year': year,
-                    'stuIds': stuList
-                };
-                $("#certIframe").html("");
-                var iframes = "";
-
-                $.ajax({
-                    type:"post",
-                    url:"../electronicscertificate/certificatelist",
-                    data: JSON.stringify(datas),
-                    contentType : 'application/json',
-                    dataType : 'json',
-                    async: false,
-                    success:function (data) {
-                        if (data != null && data.length > 0){
-                            iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../electronicscertificate/certificate/showPdf'>";
-                            iframes += "</iframe>";
-                            $("#certIframe").html(iframes);
-                            $("#printIframe0")[0].contentWindow.print();
-                        }
+            var classname = $("#classSelect").val();
+            var year = $("#yearSelect").val();
+            var teacherid = $("#teacherid").val();
+            //var trList = $("#datadiv table tbody").children("tr");
+            //if (trList.length > 0){
+                //var stuList = new Array();
+                //for(var i = 0;i < trList.length;i++){
+                //    stuList.push(trList.eq(i).attr("data-id"));
+                //}
+            var datas = {
+                'className' : classname,
+                'year': year,
+                'teacherId': teacherid
+            };
+            $.ajax({
+                type:"post",
+                url:"../electronicscertificate/certificatelist",
+                data: JSON.stringify(datas),
+                contentType : 'application/json',
+                dataType : 'json',
+                async: false,
+                success:function (data) {
+                    if (data != null && data.length > 0){
+                        iframeHtml += '<iframe id="print-modal-content" style="width:96%; height:780px;" frameborder="0" name="print-frame" src="../electronicscertificate/certificate/showPdf" />';
                     }
-                });
-
-            }
+                }
+            });
+            //}
         }
     }
 })(jQuery);

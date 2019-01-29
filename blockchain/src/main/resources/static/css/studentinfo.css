@@ -11,6 +11,7 @@
     height:5%;
     background-color: #004a80;
     display: table;
+    min-width: 1500px;
 }
 
 #imgbox{

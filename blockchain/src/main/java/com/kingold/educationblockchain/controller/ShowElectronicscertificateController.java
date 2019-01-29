@@ -70,25 +70,27 @@ public class ShowElectronicscertificateController {
         gson = new Gson();
         String className = params.getString("className");
         int year = params.getInteger("year");
-        ArrayList<String> studentIdList = (ArrayList) params.get("stuIds");
+        String teacherId = params.getString("teacherId");
+        //ArrayList<String> studentIdList = (ArrayList) params.get("stuIds");
         List<String> certIds = new ArrayList<>();
-        if(studentIdList.size() > 0){
-            List<Electronicscertificate> allCertList = new ArrayList<>();
-            CertificateParam param = new CertificateParam();
-            param.setClassName(className);
-            param.setYear(year);
-            for(String stuId: studentIdList){
-                param.setStudentId(stuId);
-                // 进行查询
-                List<Electronicscertificate> certList = mElectronicscertificateService.GetCertificatesByParam(param);
-                allCertList.addAll(certList);
-            }
+        //if(studentIdList.size() > 0){
+        List<Electronicscertificate> allCertList = new ArrayList<>();
+        CertificateParam param = new CertificateParam();
+        param.setClassName(className);
+        param.setYear(year);
+        param.setTeacherId(teacherId);
+//            for(String stuId: studentIdList){
+//                param.setStudentId(stuId);
+
+        List<Electronicscertificate> certList = mElectronicscertificateService.GetCertificatesByParam(param);
+        allCertList.addAll(certList);
+//            }
             List<Electronicscertificate> newCerts = RemoveDuplicateCert(allCertList);
             for(Electronicscertificate cert : newCerts){
                 certIds.add(cert.getKg_electronicscertificateid());
             }
             certIdArray = certIds;
-        }
+        //}
 
         return gson.toJson(certIds);
     }

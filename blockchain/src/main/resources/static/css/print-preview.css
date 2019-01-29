@@ -4,31 +4,30 @@
     left: 50%;
     margin: 0 0 0 -465px;
     padding: 0 68px;
-    width: 794px;
+    width: 840px;
     box-shadow: 0 0 20px #000;
-        -moz-box-shadow: 0 0 20px #000;
-    	-webkit-box-shadow: 0 0 10px #000;
+    -moz-box-shadow: 0 0 20px #000;
+    -webkit-box-shadow: 0 0 10px #000;
 }
 
 #print-modal-content {
     margin: 68px 0;
     border: none;
-    height: 100%;
+    height: 780px;
     overflow: hidden;
     width: 100%;
 }
 
 #print-modal-controls {
     border: 1px solid #ccc;
-    border-radius: 8px;
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
     top: 15px;
-    left: 50%;
-    margin: 0 0 0 -81px;
+    left: 57%;
     position: fixed;
     padding: 5px 0;
     background: rgba(250, 250, 250, 0.75);
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
 }
 
     #print-modal-controls a {

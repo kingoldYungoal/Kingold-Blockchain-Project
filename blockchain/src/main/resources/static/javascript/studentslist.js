@@ -2,10 +2,11 @@ var pageNum = 1;
 var pageSize = 10;
 var classname;
 var year;
+var teacherid;
 var phone;
 var M = {};
 // 判断浏览器类型
-var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+var userAgent = navigator.userAgent;
 
 $(document).ready(function(){
     phone = $("#phone").val();
@@ -42,7 +43,6 @@ function initTable() {
         type: 'get',
         dataType : "json",
         async: false,
-        //url: "/student/studentlist",
         url: "../student/studentlist",
         data:{"teacherphone":phone, "classname":classname, "year": year, "pageNum":pageNum,"pageSize":pageSize},
         error: function () {//请求失败处理函数
@@ -91,7 +91,6 @@ function initTable() {
                         $("#datadiv table tbody").html("");
                         var tbodys = "";
                         $.ajax({
-                            //url: "/student/studentlist",
                             url: "../student/studentlist",
                             type: "get",
                             dataType : "json",
@@ -120,54 +119,53 @@ function initTable() {
 function BatchPrintPDF(){
     classname = $("#classSelect").val();
     year = $("#yearSelect").val();
+    teacherid = $("#teacherid").val();
     // 获取所有的证书id
-    var trList = $("#datadiv table tbody").children("tr");
-    if (trList.length > 0){
-        var stuList = new Array();
-        for(var i = 0;i < trList.length;i++){
-            stuList.push(trList.eq(i).attr("data-id"));
-        }
+    //var trList = $("#datadiv table tbody").children("tr");
+    //if (trList.length > 0){
+        //var stuList = new Array();
+        //for(var i = 0;i < trList.length;i++){
+        //    stuList.push(trList.eq(i).attr("data-id"));
+        //}
         // ajax 请求获取证书id
-        var datas = {
-            'className' : classname,
-            'year': year,
-            'stuIds': stuList
-        };
-        $("#certIframe").html("");
-        var iframes = "";
+    var datas = {
+        'className' : classname,
+        'year': year,
+        'teacherId': teacherid
+    };
+    $("#certIframe").html("");
+    var iframes = "";
 
-        $.ajax({
-            type:"post",
-            url:"../electronicscertificate/certificatelist",
-            data: JSON.stringify(datas),
-            contentType : 'application/json',
-            dataType : 'json',
-            async: false,
-            success:function (data) {
-                if (data != null && data.length > 0){
-                    iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../electronicscertificate/certificate/showPdf'>";
-                    iframes += "</iframe>";
-                    $("#certIframe").html(iframes);
-                    $("#printIframe0")[0].contentWindow.print();
-                }
-            },error: function () {//请求失败处理函数
+    $.ajax({
+        type:"post",
+        url:"../electronicscertificate/certificatelist",
+        data: JSON.stringify(datas),
+        contentType : 'application/json',
+        dataType : 'json',
+        async: false,
+        success:function (data) {
+            if (data != null && data.length > 0){
+                iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../electronicscertificate/certificate/showPdf'>";
+                iframes += "</iframe>";
+                $("#certIframe").html(iframes);
+                $("#printIframe0")[0].contentWindow.print();
+            }else{
                 M.dialog13 = jqueryAlert({
                     'icon': '../images/alertimgs/warning.png',
-                    'content': '请求失败',
+                    'content': '暂无可以打印的证书信息',
                     'closeTime': 2000,
                 })
                 M.dialog13.show();
             }
-        });
-
-    } else{
-        M.dialog13 = jqueryAlert({
-            'icon': '../images/alertimgs/warning.png',
-            'content': '暂无可以打印的证书信息',
-            'closeTime': 2000,
-        })
-        M.dialog13.show();
-    }
+        },error: function () {//请求失败处理函数
+            M.dialog13 = jqueryAlert({
+                'icon': '../images/alertimgs/warning.png',
+                'content': '请求失败',
+                'closeTime': 2000,
+            })
+            M.dialog13.show();
+        }
+    });
 }
 
 function GoStudentInfo(obj) {
