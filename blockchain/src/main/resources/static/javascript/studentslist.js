@@ -23,16 +23,6 @@ $(document).ready(function(){
     initTable();
 });
 
-if (userAgent.indexOf("Chrome") <= -1) {
-    $(document).bind('keydown', function(e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
-        if (code == 80 && !$('#print-modal').length) {
-            $.printPreview.loadPrintPreview();
-            return false;
-        }
-    });
-}
-
 
 //ajax获取后台数据
 function initTable() {
@@ -120,14 +110,6 @@ function BatchPrintPDF(){
     classname = $("#classSelect").val();
     year = $("#yearSelect").val();
     teacherid = $("#teacherid").val();
-    // 获取所有的证书id
-    //var trList = $("#datadiv table tbody").children("tr");
-    //if (trList.length > 0){
-        //var stuList = new Array();
-        //for(var i = 0;i < trList.length;i++){
-        //    stuList.push(trList.eq(i).attr("data-id"));
-        //}
-        // ajax 请求获取证书id
     var datas = {
         'className' : classname,
         'year': year,
@@ -145,10 +127,10 @@ function BatchPrintPDF(){
         async: false,
         success:function (data) {
             if (data != null && data.length > 0){
-                iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../electronicscertificate/certificate/showPdf'>";
+                iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe' src='../electronicscertificate/certificate/showPdf'>";
                 iframes += "</iframe>";
                 $("#certIframe").html(iframes);
-                $("#printIframe0")[0].contentWindow.print();
+                $("#printIframe")[0].contentWindow.print();
             }else{
                 M.dialog13 = jqueryAlert({
                     'icon': '../images/alertimgs/warning.png',

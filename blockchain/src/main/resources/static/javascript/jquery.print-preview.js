@@ -8,16 +8,16 @@
  * Date: Wed Jan 25 00:00:00 2012 -000
  */
  
-(function($) { 
+(function($) {
     var iframeHtml = "";
-	// Initialization
 	$.fn.printPreview = function() {
 		this.each(function() {
-			$(this).bind('click', function(e) {
+			$(this).on('click', function(e) {
 			    e.preventDefault();
-			    if (!$('#print-modal').length) {
+                $('#print-modal').html('');
+			    //if (!$('#print-modal').length) {
 			        $.printPreview.loadPrintPreview();
-			    }
+			    //}
 			});
 		});
 		return this;
@@ -27,62 +27,23 @@
     var mask, size, print_modal, print_controls;
     $.printPreview = {
         loadPrintPreview: function() {
-            // Declare DOM objects
             print_modal = $('<div id="print-modal"></div>');
-            // print_controls = $('<div id="print-modal-controls">' +
-            //                         '<a href="#" class="print" title="Print page">Print page</a>' +
-            //                         '<a href="#" class="close" title="Close print preview">Close</a>').hide();
             print_controls = $('<div id="print-modal-controls">' +
                 '<a href="#" class="close" title="Close">关闭</a>').hide();
             $.printPreview.GetIframeHtml();
             var print_frame = $(iframeHtml);
-            iframeHtml = "";
             print_modal
                 .hide()
                 .append(print_controls)
                 .append(print_frame)
                 .appendTo('body');
 
-            // The frame lives
-            //for (var i=0; i < window.frames.length; i++) {
-                //if (window.frames[i].name == "print-frame") {
             var print_frame_ref = $("#print-modal-content").document;
-                //    break;
-                //}
-            //}
-            // print_frame_ref.open();
-            // print_frame_ref.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
-            //     '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">' +
-            //     '<head><title>' + document.title + '</title></head>' +
-            //     '<body></body>' +
-            //     '</html>');
-            // print_frame_ref.close();
-            
-            //var $iframe_head = $('head link[media*=print], head link[media=all]').clone();
-            // 拼接
-            //$iframe_body = $(iframeHtml);
-            // $iframe_head.each(function() {
-            //     $(this).attr('media', 'all');
-            // });
 
-            // if (!$.browser.msie && !($.browser.version < 7) ) {
-            //     $('head', print_frame_ref).append($iframe_head);
-            //     $('body', print_frame_ref).append($iframe_body);
-            // }
-            // else {
-            //     $('body > *:not(#print-modal):not(script)').clone().each(function() {
-            //         $('body', print_frame_ref).append($iframe_body);
-            //     });
-                // $('head link[media*=print], head link[media=all]').each(function() {
-                //     $('head', print_frame_ref).append($(this).clone().attr('media', 'all')[0].outerHTML);
-                // });
-            //}
-            
             $('a', print_frame_ref).bind('click.printPreview', function(e) {
                 e.preventDefault();
             });
             
-            // Introduce print styles
             $('head').append('<style type="text/css">' +
                 '@media print {' +
                     '/* -- Print Preview --*/' +
@@ -96,6 +57,11 @@
                 '}' +
                 '</style>'
             );
+
+            if (iframeHtml == ""){
+                return;
+            }
+            iframeHtml = "";
             $.printPreview.loadMask();
             $('body').css({overflowY: 'hidden', height: '100%'});
             starting_position = $(window).height() + $(window).scrollTop();
@@ -132,7 +98,6 @@
     			mask.remove();
     		});				
 
-    		$(document).unbind("keydown.printPreview.mask");
     		mask.unbind("click.printPreview.mask");
     		$(window).unbind("resize.printPreview.mask");
 	    },
@@ -162,15 +127,10 @@
 			mask.bind("click.printPreview.mask", function(e)  {
 				$.printPreview.distroyPrintPreview();
 			});
-			
-			$(document).bind("keydown.printPreview.mask", function(e) {
-			    if (e.keyCode == 27) {  $.printPreview.distroyPrintPreview(); }
-			});
         },
     
         sizeUpMask: function() {
             if ($.browser.msie) {
-            	// if there are no scrollbars then use window.height
             	var d = $(document).height(), w = $(window).height();
             	return [
             		window.innerWidth || 						// ie7+
@@ -190,12 +150,6 @@
             var classname = $("#classSelect").val();
             var year = $("#yearSelect").val();
             var teacherid = $("#teacherid").val();
-            //var trList = $("#datadiv table tbody").children("tr");
-            //if (trList.length > 0){
-                //var stuList = new Array();
-                //for(var i = 0;i < trList.length;i++){
-                //    stuList.push(trList.eq(i).attr("data-id"));
-                //}
             var datas = {
                 'className' : classname,
                 'year': year,
@@ -211,7 +165,21 @@
                 success:function (data) {
                     if (data != null && data.length > 0){
                         iframeHtml += '<iframe id="print-modal-content" style="width:96%; height:780px;" frameborder="0" name="print-frame" src="../electronicscertificate/certificate/showPdf" />';
+                    }else{
+                        M.dialog13 = jqueryAlert({
+                            'icon': '../images/alertimgs/warning.png',
+                            'content': '暂无可以打印的证书信息',
+                            'closeTime': 2000,
+                        })
+                        M.dialog13.show();
                     }
+                },error: function () {
+                    M.dialog13 = jqueryAlert({
+                        'icon': '../images/alertimgs/warning.png',
+                        'content': '请求失败',
+                        'closeTime': 2000,
+                    })
+                    M.dialog13.show();
                 }
             });
             //}
