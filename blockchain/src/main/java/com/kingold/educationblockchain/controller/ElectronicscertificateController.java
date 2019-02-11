@@ -107,13 +107,22 @@ public class ElectronicscertificateController {
                     map.put("name",cert.getKg_studentname());
                     map.put("certType",cert.getKg_certitype());
                     map.put("schoolName",cert.getKg_schoolname());
-
-                    Resource schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
+                    Resource schoolMasterResource;
+                    switch(cert.getKg_schoolname()) {
+                        case "侨鑫汇悦天启幼儿园":
+                            schoolMasterResource = new ClassPathResource("static/天启幼儿园园长.png");
+                            break;
+                        case "侨鑫汇景新城幼儿园":
+                            schoolMasterResource = new ClassPathResource("static/汇景幼儿园园长.png");
+                            break;
+                        default:
+                            schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
+                    }
                     //File schoolMasterFile = schoolMasterResource.getFile();
                     InputStream schoolMasterInputStream = schoolMasterResource.getInputStream();
                     byte[] schoolMasterBytes = mStreamCommon.read(schoolMasterInputStream);
 
-                    Resource presidentResource = new ClassPathResource("static/president.png");
+                    Resource presidentResource = new ClassPathResource("static/事业部总裁孙总.png");
                     //File presidentFile = presidentResource.getFile();
                     InputStream presidentInputStream = presidentResource.getInputStream();
                     byte[] presidentBytes = mStreamCommon.read(presidentInputStream);
