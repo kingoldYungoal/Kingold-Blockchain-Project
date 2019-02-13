@@ -11,13 +11,13 @@ var userAgent = navigator.userAgent;
 $(document).ready(function(){
     phone = $("#phone").val();
     var printA ="";
-    if (userAgent.indexOf("Chrome") > -1) {
+    if (userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Edge") <= -1) {
         printA += "<a class='print-preview' id='printbtn' onclick='BatchPrintPDF()'>证书批量打印</a>";
     }else{
         printA += "<a class='print-preview' id='printbtn'>证书批量打印</a>";
     }
     $("#printdiv").html(printA);
-    if (userAgent.indexOf("Chrome") <= -1){
+    if (userAgent.indexOf("Chrome") <= -1 || userAgent.indexOf("Edge") > -1){
         $('a.print-preview').printPreview();
     }
     initTable();
@@ -154,4 +154,23 @@ function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
     var roleid = $("#teacherid").val();
     window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2";
+}
+
+function loading() {
+    $('body').loading({
+        loadingWidth:240,
+        title:'请稍等',
+        name:'test',
+        discription:'正在全力加载证书打印预览',
+        direction:'column',
+        type:'origin',
+        originBg:'#000',
+        originDivWidth:40,
+        originDivHeight:40,
+        originWidth:6,
+        originHeight:6,
+        smallLoading:false,
+        loadingBg:'#004a80',
+        loadingMaskBg:'rgba(123,122,222,0.2)'
+    });
 }

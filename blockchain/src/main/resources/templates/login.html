@@ -2,15 +2,9 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>侨鑫教育平台</title>
-    <!--<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">-->
-    <!--<link rel="stylesheet" th:href="@{/css/alert.css}" href="../static/css/alert.css">-->
-    <!--<link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">-->
-    <!--<link rel="stylesheet" th:href="@{/css/login.css}" href="../static/css/login.css">-->
-    <!--<script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>-->
-    <!--<script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="../static/javascript/alert.min.js"></script>-->
-    <!--<script type="text/javascript" th:src="@{/javascript/login.js}" src="../static/javascript/login.js"></script>-->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/alert.css}" href="css/alert.css">
     <link rel="stylesheet" th:href="@{/css/main.css}" href="css/main.css">
@@ -31,7 +25,7 @@
             <span class="login-form-title">学生教育成长平台</span>
             <form id="loginform" class="login-form" name="loginform" accept-charset="utf-8" th:action="@{/login/loginVerify}" action="/login/loginVerify" method="post">
                 <div class="wrap-input">
-                    <input id="phonenumber" class="input" type="text" name="phonenumber" placeholder="请输入手机号码" autocomplete="off" maxlength="11" onchange="">
+                    <input id="phonenumber" class="input" type="text" name="phonenumber" placeholder="请输入手机号码" autocomplete="off" maxlength="11">
                 </div>
                 <div id="authcodeDiv">
                     <input id="authcode" type="text" name="authcode" placeholder="请输入验证码" maxlength="6">
