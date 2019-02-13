@@ -1,12 +1,16 @@
 package com.kingold.educationblockchain;
 
 import com.kingold.educationblockchain.controller.ElectronicscertificateController;
+import com.kingold.educationblockchain.util.StreamCommon;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,10 +32,10 @@ public class EducationblockchainApplicationTests {
                 .append(certificateName).toString();
 
         Map<String,String> map = new HashMap();
-        String certType="录取通知书";
+        String certType="毕业证书";
         map.put("name","萧峰");
         map.put("certType",certType);
-        map.put("schoolName","XX小学");
+        map.put("schoolName","侨鑫汇悦天启幼儿园");
         if(certType=="毕业证书") {
             map.put("yearFrom","2015");
             map.put("yearTo","2018");
@@ -55,8 +59,16 @@ public class EducationblockchainApplicationTests {
         ElectronicscertificateController electronicscertificateController=new ElectronicscertificateController();
         try {
 
+            StreamCommon mStreamCommon = new StreamCommon();
             //electronicscertificateController.GeneratePdfCertificate(certificateFilePath, map);
-//electronicscertificateController.GeneratePdfCertificate(certificateFilePath, map,"src/main/resources/static/schoolmaster.png","src/main/resources/static/president.png");
+            Resource schoolMasterResource = new ClassPathResource("static/天启幼儿园园长.png");
+            Resource presidentResource = new ClassPathResource("static/事业部总裁孙总.png");
+            InputStream schoolMasterInputStream = schoolMasterResource.getInputStream();
+            byte[] schoolMasterBytes = mStreamCommon.read(schoolMasterInputStream);
+            InputStream presidentInputStream = presidentResource.getInputStream();
+            byte[] presidentBytes = mStreamCommon.read(presidentInputStream);
+
+            electronicscertificateController.GeneratePdfCertificate(certificateFilePath, map,schoolMasterBytes,presidentBytes);
         } catch (Exception e) {
             e.printStackTrace();
         }
