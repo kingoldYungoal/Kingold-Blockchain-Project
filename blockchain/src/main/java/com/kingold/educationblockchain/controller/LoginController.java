@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
@@ -56,13 +57,21 @@ public class LoginController {
                 if (studentParents != null && studentParents.size() > 0) {
                     if(studentParents.size() > 1){
                         List<StudentProfile> StudentProfileList = new ArrayList<>();
-                        for(StudentParent sp : studentParents){
-                            StudentProfileList.add(mStudentProfileService.GetStudentProfileById(sp.getKg_studentprofileid()));
+                        try {
+                            for (StudentParent sp : studentParents) {
+                                StudentProfileList.add(mStudentProfileService.GetStudentProfileById(sp.getKg_studentprofileid()));
+                            }
+                            model.addObject("childrenList", StudentProfileList);
+                            model.addObject("parentInformation", parentInformation);
+                            model.setViewName("childrenlist");
+                            return model;
                         }
-                        model.addObject("childrenList",StudentProfileList);
-                        model.addObject("parentInformation",parentInformation);
-                        model.setViewName("childrenlist");
-                        return model;
+                        catch (HttpClientErrorException ex)
+                        {
+                            model.addObject("errorMessage",ex.getMessage());
+                            model.setViewName("error");
+                            return model;
+                        }
                     }else{
                         StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentParents.get(0).getKg_studentprofileid());
                         model.addObject("studentprofile",studentprofile);

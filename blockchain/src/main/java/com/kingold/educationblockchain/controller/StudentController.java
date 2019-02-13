@@ -67,6 +67,9 @@ public class StudentController {
         catch (HttpClientErrorException ex)
         {
             String s = ex.getResponseBodyAsString();
+            model.setViewName("error");
+            model.addObject("errorMessage",ex.getMessage());
+            return model;
         }
 
         if(id.trim().length() > 0){
