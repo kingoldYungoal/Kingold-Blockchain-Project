@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>侨鑫教育平台</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/mobileLogin.css}" href="css/mobileLogin.css">
+    <link rel="stylesheet" th:href="@{/css/pickout.css}" href="css/pickout.css">
+    <link rel="stylesheet" th:href="@{/css/alert.css}" href="css/alert.css">
+    <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="javascript/alert.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/login.js}" src="javascript/login.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/pickout.js}" src="javascript/pickout.js"></script>
+</head>
+<body style="background:rgb(245,246,252);">
+<div class="panel panel-info">
+    <div class="panel-form">
+        <div class="panel-heading">
+            <div class="login-form">
+            <span class="login-form-logo">
+                <img th:src="@{/images/logo.png}" src="../static/images/logo.png" class="icon">
+            </span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form role="form" id="loginform" class="form-horizontal" name="loginform" accept-charset="utf-8" th:action="@{/login/loginVerify}" action="/login/loginVerify" method="post">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="content -bg">
+                            <div class="pk-form">
+                                <select name="option" id="option" class="option pickout" placeholder="请选择登录角色">
+                                    <option value=""></option>
+                                    <option value="1" selected="selected">家长登录</option>
+                                    <option value="2">教师登录</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="wrap-input">
+                            <input id="phonenumber" class="form-control" type="text" name="phonenumber" placeholder="请输入手机号码" autocomplete="off" maxlength="11">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-10 col-xs-offset-2">
+                        <div id="authcodeDiv">
+                            <input id="authcode" type="text" name="authcode" class="form-control" placeholder="请输入验证码" maxlength="6">
+                            <input type="button" id="codebtn" value="获取验证码" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="wrap-form-btn">
+                        <input id="loginbtn" class="login-form-btn" type="button" value="登 录">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    pickout.to('#option');
+    // Value default
+    pickout.updated('#option');
+</script>
+</html>
+

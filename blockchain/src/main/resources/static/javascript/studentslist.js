@@ -2,14 +2,27 @@ var pageNum = 1;
 var pageSize = 10;
 var classname;
 var year;
+var teacherid;
 var phone;
 var M = {};
-jQuery.support.cors=true;
+// 判断浏览器类型
+var userAgent = navigator.userAgent;
 
 $(document).ready(function(){
     phone = $("#phone").val();
+    var printA ="";
+    if (userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Edge") <= -1) {
+        printA += "<a class='print-preview' id='printbtn' onclick='BatchPrintPDF()'>证书批量打印</a>";
+    }else{
+        printA += "<a class='print-preview' id='printbtn'>证书批量打印</a>";
+    }
+    $("#printdiv").html(printA);
+    if (userAgent.indexOf("Chrome") <= -1 || userAgent.indexOf("Edge") > -1){
+        $('a.print-preview').printPreview();
+    }
     initTable();
 });
+
 
 //ajax获取后台数据
 function initTable() {
@@ -20,7 +33,6 @@ function initTable() {
         type: 'get',
         dataType : "json",
         async: false,
-        //url: "/student/studentlist",
         url: "../student/studentlist",
         data:{"teacherphone":phone, "classname":classname, "year": year, "pageNum":pageNum,"pageSize":pageSize},
         error: function () {//请求失败处理函数
@@ -69,7 +81,6 @@ function initTable() {
                         $("#datadiv table tbody").html("");
                         var tbodys = "";
                         $.ajax({
-                            //url: "/student/studentlist",
                             url: "../student/studentlist",
                             type: "get",
                             dataType : "json",
@@ -98,67 +109,68 @@ function initTable() {
 function BatchPrintPDF(){
     classname = $("#classSelect").val();
     year = $("#yearSelect").val();
-    // 获取所有的证书id
-    var trList = $("#datadiv table tbody").children("tr");
-    if (trList.length > 0){
-        var stuList = new Array();
-        for(var i = 0;i < trList.length;i++){
-            stuList.push(trList.eq(i).attr("data-id"));
-        }
-        // ajax 请求获取证书id
-        var datas = {
-            'className' : classname,
-            'year': year,
-            'stuIds': stuList
-        };
-        $("#certIframe").html("");
-        var iframes = "";
+    teacherid = $("#teacherid").val();
+    var datas = {
+        'className' : classname,
+        'year': year,
+        'teacherId': teacherid
+    };
+    $("#certIframe").html("");
+    var iframes = "";
 
-        $.ajax({
-            type:"post",
-            url:"../electronicscertificate/certificatelist",
-            data: JSON.stringify(datas),
-            contentType : 'application/json',
-            dataType : 'json',
-            async: false,
-            success:function (data) {
-                if (data != null && data.length > 0){
-                    // iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../electronicscertificate/certificate/showPdf?fileid=" + data[0] + "'>";
-                    // iframes += "</iframe>";
-                    // for (var i = 1;i <data.length;i++){
-                    //     iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe"+ i +"' src='../electronicscertificate/certificate/showPdf?fileid=" + data[i] + "'>";
-                    //     iframes += "</iframe>";
-                    // }
-                    iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe0' src='../test.pdf'>";
-                    iframes += "</iframe>";
-                    $("#certIframe").html(iframes);
-                    $("#printIframe0")[0].contentWindow.print();
-                    // for (var i = 0;i<data.length;i++){
-                    //     $("#printIframe"+ i)[0].contentWindow.print();
-                    // }
-                }
-            },error: function () {//请求失败处理函数
+    $.ajax({
+        type:"post",
+        url:"../electronicscertificate/certificatelist",
+        data: JSON.stringify(datas),
+        contentType : 'application/json',
+        dataType : 'json',
+        async: false,
+        success:function (data) {
+            if (data != null && data.length > 0){
+                iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe' src='../electronicscertificate/certificate/showPdf'>";
+                iframes += "</iframe>";
+                $("#certIframe").html(iframes);
+                $("#printIframe")[0].contentWindow.print();
+            }else{
                 M.dialog13 = jqueryAlert({
                     'icon': '../images/alertimgs/warning.png',
-                    'content': '请求失败',
+                    'content': '暂无可以打印的证书信息',
                     'closeTime': 2000,
                 })
                 M.dialog13.show();
             }
-        });
-
-    } else{
-        M.dialog13 = jqueryAlert({
-            'icon': '../images/alertimgs/warning.png',
-            'content': '暂无可以打印的证书信息',
-            'closeTime': 2000,
-        })
-        M.dialog13.show();
-    }
+        },error: function () {//请求失败处理函数
+            M.dialog13 = jqueryAlert({
+                'icon': '../images/alertimgs/warning.png',
+                'content': '请求失败',
+                'closeTime': 2000,
+            })
+            M.dialog13.show();
+        }
+    });
 }
 
 function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
     var roleid = $("#teacherid").val();
     window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2";
+}
+
+function loading() {
+    $('body').loading({
+        loadingWidth:240,
+        title:'请稍等',
+        name:'test',
+        discription:'正在全力加载证书打印预览',
+        direction:'column',
+        type:'origin',
+        originBg:'#000',
+        originDivWidth:40,
+        originDivHeight:40,
+        originWidth:6,
+        originHeight:6,
+        smallLoading:false,
+        loadingBg:'#004a80',
+        loadingMaskBg:'rgba(123,122,222,0.2)'
+    });
 }

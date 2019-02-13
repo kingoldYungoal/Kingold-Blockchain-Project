@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
 import java.util.*;
 import javax.imageio.ImageIO;
 
@@ -50,6 +49,8 @@ public class ShowElectronicscertificateController {
 
     private Gson gson;
 
+    private List<String> certIdArray = new ArrayList<>();
+
     /*
     * 学生证书页面
     * */
@@ -63,34 +64,34 @@ public class ShowElectronicscertificateController {
         return model;
     }
 
-    @RequestMapping(value = "/certificatelist", produces="application/pdf", method = RequestMethod.POST)
+    @RequestMapping(value = "/certificatelist", method = RequestMethod.POST)
     @ResponseBody
-    public String GetCertificateList(@RequestBody JSONObject params,HttpServletResponse response) throws Exception{
+    public String GetCertificateList(@RequestBody JSONObject params){
         gson = new Gson();
         String className = params.getString("className");
         int year = params.getInteger("year");
-        ArrayList<String> studentIdList = (ArrayList) params.get("stuIds");
+        String teacherId = params.getString("teacherId");
+        //ArrayList<String> studentIdList = (ArrayList) params.get("stuIds");
         List<String> certIds = new ArrayList<>();
-        if(studentIdList.size() > 0){
-            List<Electronicscertificate> allCertList = new ArrayList<>();
-            CertificateParam param = new CertificateParam();
-            param.setClassName(className);
-            param.setYear(year);
-            for(String stuId: studentIdList){
-                param.setStudentId(stuId);
-                // 进行查询
-                List<Electronicscertificate> certList = mElectronicscertificateService.GetCertificatesByParam(param);
-                allCertList.addAll(certList);
-            }
+        //if(studentIdList.size() > 0){
+        List<Electronicscertificate> allCertList = new ArrayList<>();
+        CertificateParam param = new CertificateParam();
+        param.setClassName(className);
+        param.setYear(year);
+        param.setTeacherId(teacherId);
+//            for(String stuId: studentIdList){
+//                param.setStudentId(stuId);
+
+        List<Electronicscertificate> certList = mElectronicscertificateService.GetCertificatesByParam(param);
+        allCertList.addAll(certList);
+//            }
             List<Electronicscertificate> newCerts = RemoveDuplicateCert(allCertList);
             for(Electronicscertificate cert : newCerts){
                 certIds.add(cert.getKg_electronicscertificateid());
             }
-        }
-        response.setContentType("application/pdf");
-        response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "filename=certificatelist.pdf");
-        GetPDFListStreamFromCECS(certIds,response.getOutputStream());
+            certIdArray = certIds;
+        //}
+
         return gson.toJson(certIds);
     }
 
@@ -110,13 +111,14 @@ public class ShowElectronicscertificateController {
      * 展示pdf证书
      * */
     @RequestMapping(value = "/certificate/showPdf", produces="application/pdf")
-    public void ShowPDFCertificate(@RequestParam(value = "fileid", required = true)String fileid,HttpServletResponse response) throws Exception{
+    public void ShowPDFCertificate(HttpServletResponse response) throws Exception{
         String certificateName = "certificate.pdf";
         response.setContentType("application/pdf");
         response.setCharacterEncoding("utf-8");
         response.setHeader("Content-Disposition", "filename="+certificateName);
-        OutputStream outputStream = response.getOutputStream();
-        GetPDFStreamFromCECS(fileid, outputStream);
+        if(certIdArray.size() > 0){
+            GetPDFListStreamFromCECS(certIdArray,response.getOutputStream());
+        }
     }
 
     /*
@@ -166,6 +168,7 @@ public class ShowElectronicscertificateController {
             pdfDocWriter.close();
         }
     }
+
 
     /*
      * 从CECS中获取JPG文件流

@@ -2,7 +2,8 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>侨鑫教育平台</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}" href="css/main.css">
@@ -24,12 +25,7 @@
             <div id="downloaddiv">
                 <input id="downloadbtn" class="button" type="button" value="下载电子证书 PDF" th:attr="data-certId=${certificateid}" onclick="DownCertPDF(this)">
             </div>
-            <div id="printdiv">
-                <input id="printbtn" class="button" type="button" value="打印电子证书 PDF" onclick="PrintCertPDF()">
-            </div>
         </div>
-        <iframe frameborder='0' style='width: 0px;height: 0px;' id='printIframe' th:src="@{/electronicscertificate/certificate/showPdf?fileid={certificateid}(certificateid=${certificateid})}">
-        </iframe>
     </div>
 </body>
 <script>
@@ -37,10 +33,5 @@
         var certId = $(obj).attr("data-certId");
         window.location.href = "../electronicscertificate/certificate/download?fileid=" + certId;
     }
-
-    function PrintCertPDF() {
-        $("#printIframe")[0].contentWindow.print();
-    }
-
 </script>
 </html>

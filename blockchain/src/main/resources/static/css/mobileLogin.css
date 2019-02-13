@@ -1,0 +1,92 @@
+
+.login-form {
+    height: 10rem;
+    text-align: center;
+}
+
+.login-form-logo {
+    display: inline-block;
+    position: relative;
+    margin-top: 3rem;
+    padding-left: 5rem;
+    line-height: 2rem;
+}
+
+.icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 5rem;
+}
+
+.panel-form {
+    max-width: 400px;
+    margin:auto;
+}
+
+.panel-body{
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.wrap-input input{
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+}
+
+#authcodeDiv{
+    width: 100%;
+    height: 50px;
+}
+
+#authcode{
+    width: 70%;
+    height: 100%;
+    background-color: transparent;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    float: left;
+}
+
+#codebtn{
+    width: 30%;
+    height: 100%;
+    background-color: transparent;
+    border-top-width: 0px;
+    border-left-width: 1px;
+
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    float: left;
+    position: relative;
+}
+
+.wrap-form-btn {
+    width: 100%;
+    height:50px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login-form-btn {
+    height:50px;
+    width: 100%;
+    font-size: 20px;
+    color: #fff;
+    line-height: 50px;
+    background: #004a80;
+    margin-top: 10px;
+    border: 1px solid #004a80;
+    border-radius: 10px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    -o-border-radius: 30px;
+}

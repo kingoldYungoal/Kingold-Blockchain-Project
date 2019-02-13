@@ -97,16 +97,15 @@ public class ElectronicscertificateController {
                             .append(".pdf");
 
                     String certificateFilePath = new StringBuffer(mCertificateTemplatePath)
-                            .append(certificateName).toString() ;
+                            .append(certificateName).toString();
 
                     Map<String,String> map = new HashMap();
-                    //map.put("name",cert.getKg_studentname());
-                    //map.put("classname",cert.getKg_classname());
-                    //map.put("teachername",cert.getKg_teachername());
-                    //map.put("certificatedate",cert.getKg_certificatedate());
                     map.put("name",cert.getKg_studentname());
                     map.put("certType",cert.getKg_certitype());
                     map.put("schoolName",cert.getKg_schoolname());
+
+                    //Resource schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
+                    //File schoolMasterFile = schoolMasterResource.getFile();
                     Resource schoolMasterResource;
                     switch(cert.getKg_schoolname()) {
                         case "侨鑫汇悦天启幼儿园":
@@ -118,10 +117,10 @@ public class ElectronicscertificateController {
                         default:
                             schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
                     }
-                    //File schoolMasterFile = schoolMasterResource.getFile();
                     InputStream schoolMasterInputStream = schoolMasterResource.getInputStream();
                     byte[] schoolMasterBytes = mStreamCommon.read(schoolMasterInputStream);
 
+                    //Resource presidentResource = new ClassPathResource("static/president.png");
                     Resource presidentResource = new ClassPathResource("static/事业部总裁孙总.png");
                     //File presidentFile = presidentResource.getFile();
                     InputStream presidentInputStream = presidentResource.getInputStream();
@@ -269,11 +268,6 @@ public class ElectronicscertificateController {
         PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
         PdfFont fontUtopia = PdfFontFactory.createFont("static/font/Utopia Regular.ttf", IDENTITY_H ,false);
         PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
-
-        //for weblogic
-        //PdfFont fontRuiYun = PdfFontFactory.createFont("font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
-        //PdfFont fontUtopia = PdfFontFactory.createFont("font/Utopia Regular.ttf", IDENTITY_H ,false);
-        //PdfFont fontYuWei = PdfFontFactory.createFont("font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
 
         for(String fieldName: fields.keySet()){
             if(form.getField(fieldName)==null)

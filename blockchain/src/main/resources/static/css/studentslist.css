@@ -152,13 +152,12 @@
 }
 
 #printbtn{
-    display: block;
-    width: 160px;
-    height:100%;
-    font-size: 18px;
-    margin: 0 auto;
+    display: inline-block;
+    width: 170px;
     color: #004a80;
     background: #fff;
+    text-align:center;
+    line-height:37px;
     border: 1px solid #004a80;
     border-radius: 20px;
     -moz-border-radius: 20px;

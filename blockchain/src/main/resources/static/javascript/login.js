@@ -190,18 +190,16 @@ $(function () {
          //     data: JSON.stringify(datas),
          //     contentType : 'application/json',
          //     dataType : 'json',
-         //     //async: false,
          //     success:function (data) {
          //         if (data){
          //             // 验证码是否正确判断
-         //             //获取验证码
+         //             // 获取验证码
          //             $.ajax({
          //                 type:"post",
          //                 url:"../smscode/getsmscode",
          //                 data: JSON.stringify(datas),
          //                 contentType : 'application/json',
          //                 dataType : 'json',
-         //                 //async: false,
          //                 success:function (data) {
          //                     if (data.success){
          //                         var verifycodes = data.result.result;

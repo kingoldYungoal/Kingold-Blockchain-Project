@@ -1,9 +1,10 @@
 /*//////////////////////////////////////////////////////////////////
-[ childrenlist ]*/
+[ studentslist ]*/
 .pagewrap {
     width: 100%;
     height:100%;
     margin: 0 auto;
+    min-width: 1034px;
 }
 
 #header{
@@ -44,6 +45,7 @@
     background-color: #fff;
     display: table;
     margin-top:20px;
+    margin-left:5.5%
 }
 
 #stuimgbox{
@@ -92,7 +94,7 @@
 #nodiv{
     width: 89%;
     height: 70px;
-    margin-left:5.5%;
+    margin-left:5.5%
 }
 
 #nodiv span{
@@ -106,10 +108,69 @@
     float:left;
 }
 
+.classdiv{
+    width: 260px;
+    height:40px;
+    float:left;
+    margin-left:40px;
+    margin-top:15px;
+    position: relative;
+}
+
+.classdiv select{
+    outline: none;
+    width: 100%;
+    height: 40px;
+    padding-left: 20px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 1px solid #004a80;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+
+.classdiv:after{
+    content: "";
+    width: 20px;
+    height: 20px;
+    background: url(../images/selecticon.png) no-repeat center;
+    position: absolute;
+    pointer-events: none;
+    right: 22px;
+    top: 25%;
+}
+
+#printdiv{
+    width: 180px;
+    height:40px;
+    float:left;
+    margin-left:40px;
+    margin-top:15px;
+}
+
+#printbtn{
+    display: block;
+    width: 160px;
+    height:100%;
+    font-size: 18px;
+    margin: 0 auto;
+    color: #004a80;
+    background: #fff;
+    border: 1px solid #004a80;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+
+
 #datadiv{
     width: 89%;
-    height: 75%;
     background-color: #fff;
+    margin-left:5.5%
 }
 
 #datadiv table{
@@ -125,7 +186,6 @@
     height:50px;
     line-height:50px;
     border-bottom: 2px solid #cd8221;
-    font-family: PingFang-SC-Regular;
 }
 
 #datadiv table td{
@@ -134,4 +194,15 @@
     height:50px;
     line-height:50px;
     cursor:pointer;
+}
+
+#pages{
+    position: relative;
+    bottom: 55px;
+    width:100%;
+    margin-top: 80px;
+}
+
+#certIframe{
+    display:none;
 }
