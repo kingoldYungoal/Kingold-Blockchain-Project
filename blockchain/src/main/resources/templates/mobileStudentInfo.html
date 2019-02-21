@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>侨鑫教育平台</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/mobileChildrenlist.css}" href="../static/css/mobileChildrenlist.css">
+    <link rel="stylesheet" th:href="@{/css/jazz-timeline.css}" href="../static/css/jazz-timeline.css">
+    <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/skrollr.min.js}" src="../static/javascript/skrollr.min.js"></script>
+</head>
+<body style="background:#fafbfc;font-family: Helvetica; ">
+<div class="panel panel-info">
+    <div class="panel-form">
+        <div class="panel-heading">
+            <div class="childrenpage-head">
+                <div class="head-logo">
+                    <img th:src="@{/images/mobilelogo.png}" src="../static/images/mobilelogo.png" class="icon">
+                </div>
+                <div class="head-title">
+                    侨鑫教育
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="parent-info">
+                <div class="teacher-info-card">
+                    <div class="profile-photo">
+                        <img th:src="@{/images/parentimg2.png}" src="../static/images/parentimg2.png" id="parentimg">
+                    </div>
+                    <div class="parentname">
+                        <ul>
+                            <li><span id="namespan">Susan White</span></li>
+                            <li><span id="phonediv">18016301234</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="jazz-timeline-wrapper" id="skrollr-body">
+                <div class="jazz-timeline">
+                    for(var i == 0; i <){
+
+                    }
+                    <div class="timeline-post">
+                        <div class="timeline-icon icon-larger iconbg-turqoise icon-color-white">
+                            <div class="icon-placeholder">2018.12.10</div>
+                            <div class="timeline-bar"></div>
+                        </div>
+                        <div class="timeline-content"
+                             data--10-bottom-top="transform: rotateX(-90deg); opacity: 0;"
+                             data--80-bottom-bottom="transform: rotateX(0deg); opacity: 1;">
+                            <h2 class="content-title"> 小学小班英文优秀荣誉证书 </h2>
+                            <div class="content-details">
+                                <p>颁发机构：侨鑫汇景新城实验小学</p>
+                                <p>证书类别：录取通知书 </p>
+                                <p>颁发日期：2018/03/01 </p>
+                                <a href="#">英文小镇</a>
+                                <a href="#">英文小镇</a>
+                            </div>
+                        </div><!-- timeline content -->
+                    </div><!-- .timeline-post -->
+                </div><!-- .timeline -->
+            </div><!-- .jazz-timeline-wrapper -->
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var s = skrollr.init({ forceHeight: false });
+</script>
+</html>
+

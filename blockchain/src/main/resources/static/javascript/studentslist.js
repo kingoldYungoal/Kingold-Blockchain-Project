@@ -5,6 +5,9 @@ var year;
 var teacherid;
 var phone;
 var M = {};
+//--loading--
+var delVal=50;
+
 // 判断浏览器类型
 var userAgent = navigator.userAgent;
 
@@ -20,6 +23,11 @@ $(document).ready(function(){
     if (userAgent.indexOf("Chrome") <= -1 || userAgent.indexOf("Edge") > -1){
         $('a.print-preview').printPreview();
     }
+    $('#loadingModal').modal({
+        keyboard: false,
+        backdrop: false
+    });
+    $('#loadingModal').modal('hide');
     initTable();
 });
 
@@ -127,10 +135,18 @@ function BatchPrintPDF(){
         async: false,
         success:function (data) {
             if (data != null && data.length > 0){
+                $('#loadingModal').modal('show');
+                setInterval(autoMove,8);
+                setInterval(autoTsq,1500);
+
                 iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe' src='../electronicscertificate/certificate/showPdf'>";
                 iframes += "</iframe>";
                 $("#certIframe").html(iframes);
                 $("#printIframe")[0].contentWindow.print();
+                var iframe = document.getElementById("printIframe");
+                iframe.onload = function(){
+                    $('#loadingModal').modal('hide');
+                };
             }else{
                 M.dialog13 = jqueryAlert({
                     'icon': '../images/alertimgs/warning.png',
@@ -156,21 +172,17 @@ function GoStudentInfo(obj) {
     window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2";
 }
 
-function loading() {
-    $('body').loading({
-        loadingWidth:240,
-        title:'请稍等',
-        name:'test',
-        discription:'正在全力加载证书打印预览',
-        direction:'column',
-        type:'origin',
-        originBg:'#000',
-        originDivWidth:40,
-        originDivHeight:40,
-        originWidth:6,
-        originHeight:6,
-        smallLoading:false,
-        loadingBg:'#004a80',
-        loadingMaskBg:'rgba(123,122,222,0.2)'
-    });
+function autoMove(){
+    delVal++;
+    if(delVal>400){
+        delVal=50;
+    }
+    $(".mvBtn").css("left",delVal);
+}
+
+function autoTsq(){
+    $(".mvSq").css("color","#F5FAFD");
+    setTimeout(function(){$(".mvSq").eq(0).css("color","#29B6FF")},0);
+    setTimeout(function(){$(".mvSq").eq(1).css("color","#29B6FF")},500);
+    setTimeout(function(){$(".mvSq").eq(2).css("color","#29B6FF")},1000);
 }

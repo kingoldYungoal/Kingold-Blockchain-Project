@@ -1,15 +1,23 @@
 .pk-form {
-	width:100%;
+	width:35%;
+	float:left;
+	margin:5px 0;
+}
+
+.pk-form1 {
+	width:65%;
 	float:left;
 	margin:5px 0;
 }
 
 .pk-field {
-	width:30%;
+	width:80%;
 	float:left;
-	cursor:pointer;			
-	padding:8px;
+	cursor:pointer;
+	padding:5px;
 	border-radius:5px;
+	color: #666;
+	text-align: center;
 }
 
 .pk-field.-multiple{
@@ -21,15 +29,14 @@
 	bottom:0;
 	width:20px;
 	border-radius:0 5px 5px 0;
-	float:left;
+	/*float:left;*/
 }
 
 .pk-arrow:before{
-	transform: rotate(90deg);	
-	font-size:25px;	
+	font-size:12px;
 	position:relative;
-	content:'›';
-	margin:5px 0 0 8px;
+	content:'\25BC';
+	margin:10px 0 0 0;
 	float:left;
 }
 
@@ -55,13 +62,14 @@
 .pk-modal {
 	transform: translateX(-50%) scale(0.8,0.8);
 	left:50%;
-	top:30%;
-	border-radius:6px;
+	top:20%;
+	border-radius:10px;
 	position:fixed;
 	width:280px;
-	z-index:1111;			
+	/*height: 150px;*/
+	z-index:1111;
 	transition: all .3s;
-	visibility:hidden;		
+	visibility:hidden;
 	background:#f2f2f2;
 	opacity:0;
 }
@@ -82,16 +90,16 @@
 }
 
 .pk-modal > .head{
-	font-size:18px;
-	padding:20px 10px;
+	font-size:13px;
+	padding: 10px 0px 10px 25px;
 	border-radius: 4px 4px 0 0;
+	font-weight: bold;
 }
 
 .pk-modal.-show {
 	transform: translateX(-50%) scale(1,1);
-	visibility:visible;		
+	visibility:visible;
 	opacity:1;
-	box-shadow:0 30px 10px -20px #777;
 }
 
 .pk-search{
@@ -116,16 +124,16 @@
 
 .pk-modal > .close{
 	position:absolute;
-	top:18px;
+	top:10px;
 	right:15px;
 	color:#666;
-	font-size:22px;	
+	font-size:22px;
 	cursor:pointer;
 }
 
 .pk-option, .pk-option-group{
 	cursor:pointer;
-	padding:14px 10px;
+	padding:15px 40px;
 	border-bottom:1px solid #efefef;
 	position:relative;
 }
@@ -135,18 +143,18 @@
 }
 
 .pk-option.-selected:last-child{
-	border-radius: 0 0 4px 4px;	
+	border-radius: 0 0 4px 4px;
 }
 
 .pk-option-group{
 	cursor:auto;
 	font-weight: bold;
 	font-size:13px;
-	letter-spacing:1px; 
+	letter-spacing:1px;
 }
 
 .pk-option-group:not(:first-child){
-	margin-top:14px;	
+	margin-top:14px;
 }
 
 .pk-option > .icon:not(:empty){
@@ -159,7 +167,7 @@
 	text-align:center;
 }
 
-.pk-option > .txt{	
+.pk-option > .txt{
 	font-size:14px;
 	font-weight:300;
 	letter-spacing:1.2px;
@@ -178,7 +186,7 @@
 
 .pk-btnMultiply{
 	background: none;
-	border:none;	
+	border:none;
 	margin-top:10px;
 	width:100%;
 	padding-top:16px;
@@ -210,7 +218,7 @@
 
 .pk-tag > .txt{
 	float:left;
-  	padding:6px;
+	padding:6px;
 	padding-right:22px;
 	border-radius:6px;
 	position:relative;
@@ -241,13 +249,12 @@
 }
 
 .pk-arrow.-clean{
-	background:#eee;
-	color:#aaa;			
+	color:#aaa;
 }
 
 .pk-field.-clean:hover + .pk-arrow, .pk-arrow.-clean:hover{
 	background:#dfdfdf;
-	color:#aaa;			
+	color:#aaa;
 }
 
 .pk-modal.-clean{
@@ -256,17 +263,16 @@
 
 .pk-modal.-clean > .head{
 	color:#666;
-	background:#efefef;
 	font-family: 'PingFang-SC-Regular', sans-serif;
 }
 
-.pk-option.-clean:not(:last-child){	
+.pk-option.-clean:not(:last-child){
 	border-bottom:1px solid #efefef;
 }
 
 .pk-option.-clean:hover, .pk-option.-clean.-selected{
-	border-radius: 0 0 4px 4px;	
-	background:#f2f2f2;			
+	border-radius: 0 0 10px 10px;
+	background:#f2f2f2;
 }
 
 .pk-no_result_search.-clean{
@@ -284,7 +290,7 @@
 
 .pk-circle.-clean{
 	border-color:#ddd;
-	border:1px solid #ccc;	
+	border:1px solid #ccc;
 }
 
 .pk-option.-selected > .pk-circle.-clean{

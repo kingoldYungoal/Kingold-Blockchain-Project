@@ -8,6 +8,12 @@
         this.each(function() {
             $(this).bind('click', function(e) {
                 e.preventDefault();
+                if(window.ActiveXObject || "ActiveXObject" in window) {
+                }else{
+                    $("#loadingModal").modal('show');
+                    setInterval(autoMove,8);
+                    setInterval(autoTsq,1500);
+                }
                 $('#print-modal').html('');
                 $.printPreview.loadPrintPreview();
             });
@@ -28,6 +34,7 @@
                 print_controls = $('<div id="print-modal-controls">' +
                     '<a href="#" class="close" title="Close">关闭</a>').hide();
             }
+
             $.printPreview.GetIframeHtml();
             var print_frame = $(iframeHtml);
             print_modal
@@ -36,7 +43,7 @@
                 .append(print_frame)
                 .appendTo('body');
 
-            var print_frame_ref = $("#print-modal-content").document;
+            var print_frame_ref = window.frames[0].document;
 
             $('a', print_frame_ref).bind('click.printPreview', function(e) {
                 e.preventDefault();
@@ -44,13 +51,13 @@
 
             $('head').append('<style type="text/css">' +
                 '@media print {' +
-                    '#print-modal-mask,' +
-                    '#print-modal {' +
-                        'page-break-after: always;' +
-                    '}' +
-                    '.pagewrap {' +
-                        'display: none !important;' +
-                    '}' +
+                '#print-modal-mask,' +
+                '#print-modal {' +
+                'page-break-after: always;' +
+                '}' +
+                '.pagewrap {' +
+                'display: none !important;' +
+                '}' +
                 '}' +
                 '</style>'
             );
@@ -60,7 +67,7 @@
             }
             iframeHtml = "";
             $.printPreview.loadMask();
-            $('body').css({overflowY: 'hidden', height: '100%'});
+            $('#print-modal').css({overflowY: 'hidden', height: '100%'});
             starting_position = $(window).height() + $(window).scrollTop();
             var css = {
                 top:         starting_position,
@@ -85,6 +92,10 @@
                     $.printPreview.distroyPrintPreview();
                 }
             });
+            var iframe = document.getElementById("print-modal-content");
+            iframe.onload = iframe.onreadystatechange = function(){
+                $("#loadingModal").modal('hide');
+            };
         },
 
         distroyPrintPreview: function() {
@@ -181,7 +192,6 @@
                     M.dialog13.show();
                 }
             });
-            //}
         }
     }
 })(jQuery);

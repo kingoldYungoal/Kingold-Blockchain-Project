@@ -1,0 +1,243 @@
+
+.childrenpage-head {
+    height: 2rem;
+    text-align: center;
+}
+
+.head-logo{
+    margin:0 0 0 1px;
+    width: 35%;
+    float:left;
+}
+
+.icon {
+    left: 0;
+    top: 0;
+    height: 1rem;
+}
+
+.head-title{
+    width: 65%;
+    margin-right: 35%;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.panel-body{
+    padding-left: 0rem;
+    padding-right: 0rem;
+}
+
+.parent-info{
+    width: 100%;
+    height: 10rem;
+}
+
+.teacher-info-card{
+    height:11rem;
+    background: url(../images/mobilebg.png) no-repeat;
+    background-size: 100% 100%;
+    margin-top: 0rem;
+}
+
+.profile-photo{
+    width: 30%;
+    height: 8rem;
+    float: left;
+}
+
+#parentimg {
+    width: 70%;
+    float: right;
+    margin: 1.5rem 0rem;
+}
+
+.parentname {
+    width: 70%;
+    height: 5rem;
+    margin-top: 2rem;
+    padding-left: 1rem;
+    float: right;
+    color: #FFFFFF;
+}
+
+ul,li{
+    padding:0;
+    margin:0;
+    list-style:none
+}
+
+#namespan{
+    font-size: 1.5rem;
+    margin: auto;
+}
+
+#phonediv{
+    font-size: 0.7rem;
+    margin-top: 0;
+}
+
+.childrenlist{
+    width: 96%;
+    margin-left: 2%;
+    height: 100%;
+    background-color: #FFFFFF;
+    min-height: 32rem;
+}
+
+.list-group{
+    border: 0;
+    width: 96%;
+    margin-left: 2%;
+    height: 100%;
+    background-color: #fafbfc;
+    min-height: 32rem;
+}
+
+.list-group-item{
+    width: 96%;
+    margin-left: 2%;
+    height: 6.5rem;
+    margin-bottom: 0.5rem;
+    border: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+}
+
+.list-group-item:last-child {
+    margin-bottom: 0;
+}
+
+.childimg{
+    width: 15%;
+    float: left;
+    margin: auto;
+}
+
+.stuimg{
+    width: 3rem;
+    margin-top: 1.5rem;
+}
+
+.childinfo{
+    width: 40%;
+    float: left;
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+}
+
+.childinfo-name{
+    font-size: 0.8rem;
+    line-height: 2rem
+}
+
+.childinfo-gender{
+    font-size: 0.5rem;
+    color: #787878;
+}
+
+.childinfo-class-time{
+    font-size: 0.6rem;
+    color: #787878;
+    line-height: 1rem
+}
+
+.parent-name-tel{
+    font-size: 0.6rem;
+    color: #787878;
+    line-height: 1rem;
+}
+
+.other-info{
+    width: 40%;
+    float: right;
+}
+
+.schoolname{
+    border-radius: 0 0.4rem 0 0.4rem;
+    font-size: 0.5rem;
+    line-height: 1.2rem;
+    background-color: #004081;
+    color: #FFFFFF;
+    float: right;
+    text-align: center;
+}
+
+.stunumber{
+    font-size: 0.6rem;
+    line-height: 1rem;
+    color: #ad6704;
+    height: 1rem;
+    margin: 4.5rem 0rem auto 1rem;
+}
+
+
+.cd-container {
+    width: 90%;
+    max-width: 768px;
+    margin: 2em auto;
+}
+
+.cd-container::after {
+    /* clearfix */
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.cd-top {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    position: fixed;
+    bottom: 40px;
+    right: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    /* image replacement properties */
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+    background: rgba(200, 201, 202, 0.8) url(../images/cd-top-arrow.svg) no-repeat center 50%;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: opacity .3s 0s, visibility 0s .3s;
+    -moz-transition: opacity .3s 0s, visibility 0s .3s;
+    transition: opacity .3s 0s, visibility 0s .3s;
+}
+.cd-top.cd-is-visible, .cd-top.cd-fade-out, .no-touch .cd-top:hover {
+    -webkit-transition: opacity .3s 0s, visibility 0s 0s;
+    -moz-transition: opacity .3s 0s, visibility 0s 0s;
+    transition: opacity .3s 0s, visibility 0s 0s;
+}
+.cd-top.cd-is-visible {
+    /* the button becomes visible */
+    visibility: visible;
+    opacity: 1;
+}
+.cd-top.cd-fade-out {
+    /* if the user keeps scrolling down, the button is out of focus and becomes less visible */
+    opacity: .5;
+}
+.no-touch .cd-top:hover {
+    background-color: #0e90d2;
+    opacity: 1;
+}
+@media only screen and (min-width: 768px) {
+    .cd-top {
+        right: 20px;
+        bottom: 20px;
+    }
+}
+@media only screen and (min-width: 1024px) {
+    .cd-top {
+        height: 60px;
+        width: 60px;
+        right: 30px;
+        bottom: 30px;
+    }
+}

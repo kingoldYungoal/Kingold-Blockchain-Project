@@ -1,0 +1,159 @@
+
+.childrenpage-head {
+    height: 2rem;
+    text-align: center;
+}
+
+.head-logo{
+    margin:0 0 0 0.1rem;
+    width: 35%;
+    float:left;
+}
+
+.icon {
+    left: 0;
+    top: 0;
+    height: 1rem;
+}
+
+.head-title{
+    width: 65%;
+    margin-right: 35%;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.panel-body{
+    padding-left: 0rem;
+    padding-right: 0rem;
+}
+
+.parent-info{
+    width: 100%;
+    height: 10rem;
+}
+
+.teacher-info-card{
+    height:11rem;
+    background: url(../images/mobilebg.png) no-repeat;
+    background-size: 100% 100%;
+    margin-top: 0rem;
+}
+
+.profile-photo{
+    width: 30%;
+    height: 8rem;
+    float: left;
+}
+
+#parentimg {
+    width: 70%;
+    float: right;
+    margin: 1.5rem 0rem;
+}
+
+.parentname {
+    width: 70%;
+    height: 5rem;
+    margin-top: 2rem;
+    padding-left: 1rem;
+    float: right;
+    color: #FFFFFF;
+}
+
+ul,li{
+    padding:0;
+    margin:0;
+    list-style:none;
+}
+
+#namespan{
+    font-size: 1.5rem;
+    margin: auto;
+}
+
+#phonediv{
+    font-size: 0.7rem;
+    margin-top: 0;
+}
+
+.childrenlist{
+    width: 96%;
+    margin-left: 2%;
+    height: 100%;
+    background-color: #FFFFFF;
+    min-height: 32rem;
+}
+
+.list-group{
+    border: 0;
+    width: 96%;
+    margin-left: 2%;
+    height: 100%;
+    background-color: #FFFFFF;
+    min-height: 32rem;
+}
+
+.list-group-item{
+    width: 96%;
+    margin-left: 2%;
+    height: 6.5rem;
+    border-right: 0;
+    border-left: 0;
+    border-top: 0;
+    margin-bottom: 0rem;
+    border-bottom: 0.1rem solid #E0E0E0;
+    padding: 0;
+}
+
+.list-group-item:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+}
+
+.childimg{
+    width: 15%;
+    float: left;
+    margin: auto;
+}
+
+.stuimg{
+    width: 3rem;
+    margin-top: 1.5rem;
+}
+
+.childinfo{
+    width: 40%;
+    float: left;
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+}
+
+.childinfo-name{
+    font-size: 0.8rem;
+    line-height: 2rem
+}
+
+.childinfo-gender{
+    font-size: 0.5rem;
+    color: #787878;
+}
+
+.childinfo-class-time{
+    font-size: 0.6rem;
+    color: #787878;
+    line-height: 1rem
+}
+.schoolname{
+    width: 35%;
+    margin-top: 1.2rem;
+    border-radius: 1rem;
+    font-size: 0.5rem;
+    line-height: 0.8rem;
+    background-color: #004081;
+    color:#FFFFFF;
+    float: right;
+    text-align: center;
+}

@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
-import com.kingold.educationblockchain.dao.ElectronicscertificateMapper;
 import com.kingold.educationblockchain.service.*;
+
+import com.kingold.educationblockchain.util.CheckRequestDevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,7 +42,7 @@ public class LoginController {
     private String channel;
 
     @RequestMapping("/login")
-    public String UserLogin(){
+    public String UserLogin(HttpServletRequest request){
         return "login";
     }
 
@@ -48,7 +51,6 @@ public class LoginController {
     public ModelAndView UserLoginVerify(String phonenumber, int role, ModelMap map){
         //role 為1，代表家長，為2，代表教師
         ModelAndView model = new ModelAndView();
-        //HttpSession session = request.getSession(true);
         if (role == 1) {
             ParentInformation parentInformation = mParentInfomationService.FindParentInformationByPhone(phonenumber);
             if (parentInformation != null) {
@@ -206,7 +208,6 @@ public class LoginController {
                     }
                 }
             }
-
             model.addObject("classList",classes);
             model.addObject("teacherInformation", teacherInformation);
             model.setViewName("studentlist");
@@ -296,5 +297,30 @@ public class LoginController {
         Calendar date = Calendar.getInstance();
         String year = String.valueOf(date.get(Calendar.YEAR));
         return year;
+    }
+
+    // 访问设备验证
+    public boolean CheckLogin(HttpServletRequest request){
+        boolean isFromMobile = false;
+        HttpSession session = request.getSession();
+        if(session.getAttribute("ua") == null){
+            try{
+                //获取ua，用来判断是否为移动端访问
+                String userAgent = request.getHeader("USER-AGENT").toLowerCase();
+                if(userAgent == null){
+                    userAgent = "";
+                }
+                isFromMobile = CheckRequestDevice.check(userAgent);
+                //判断是否为移动端访问
+                if(isFromMobile){
+                    session.setAttribute("ua","mobile");
+                } else {
+                    session.setAttribute("ua","pc");
+                }
+            }catch(Exception e){}
+        }else{
+            isFromMobile = session.getAttribute("ua").equals("mobile");
+        }
+        return isFromMobile;
     }
 }

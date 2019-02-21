@@ -94,7 +94,6 @@ public class CommonController {
         switch(tableName.trim()){
             case "kg_studentprofile":
                 StudentProfile studentProfile = JSONObject.parseObject(jsonParam,StudentProfile.class);
-                //studentProfile.setKg_studentprofileid(UUID.randomUUID().toString());
                 // 判断学号，学籍号 是否已存在
                 List<StudentProfile> studentProfileList = mStudentProfileService.GetStudentProfileByNumber(studentProfile.getKg_educationnumber(),studentProfile.getKg_studentnumber());
                 if(studentProfileList == null || studentProfileList.size() <= 0){

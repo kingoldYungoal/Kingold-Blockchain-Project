@@ -205,3 +205,33 @@
 #certIframe{
     display:none;
 }
+
+#loadingModal{
+    margin-top:10%;
+    z-index: 10003;
+}
+
+.mvTxt{
+    height:50px;
+    line-height:50px;
+    width:531px;
+    text-align:center;
+    font-size:22px;
+    color:darkred;
+    margin:0 auto;
+    z-index: 10001;
+}
+.mvBox{
+    height:15px;
+    background:#F5FAFD url(../images/loading/loading2.jpg) no-repeat left center;
+    width:480px;
+    position:relative;
+    padding:0 30px;
+    margin:0 auto;
+    z-index: 10001;
+}
+.mvBtn{
+    position:absolute;
+    left:50px;
+    top:0;
+}

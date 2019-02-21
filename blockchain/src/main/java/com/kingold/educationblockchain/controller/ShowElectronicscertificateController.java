@@ -115,7 +115,7 @@ public class ShowElectronicscertificateController {
         String certificateName = "certificate.pdf";
         response.setContentType("application/pdf");
         response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "filename="+certificateName);
+        response.setHeader("Content-Disposition", "inline;filename="+certificateName);
         if(certIdArray.size() > 0){
             GetPDFListStreamFromCECS(certIdArray,response.getOutputStream());
         }

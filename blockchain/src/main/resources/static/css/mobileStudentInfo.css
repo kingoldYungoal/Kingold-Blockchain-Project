@@ -1,0 +1,66 @@
+body{
+    padding:0;
+}
+
+.header{
+    height:2rem;
+    line-height:2rem;
+    width:100%;
+}
+.col-4 .headimg{
+    min-width:25%;
+}
+
+#headimg{
+    vertical-align: middle;
+    margin:10px 0 15px 0;
+    width:100%;
+}
+
+#headspan{
+    font-size: 20px;
+    font-weight: normal;
+    font-family: "Microsoft YaHei";
+    color: #222222;
+    margin:15px 0 15px 0;
+    vertical-align: middle;
+}
+
+.info{
+    height:13rem;
+    background: url(../images/mobilebg.png) no-repeat;
+    background-size: 100% 100%;
+    margin-top: 1rem;
+}
+
+#parentimg{
+    width:80%;
+    height:80%;
+    display:block;
+    border:none;
+    margin-top:10%;
+}
+
+#parentspan{
+    font-weight: normal;
+    position: relative;
+    margin-bottom: 0.5rem;
+    color:#fff;
+    font-size:16px;
+}
+
+#parentspanp{
+    font-weight: normal;
+    position: relative;
+    font-size:14px;
+    margin-bottom: 0.3rem;
+    overflow: hidden;
+    color:#fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+
+

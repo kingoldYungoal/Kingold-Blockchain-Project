@@ -20,7 +20,7 @@
 }
 
 .panel-form {
-    max-width: 400px;
+    max-width: 20rem;
     margin:auto;
 }
 
@@ -31,62 +31,66 @@
 
 .wrap-input input{
     width: 100%;
-    height: 50px;
+    height: 3rem;
     background-color: transparent;
-    border-top-width: 0px;
-    border-left-width: 0px;
-    border-right-width: 0px;
-    border-bottom-width: 1px;
+    border-top-width: 0rem;
+    border-left-width: 0rem;
+    border-right-width: 0rem;
+    border-bottom-width: 0.1rem;
+    border-radius: 0rem;
 }
 
 #authcodeDiv{
     width: 100%;
-    height: 50px;
+    height: 1.5rem;
 }
 
 #authcode{
-    width: 70%;
+    width: 65%;
     height: 100%;
     background-color: transparent;
-    border-top-width: 0px;
-    border-left-width: 0px;
-    border-right-width: 0px;
-    border-bottom-width: 1px;
+    border-top-width: 0rem;
+    border-left-width: 0rem;
+    border-right-width: 0rem;
+    border-bottom-width: 0rem;
     float: left;
 }
 
 #codebtn{
-    width: 30%;
-    height: 100%;
+    width: 35%;
+    height: 70%;
     background-color: transparent;
-    border-top-width: 0px;
-    border-left-width: 1px;
-
-    border-right-width: 0px;
-    border-bottom-width: 1px;
+    border-top-width: 0rem;
+    border-left-width: 0.1rem;
+    border-right-width: 0rem;
+    border-bottom-width: 0rem;
     float: left;
     position: relative;
+    border-radius: 0rem;
 }
 
 .wrap-form-btn {
     width: 100%;
-    height:50px;
+    height:4rem;
     display: block;
     margin: 0 auto;
     text-align: center;
 }
 
 .login-form-btn {
-    height:50px;
+    height:3rem;
     width: 100%;
-    font-size: 20px;
+    font-size: 1.2rem;
     color: #fff;
-    line-height: 50px;
-    background: #004a80;
-    margin-top: 10px;
-    border: 1px solid #004a80;
-    border-radius: 10px;
-    -moz-border-radius: 30px;
-    -webkit-border-radius: 30px;
-    -o-border-radius: 30px;
+    line-height: 1.5rem;
+    background: -webkit-linear-gradient(left,rgb(0,102,176),rgb(0,91,157),#004a80); /* Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(left,rgb(0,102,176),rgb(0,91,157),#004a80); /* Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left,rgb(0,102,176),rgb(0,91,157),#004a80); /* Firefox 3.6 to 15 */
+    background: linear-gradient(left,rgb(0,102,176),rgb(0,91,157),#004a80); /* 标准语法 (必须在最后) */
+    margin-top: 0.1rem;
+    border: 0.1rem solid #004a80;
+    border-radius: 10rem;
+    -moz-border-radius: 10rem;
+    -webkit-border-radius: 10rem;
+    -o-border-radius: 10rem;
 }
