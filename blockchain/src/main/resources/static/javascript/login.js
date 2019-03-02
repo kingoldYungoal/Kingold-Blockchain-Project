@@ -3,9 +3,13 @@ $(function () {
     var wait=60;
     var re = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/;
     var $codebtn = $("#codebtn");
+    var device = $("#device").val();
 
     $("#authcode").val("");
-    $("input:radio[name='role']").get(0).checked = true ;
+
+    if (device != "mobile"){
+        $("input:radio[name='option']").get(0).checked = true ;
+    }
 
     $("#codebtn").click(function () {
         var disabled = $("#codebtn").attr("disabled");
@@ -144,7 +148,12 @@ $(function () {
      $("#loginbtn").click(function () {
          var phonenumber = $("#phonenumber").val();
          var authcode = $("#authcode").val();
-         var role = $("input[name='role']:checked").val();
+         var role;
+         if (device != "mobile"){
+             role = $("input[name='option']:checked").val();
+         } else{
+             role = $("#optionRole").val();
+         }
          if ($.trim(phonenumber) == "") {
              M.dialog13 = jqueryAlert({
                  'icon': '../images/alertimgs/warning.png',

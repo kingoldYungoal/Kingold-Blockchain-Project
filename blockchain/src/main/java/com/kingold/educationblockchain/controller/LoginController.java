@@ -2,11 +2,19 @@ package com.kingold.educationblockchain.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
 import com.kingold.educationblockchain.service.*;
 
 import com.kingold.educationblockchain.util.CheckRequestDevice;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -41,17 +49,28 @@ public class LoginController {
     @Value("${chainCode.channel}")
     private String channel;
 
+    private boolean isFromMobile;
+
     @RequestMapping("/login")
-    public String UserLogin(HttpServletRequest request){
-        return "login";
+    public ModelAndView UserLogin(HttpServletRequest request){
+        ModelAndView model = new ModelAndView();
+        isFromMobile = CheckLogin(request);
+        model.addObject("device","mobile");
+        model.setViewName("mobileLogin");
+        return model;
+//        if(isFromMobile){
+//            return "mobileLogin";
+//        }else{
+//            return "login";
+//        }
     }
 
     @RequestMapping(value = "/loginVerify",method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView UserLoginVerify(String phonenumber, int role, ModelMap map){
+    public ModelAndView UserLoginVerify(String phonenumber, int option, ModelMap map){
         //role 為1，代表家長，為2，代表教師
         ModelAndView model = new ModelAndView();
-        if (role == 1) {
+        if (option == 1) {
             ParentInformation parentInformation = mParentInfomationService.FindParentInformationByPhone(phonenumber);
             if (parentInformation != null) {
                 List<StudentParent> studentParents = mStudentParentService.FindStudentParentByParentId(parentInformation.getKg_parentinformationid());
@@ -63,7 +82,12 @@ public class LoginController {
                         }
                         model.addObject("childrenList",StudentProfileList);
                         model.addObject("parentInformation",parentInformation);
-                        model.setViewName("childrenlist");
+                        model.setViewName("mobileChildrenlist");
+//                        if(isFromMobile){
+//                            model.setViewName("mobileChildrenlist");
+//                        }else{
+//                            model.setViewName("childrenlist");
+//                        }
                         return model;
                     }else{
                         StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentParents.get(0).getKg_studentprofileid());
@@ -90,7 +114,8 @@ public class LoginController {
                         model.addObject("roleid", "");
                         model.addObject("role", 0);
 
-                        model.setViewName("studentinfoandcerts");
+                        //model.setViewName("studentinfoandcerts");
+                        model.setViewName("mobileStudentInfo");
                         return model;
                     }
                 }
@@ -117,7 +142,11 @@ public class LoginController {
 
                         model.addObject("classList",classes);
                         model.addObject("teacherInformation", teacherInformation);
-                        model.setViewName("studentlist");
+
+                        //判断设备，如果是移动端，则需要直接获取所有的学生信息
+                        List<StudentInfo> studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), "",0);
+                        model.addObject("studentList", studentInfoList);
+                        model.setViewName("mobileStudentlist");
                         return model;
                     }else{
                         StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentTeachers.get(0).getKg_studentprofileid());
@@ -144,7 +173,8 @@ public class LoginController {
                         model.addObject("roleid", "");
                         model.addObject("role", 0);
 
-                        model.setViewName("studentinfoandcerts");
+                        //model.setViewName("studentinfoandcerts");
+                        model.setViewName("mobileStudentInfo");
                         return model;
                     }
                 }

@@ -1,13 +1,13 @@
 .pk-form {
 	width:35%;
 	float:left;
-	margin:5px 0;
+	margin-bottom:1rem;
 }
 
 .pk-form1 {
 	width:65%;
 	float:left;
-	margin:5px 0;
+	margin-bottom:1rem;
 }
 
 .pk-field {
@@ -93,7 +93,6 @@
 	font-size:13px;
 	padding: 10px 0px 10px 25px;
 	border-radius: 4px 4px 0 0;
-	font-weight: bold;
 }
 
 .pk-modal.-show {
@@ -263,7 +262,6 @@
 
 .pk-modal.-clean > .head{
 	color:#666;
-	font-family: 'PingFang-SC-Regular', sans-serif;
 }
 
 .pk-option.-clean:not(:last-child){

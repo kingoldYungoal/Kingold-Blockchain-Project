@@ -14,11 +14,11 @@
     <script type="text/javascript" th:src="@{/javascript/login.js}" src="javascript/login.js"></script>
 </head>
 <body style="min-width: 1200px;">
+<input type="hidden" id="device" name="device" th:value="${device}">
 <div class="pagewrap">
     <div class="container-login" th:style="'background:url(' + @{/images/loginbg.jpg} + ');'" style="background: url('images/loginbg.jpg')" >
         <div class="wrap-login">
             <div class="login-form-logo">
-                <!--<img th:src="@{/images/logo.png}">-->
                 <img th:src="@{/images/logo.png}">
             </div>
             <span class="login-form-title">学生教育成长平台</span>
@@ -32,11 +32,11 @@
                 </div>
                 <div class="wrap-radio">
                     <div style="margin-left:100px;" class="wrap-radios">
-                        <input type="radio" name="role" id="parentRadio" value="1" class="radio" checked="checked" />
+                        <input type="radio" name="option" id="parentRadio" value="1" class="radio" checked="checked" />
                         <label for="parentRadio">家长</label>
                     </div>
                     <div style="text-align: left;" class="wrap-radios">
-                        <input type="radio" name="role" id="teacherRadio" value="2" class="radio" />
+                        <input type="radio" name="option" id="teacherRadio" value="2" class="radio" />
                         <label for="teacherRadio">教师</label>
                     </div>
                 </div>

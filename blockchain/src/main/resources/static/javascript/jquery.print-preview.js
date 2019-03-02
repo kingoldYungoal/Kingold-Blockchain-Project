@@ -8,14 +8,26 @@
         this.each(function() {
             $(this).bind('click', function(e) {
                 e.preventDefault();
-                if(window.ActiveXObject || "ActiveXObject" in window) {
-                }else{
-                    $("#loadingModal").modal('show');
-                    setInterval(autoMove,8);
-                    setInterval(autoTsq,1500);
-                }
                 $('#print-modal').html('');
-                $.printPreview.loadPrintPreview();
+                var classname = $("#classSelect").val();
+                var year = $("#yearSelect").val();
+                if (classname != "" && year != 0){
+                    if(window.ActiveXObject || "ActiveXObject" in window) {
+                    }else{
+                        // 判断是否有查询到的值
+                        $.printPreview.GetIframeHtml();
+                    }
+
+                    $.printPreview.loadPrintPreview();
+                } else{
+                    M.dialog13 = jqueryAlert({
+                        'icon': '../images/alertimgs/warning.png',
+                        'content': '请先选择具体的年份和班级',
+                        'closeTime': 2000,
+                    })
+                    M.dialog13.show();
+                }
+
             });
         });
         return this;
@@ -35,7 +47,7 @@
                     '<a href="#" class="close" title="Close">关闭</a>').hide();
             }
 
-            $.printPreview.GetIframeHtml();
+            //$.printPreview.GetIframeHtml();
             var print_frame = $(iframeHtml);
             print_modal
                 .hide()
@@ -157,8 +169,6 @@
         },
 
         GetIframeHtml: function (){
-            var classname = $("#classSelect").val();
-            var year = $("#yearSelect").val();
             var teacherid = $("#teacherid").val();
             var datas = {
                 'className' : classname,
@@ -175,6 +185,9 @@
                 success:function (data) {
                     if (data != null && data.length > 0){
                         iframeHtml += '<iframe id="print-modal-content" style="width:96%; height:780px;" frameborder="0" name="print-frame" src="../electronicscertificate/certificate/showPdf" />';
+                        $("#loadingModal").modal('show');
+                        setInterval(autoMove,8);
+                        setInterval(autoTsq,1500);
                     }else{
                         M.dialog13 = jqueryAlert({
                             'icon': '../images/alertimgs/warning.png',

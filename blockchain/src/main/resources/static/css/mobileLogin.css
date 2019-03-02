@@ -1,4 +1,3 @@
-
 .login-form {
     height: 10rem;
     text-align: center;
@@ -29,15 +28,16 @@
     padding-right: 1rem;
 }
 
-.wrap-input input{
+#phonenumber{
     width: 100%;
-    height: 3rem;
-    background-color: transparent;
+    height: 1.5rem;
+    outline:none;
     border-top-width: 0rem;
     border-left-width: 0rem;
     border-right-width: 0rem;
-    border-bottom-width: 0.1rem;
+    border-bottom-width: 0rem;
     border-radius: 0rem;
+    background-color: transparent;
 }
 
 #authcodeDiv{
@@ -47,7 +47,7 @@
 
 #authcode{
     width: 65%;
-    height: 100%;
+    height: 1.5rem;
     background-color: transparent;
     border-top-width: 0rem;
     border-left-width: 0rem;
@@ -58,7 +58,7 @@
 
 #codebtn{
     width: 35%;
-    height: 70%;
+    height: 1.5rem;
     background-color: transparent;
     border-top-width: 0rem;
     border-left-width: 0.1rem;

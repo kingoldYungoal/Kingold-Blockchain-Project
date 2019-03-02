@@ -10,6 +10,7 @@
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
 </head>
 <body style="background:#fafbfc;font-family: Helvetica; ">
+<input type="hidden" id="parentid" name="parentid" th:value="${parentInformation.getKg_parentinformationid()}">
 <div class="panel panel-info">
     <div class="panel-form">
         <div class="panel-heading">
@@ -30,46 +31,38 @@
                     </div>
                     <div class="parentname">
                         <ul>
-                            <li><span id="namespan">Susan White</span></li>
-                            <li><span id="phonediv">18016301234</span></li>
+                            <li><span id="namespan" th:text="${parentInformation.getKg_name()}"></span></li>
+                            <li><span id="phonediv" th:text="${parentInformation.getKg_phonenumber()}" th:value="${parentInformation.getKg_phonenumber()}"></span></li>
                         </ul>
                     </div>
                 </div>
             </div>
             <ul class="list-group">
-                <li class="list-group-item" >
+                <li class="list-group-item" th:each="childrenInfo:${childrenList}" th:attr="data-id=${childrenInfo.getKg_studentprofileid()}" onclick="GoStudentInfo(this)">
                     <div class="childimg">
                         <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
                     </div>
                     <div class="childinfo">
                         <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li style="font-size: 0.6rem;color: #ad6704;line-height: 1rem;">学籍号&nbsp;:&nbsp;<span style="font-size: 0.6rem;line-height: 1rem;color: #ad6704">2018001234567</span></li>
+                            <li><span class="childinfo-name" th:text="${childrenInfo.getKg_fullname()}"></span>&nbsp;&nbsp;<span class="childinfo-gender" th:text="${childrenInfo.getKg_sex()}"></span></li>
+                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time" th:text="${childrenInfo.getKg_classname()}"></span></li>
+                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time" th:text="${childrenInfo.getKg_jointime()}"></span></li>
+                            <li style="font-size: 0.6rem;color: #ad6704;line-height: 1rem;">学籍号&nbsp;:&nbsp;<span th:text="${childrenInfo.getKg_educationnumber()}" style="font-size: 0.6rem;line-height: 1rem;color: #ad6704"></span></li>
                         </ul>
                     </div>
-                    <div class="schoolname">侨鑫汇景新城实验小学</div>
-                </li>
-
-                <li class="list-group-item" >
-                    <div class="childimg">
-                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
-                    </div>
-                    <div class="childinfo">
-                        <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li style="font-size: 0.6rem;color: #ad6704;line-height: 1rem;">学籍号&nbsp;:&nbsp;<span style="font-size: 0.6rem;line-height: 1rem;color: #ad6704">2018001234567</span></li>
-                        </ul>
-                    </div>
-                    <div class="schoolname">侨鑫汇景新城实验小学</div>
+                    <div class="schoolname" th:text="${childrenInfo.getKg_schoolname()}"></div>
                 </li>
             </ul>
         </div>
     </div>
 </div>
 </body>
+<script>
+    function GoStudentInfo(obj) {
+        var id = $(obj).attr("data-id");
+        var roleid = $("#parentid").val();
+        window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=1";
+    }
+</script>
 </html>
 

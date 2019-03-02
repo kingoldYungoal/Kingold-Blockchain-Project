@@ -100,6 +100,16 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     }
 
     /**
+     * 根据教師信息id，班级，年份，从证书表取出学生id，获取学生信息，不分页
+     * @return 学生信息列表
+     */
+    @Override
+    public List<StudentInfo> GetStudentsByParamNoPage(String teacherId, String classname, int year){
+        List<StudentProfile> stus = mStudentProfileMapper.GetStudentsByParam(teacherId,classname,year);
+        return GetStudentInfoList(stus);
+    }
+
+    /**
      * 學生信息新增
      */
     @Override

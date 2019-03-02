@@ -6,13 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>侨鑫教育平台</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{/css/mobileChildrenlist.css}" href="../static/css/mobileStudentlist.css">
+    <link rel="stylesheet" th:href="@{/css/mobileStudentlist.css}" href="../static/css/mobileStudentlist.css">
     <link rel="stylesheet" th:href="@{/css/pickout.css}" href="../static/css/pickout.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" th:src="@{/javascript/pickout.js}" src="../static/javascript/pickout.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/bootstrap.min.js}" src="javascript/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/pickoutStudentList.js}" src="../static/javascript/pickout.js"></script>
     <script type="text/javascript" th:src="@{/javascript/gotop.js}" src="../static/javascript/gotop.js"></script>
 </head>
-<body style="background:#fafbfc;font-family: Helvetica; ">
+<body style="background:#fafbfc;font-family: Helvetica;">
+<input type="hidden" id="phone" name="phone" th:value="${teacherInformation.getKg_phonenumber()}">
+<input type="hidden" id="teacherid" name="teacherid" th:value="${teacherInformation.getKg_teacherinformationid()}">
 <div class="panel panel-info">
     <div class="panel-form">
         <div class="panel-heading">
@@ -33,215 +36,48 @@
                     </div>
                     <div class="parentname">
                         <ul>
-                            <li><span id="namespan">Susan White</span></li>
-                            <li><span id="phonediv">18016301234</span></li>
+                            <li><span id="namespan" th:text="${teacherInformation.getKg_name()}"></span></li>
+                            <li><span id="phonediv" th:text="${teacherInformation.getKg_phonenumber()}"></span></li>
                         </ul>
                     </div>
                 </div>
             </div>
 
             <div class="pk-form">
-                <select name="option" id="option" class="option pickout" placeholder="年份筛选">
-                    <option value=""></option>
-                    <option value="1" selected="selected">所有年份</option>
-                    <option value="2">2019</option>
-                    <option value="3">2018</option>
-                    <option value="4">2017</option>
-                    <option value="5">2016</option>
-                    <option value="6">2015</option>
-                    <option value="7">2014</option>
-                    <option value="8">2013</option>
-                    <option value="9">2012</option>
-                    <option value="10">2011</option>
-                    <option value="11">2010</option>
+                <select name="option" id="option" class="option pickout" placeholder="年份筛选" onchange="initTable()">
+                    <option value="0" selected="selected">--年份筛选--</option>
+                    <option th:each="year:${yearList}" th:value="${year}" th:text="${year}"></option>
                 </select>
             </div>
 
-            <div class="pk-form1">
-                <select name="option" id="option1" class="option pickout" placeholder="年份筛选">
-                    <option value=""></option>
-                    <option value="1" selected="selected">所有班级</option>
-                    <option value="2">侨鑫汇悦天启幼儿园</option>
-                    <option value="3">侨鑫汇景新城幼儿园</option>
-                    <option value="4">侨鑫汇景新城实验小学</option>
+            <div class="pk-form">
+                <select name="option1" id="option1" class="option pickout" placeholder="班级筛选" onchange="initTable()">
+                    <option value="" selected="selected">--班级筛选--</option>
+                    <option th:each="className:${classList}" th:value="${className}" th:text="${className}"></option>
                 </select>
             </div>
 
             <ul class="list-group">
-                <li class="list-group-item" >
+                <li class="list-group-item" th:each="studentInfo:${studentList}" th:attr="data-id=${studentInfo.getKg_studentprofileid()}" onclick="GoStudentInfo(this)">
                     <div class="childimg">
                         <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
                     </div>
                     <div class="childinfo">
                         <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">张先生&nbsp;(18012345678)</span></li>
-                        </ul>
-                    </div>
-                    <div class="other-info">
-                        <div class="schoolname">
-                            &nbsp;&nbsp;&nbsp;侨鑫汇景新城实验小学&nbsp;&nbsp;&nbsp;
-                        </div>
-                        <div class="stunumber">
-                            <span>学籍号&nbsp;:&nbsp;2018001234567</span>
-                        </div>
-                    </div>
-                </li>
+                            <li><span class="childinfo-name" th:text="${studentInfo.getKg_fullname()}"></span>&nbsp;&nbsp;<span class="childinfo-gender" th:text="${studentInfo.getKg_sex()}"></span></li>
+                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time" th:text="${studentInfo.getKg_classname()}"></span></li>
+                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time" th:text="${studentInfo.getKg_jointime()}"></span></li>
 
-                <li class="list-group-item" >
-                    <div class="childimg">
-                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
-                    </div>
-                    <div class="childinfo">
-                        <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">张先生&nbsp;(18012345678)</span></li>
+                            <li class="parent-name-tel" th:if="${not #strings.isEmpty(studentInfo.getKg_parentName())}">家长&nbsp;:&nbsp;<span class="parent-name-tel" th:text="${studentInfo.getKg_parentName()}"></span><span>(</span><span th:text="${studentInfo.getKg_parentPhoneNumber()}"></span><span>)</span></li>
                         </ul>
                     </div>
                     <div class="other-info">
-                        <div class="schoolname">
-                            &nbsp;&nbsp;&nbsp;侨鑫汇景新城实验小学&nbsp;&nbsp;&nbsp;
-                        </div>
                         <div class="stunumber">
-                            <span>学籍号&nbsp;:&nbsp;2018001234567</span>
+                            <span>学籍号&nbsp;:&nbsp;</span><span th:text="${studentInfo.getKg_educationnumber()}"></span>
                         </div>
                     </div>
                 </li>
-                <li class="list-group-item" >
-                    <div class="childimg">
-                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
-                    </div>
-                    <div class="childinfo">
-                        <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">张先生&nbsp;(18012345678)</span></li>
-                        </ul>
-                    </div>
-                    <div class="other-info">
-                        <div class="schoolname">
-                            &nbsp;&nbsp;&nbsp;侨鑫汇景新城实验小学&nbsp;&nbsp;&nbsp;
-                        </div>
-                        <div class="stunumber">
-                            <span>学籍号&nbsp;:&nbsp;2018001234567</span>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="list-group-item" >
-                    <div class="childimg">
-                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
-                    </div>
-                    <div class="childinfo">
-                        <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">张先生&nbsp;(18012345678)</span></li>
-                        </ul>
-                    </div>
-                    <div class="other-info">
-                        <div class="schoolname">
-                            &nbsp;&nbsp;&nbsp;侨鑫汇景新城实验小学&nbsp;&nbsp;&nbsp;
-                        </div>
-                        <div class="stunumber">
-                            <span>学籍号&nbsp;:&nbsp;2018001234567</span>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item" >
-                    <div class="childimg">
-                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
-                    </div>
-                    <div class="childinfo">
-                        <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">张先生&nbsp;(18012345678)</span></li>
-                        </ul>
-                    </div>
-                    <div class="other-info">
-                        <div class="schoolname">
-                            &nbsp;&nbsp;&nbsp;侨鑫汇景新城实验小学&nbsp;&nbsp;&nbsp;
-                        </div>
-                        <div class="stunumber">
-                            <span>学籍号&nbsp;:&nbsp;2018001234567</span>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="list-group-item" >
-                    <div class="childimg">
-                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
-                    </div>
-                    <div class="childinfo">
-                        <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">张先生&nbsp;(18012345678)</span></li>
-                        </ul>
-                    </div>
-                    <div class="other-info">
-                        <div class="schoolname">
-                            &nbsp;&nbsp;&nbsp;侨鑫汇景新城实验小学&nbsp;&nbsp;&nbsp;
-                        </div>
-                        <div class="stunumber">
-                            <span>学籍号&nbsp;:&nbsp;2018001234567</span>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item" >
-                    <div class="childimg">
-                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
-                    </div>
-                    <div class="childinfo">
-                        <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">张先生&nbsp;(18012345678)</span></li>
-                        </ul>
-                    </div>
-                    <div class="other-info">
-                        <div class="schoolname">
-                            &nbsp;&nbsp;&nbsp;侨鑫汇景新城实验小学&nbsp;&nbsp;&nbsp;
-                        </div>
-                        <div class="stunumber">
-                            <span>学籍号&nbsp;:&nbsp;2018001234567</span>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="list-group-item" >
-                    <div class="childimg">
-                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
-                    </div>
-                    <div class="childinfo">
-                        <ul>
-                            <li><span class="childinfo-name">李政烨</span>&nbsp;&nbsp;<span class="childinfo-gender">女</span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">一年级三班</span></li>
-                            <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">2018/03/14</span></li>
-                            <li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">张先生&nbsp;(18012345678)</span></li>
-                        </ul>
-                    </div>
-                    <div class="other-info">
-                        <div class="schoolname">
-                            &nbsp;&nbsp;&nbsp;侨鑫汇景新城实验小学&nbsp;&nbsp;&nbsp;
-                        </div>
-                        <div class="stunumber">
-                            <span>学籍号&nbsp;:&nbsp;2018001234567</span>
-                        </div>
-                    </div>
-                </li>
-
-                <a href="#0" class="cd-top">Top</a>
+                <a href="#" class="cd-top">Top</a>
             </ul>
         </div>
     </div>
@@ -249,12 +85,14 @@
 </body>
 <script>
     pickout.to('#option');
-    // Value default
-    pickout.updated('#option');
 
     pickout.to('#option1');
-    // Value default
-    pickout.updated('#option1');
+
+    function GoStudentInfo(obj) {
+        var id = $(obj).attr("data-id");
+        var roleid = $("#teacherid").val();
+        window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2";
+    }
 </script>
 </html>
 

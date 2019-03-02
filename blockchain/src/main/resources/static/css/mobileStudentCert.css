@@ -1,0 +1,60 @@
+.childrenpage-head {
+    height: 2rem;
+    text-align: center;
+}
+
+.head-logo{
+    margin:0 0 0 0.1rem;
+    width: 35%;
+    float:left;
+}
+
+.icon {
+    left: 0;
+    top: 0;
+    height: 1rem;
+}
+
+.head-title{
+    width: 65%;
+    margin-right: 35%;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.cert{
+    margin-top: 2rem;
+    height: 100%;
+    width: 94%;
+}
+
+.certimg{
+    width: 100%;
+    margin-left:3%
+}
+
+
+.wrap-form-btn {
+    width: 100%;
+    height:4rem;
+    display: block;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.login-form-btn {
+    height:3rem;
+    width: 85%;
+    font-size: 1rem;
+    color: #0e90d2;
+    line-height: 1.5rem;
+    margin-top: 0.1rem;
+    border: 0.1rem solid #0e90d2;
+    border-radius: 0.3rem;
+    background-color: #FFFFFF;
+    background-image: url("../images/download.png") ;
+    background-size: 3rem;
+    background-repeat: no-repeat;
+    background-position-x: 10%;
+}

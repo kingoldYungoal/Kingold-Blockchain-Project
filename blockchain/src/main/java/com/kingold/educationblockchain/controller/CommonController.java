@@ -6,15 +6,15 @@ import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.EventInfo;
+import com.kingold.educationblockchain.util.*;
 import com.kingold.educationblockchain.util.Base64;
-import com.kingold.educationblockchain.util.BlockChainPayload;
-import com.kingold.educationblockchain.util.DateHandler;
-import com.kingold.educationblockchain.util.RetResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 import static com.kingold.educationblockchain.util.ResultResponse.makeErrRsp;
@@ -38,6 +38,10 @@ public class CommonController {
     private String channel;
     private DateHandler dateHandler;
     private BlockChainPayload payload = new BlockChainPayload();
+    private StringWriter stringWriter = new StringWriter();
+    private PrintWriter printWriter = new PrintWriter(stringWriter);
+    private LoggerException loggerException = new LoggerException();
+    private RecordErrorLog recordErrorLog = new RecordErrorLog();
     private Gson gson;
 
     @RequestMapping(value = "/Insert", method = RequestMethod.POST)
@@ -112,7 +116,15 @@ public class CommonController {
                             dateHandler = new DateHandler();
                             studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
                             //studentJson.setRemark();
-                            InitStudent(studentJson, channel);
+                            try{
+                                InitStudent(studentJson, channel);
+                            }catch (Exception ex){
+                                ex.printStackTrace(printWriter);
+                                ex.getMessage();
+                                loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                                recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
+                            }
+
                             flag = true;
                             message = "学生信息添加成功";
                         }
@@ -120,10 +132,15 @@ public class CommonController {
                         //删除表中新增的数据
                         mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
                         message = e1.getMessage();
+                        e1.printStackTrace(printWriter);
+                        loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, e1, stringWriter.toString());
+                        recordErrorLog.RecordError(e1, jsonParam, "", "", stringWriter.toString());
                     }catch (Exception ex){
                         mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
                         message = ex.getMessage();
-                        //throw ex;
+                        ex.printStackTrace(printWriter);
+                        loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                        recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
                     }
                 }
                 break;
@@ -144,6 +161,9 @@ public class CommonController {
                     }
                 }catch(Exception ex){
                     message = ex.getMessage();
+                    ex.printStackTrace(printWriter);
+                    loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                    recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
                     throw ex;
                 }
                 break;
@@ -164,6 +184,9 @@ public class CommonController {
                     }
                 }catch(Exception ex){
                     message = ex.getMessage();
+                    ex.printStackTrace(printWriter);
+                    loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                    recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
                     throw ex;
                 }
                 break;
@@ -191,6 +214,9 @@ public class CommonController {
                     }
                 }catch(Exception ex){
                     message = ex.getMessage();
+                    ex.printStackTrace(printWriter);
+                    loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                    recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
                     throw ex;
                 }
                 break;
@@ -218,6 +244,9 @@ public class CommonController {
                     }
                 }catch(Exception ex){
                     message = ex.getMessage();
+                    ex.printStackTrace(printWriter);
+                    loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                    recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
                     throw ex;
                 }
                 break;
@@ -392,7 +421,15 @@ public class CommonController {
         try {
             return payload.GetPayload("initStudent", getInsertStudentJson(studentJson),channelName).toString();
         }catch (HttpClientErrorException e1) {
+            e1.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertStudentJson(studentJson), e1, stringWriter.toString());
+            recordErrorLog.RecordError(e1, getInsertStudentJson(studentJson), "", "", stringWriter.toString());
             return e1.getMessage();
+        } catch(Exception e){
+            e.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertStudentJson(studentJson), e, stringWriter.toString());
+            recordErrorLog.RecordError(e, getInsertStudentJson(studentJson), "", "", stringWriter.toString());
+            return null;
         }
     }
 
@@ -403,7 +440,15 @@ public class CommonController {
         try {
             return payload.GetPayload("insertEventInfo", getInsertEventJson(eventInfo), channelName).toString();
         } catch (HttpClientErrorException ex) {
+            ex.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertEventJson(eventInfo), ex, stringWriter.toString());
+            recordErrorLog.RecordError(ex, getInsertEventJson(eventInfo), "", "", stringWriter.toString());
             throw ex;
+        } catch(Exception e){
+            e.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertEventJson(eventInfo), e, stringWriter.toString());
+            recordErrorLog.RecordError(e, getInsertEventJson(eventInfo), "", "", stringWriter.toString());
+            return null;
         }
     }
 
@@ -426,8 +471,14 @@ public class CommonController {
             }
             return certInfoList;
         } catch (HttpClientErrorException ex) {
+            ex.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), CrmId, ex, stringWriter.toString());
+            recordErrorLog.RecordError(ex, CrmId, "", "", stringWriter.toString());
             throw ex;
         } catch(Exception e){
+            e.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), CrmId, e, stringWriter.toString());
+            recordErrorLog.RecordError(e, CrmId, "", "", stringWriter.toString());
             return null;
         }
     }
@@ -437,7 +488,6 @@ public class CommonController {
      */
     public List<EventInfo> QueryEventByCRMId(String CrmId, String channelName) {
         try {
-
             JsonArray jsonArray = payload.GetPayload("queryEventByCRMId",'"'+CrmId+'"',channelName).getAsJsonArray();
             Iterator<JsonElement> it =jsonArray.iterator();
             gson = new Gson();
@@ -451,7 +501,15 @@ public class CommonController {
             }
             return eventInfoList;
         } catch (HttpClientErrorException ex) {
+            ex.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), CrmId, ex, stringWriter.toString());
+            recordErrorLog.RecordError(ex, CrmId, "", "", stringWriter.toString());
             throw ex;
+        }catch(Exception e){
+            e.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), CrmId, e, stringWriter.toString());
+            recordErrorLog.RecordError(e, CrmId, "", "", stringWriter.toString());
+            return null;
         }
     }
 
@@ -465,7 +523,15 @@ public class CommonController {
             gson = new Gson();
             CertInfo certInfo = gson.fromJson(jsonString,CertInfo.class);
             return certInfo;
+        } catch (HttpClientErrorException e1) {
+            e1.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), certId, e1, stringWriter.toString());
+            recordErrorLog.RecordError(e1, certId, "", "", stringWriter.toString());
+            throw e1;
         } catch (Exception ex) {
+            ex.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), certId, ex, stringWriter.toString());
+            recordErrorLog.RecordError(ex, certId, "", "", stringWriter.toString());
             throw ex;
         }
     }
@@ -480,7 +546,15 @@ public class CommonController {
             gson = new Gson();
             EventInfo evtInfo = gson.fromJson(jsonString,EventInfo.class);
             return evtInfo;
+        } catch (HttpClientErrorException e1) {
+            e1.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), evtId, e1, stringWriter.toString());
+            recordErrorLog.RecordError(e1, evtId, "", "", stringWriter.toString());
+            throw e1;
         } catch (Exception ex) {
+            ex.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), evtId, ex, stringWriter.toString());
+            recordErrorLog.RecordError(ex, evtId, "", "", stringWriter.toString());
             throw ex;
         }
     }

@@ -60,7 +60,8 @@ public class ShowElectronicscertificateController {
         //获取证书Id逻辑
         ModelAndView model = new ModelAndView();
         model.addObject("certificateid",fileId);
-        model.setViewName("studentcertdetail");
+        //model.setViewName("studentcertdetail");
+        model.setViewName("mobileStudentCert");
         return model;
     }
 

@@ -10,6 +10,17 @@
     <link rel="stylesheet" th:href="@{/css/jazz-timeline.css}" href="../static/css/jazz-timeline.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" th:src="@{/javascript/skrollr.min.js}" src="../static/javascript/skrollr.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/gotop.js}" src="../static/javascript/gotop.js"></script>
+    <style>
+        .seeBigImg{
+            border:0.1rem solid #004a80;
+            float:right;
+            background: #004A80;
+            color:#fff;
+            font-size:0.8rem;
+            border-radius: 0.8rem;
+        }
+    </style>
 </head>
 <body style="background:#fafbfc;font-family: Helvetica; ">
 <div class="panel panel-info">
@@ -25,42 +36,49 @@
             </div>
         </div>
         <div class="panel-body">
-            <div class="parent-info">
+            <div class="parent-info" style="height: 11rem">
                 <div class="teacher-info-card">
                     <div class="profile-photo">
-                        <img th:src="@{/images/parentimg2.png}" src="../static/images/parentimg2.png" id="parentimg">
+                        <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" id="parentimg">
                     </div>
                     <div class="parentname">
                         <ul>
-                            <li><span id="namespan">Susan White</span></li>
-                            <li><span id="phonediv">18016301234</span></li>
+                            <li><span id="namespan" th:text="${studentprofile.getKg_fullname()}"></span></li>
+                            <li><span id="phonediv" th:text="${studentprofile.getKg_educationnumber()}"></span></li>
                         </ul>
+                        <input id="gotoinfopage" class="gotoinfo" type="button" value="个人信息详情 >" th:attr="data-stuId=${studentprofile.getKg_studentprofileid()}" onclick="GoStuDetail(this);">
+                    </div>
+                    <div class="cert" >
+                        <img src="../static/images/certicon.png" class="certimg">&nbsp;证书信息
                     </div>
                 </div>
             </div>
+            <div class="jazz-timeline-wrapper" th:if="${certCount > 0}">
+                <div class="jazz-timeline white-timeline bordered-timeline one-sided" style="margin-top:-3rem">
 
-            <div class="jazz-timeline-wrapper" id="skrollr-body">
-                <div class="jazz-timeline">
-                    for(var i == 0; i <){
-
-                    }
-                    <div class="timeline-post">
+                    <div class="timeline-post" th:each="cert:${json}">
                         <div class="timeline-icon icon-larger iconbg-turqoise icon-color-white">
-                            <div class="icon-placeholder">2018.12.10</div>
-                            <div class="timeline-bar"></div>
+                            <div class="icon-placeholder" th:text="${cert.DisplayCertInfo.CertIssueDate}"></div>
                         </div>
-                        <div class="timeline-content"
-                             data--10-bottom-top="transform: rotateX(-90deg); opacity: 0;"
-                             data--80-bottom-bottom="transform: rotateX(0deg); opacity: 1;">
-                            <h2 class="content-title"> 小学小班英文优秀荣誉证书 </h2>
+                        <div class="timeline-content">
+                            <h2 class="content-title" th:text="${cert.DisplayCertInfo.CertName}"></h2>
                             <div class="content-details">
-                                <p>颁发机构：侨鑫汇景新城实验小学</p>
-                                <p>证书类别：录取通知书 </p>
-                                <p>颁发日期：2018/03/01 </p>
-                                <a href="#">英文小镇</a>
-                                <a href="#">英文小镇</a>
+                                <p>入读学校：<span th:text="${cert.DisplayCertInfo.StuSchool}"></span></p>
+                                <p>入读班级：<span th:text="${cert.DisplayCertInfo.StuClass}"></span></p>
+                                <p>证书类别：<span th:text="${cert.DisplayCertInfo.CertType}"></span></p>
+                                <p>老师：<span th:text="${cert.DisplayCertInfo.StuTeacher}"></span></p>
+                                <p>学级：<span th:text="${cert.DisplayCertInfo.StuStudyGrade}"></span></p>
+                            </div>
+                            <div class="content-details" style="height:1.4rem;margin-top:0.2rem">
+                                <a href="#" class="seeBigImg" th:attr="data-certId=${cert.DisplayCertInfo.CertPdfPath}" onclick="GoCertDetail(this)">查看证书大图</a>
                             </div>
                         </div><!-- timeline content -->
+                    </div><!-- .timeline-post -->
+
+                    <div class="timeline-post" style="margin-top:-30px;">
+                        <div class="timeline-icon icon-larger iconbg-turqoise icon-color-white">
+                            <div class="icon-placeholder">已到最底部</div>
+                        </div>
                     </div><!-- .timeline-post -->
                 </div><!-- .timeline -->
             </div><!-- .jazz-timeline-wrapper -->
@@ -68,8 +86,15 @@
     </div>
 </div>
 </body>
-<script type="text/javascript">
-    var s = skrollr.init({ forceHeight: false });
+<script>
+    function  GoStuDetail(obj){
+        var stuId = $(obj).attr("data-stuId");
+        window.location.href = "../student/mobilestudentinfo?stuId=" + stuId;
+    }
+    function GoCertDetail(obj) {
+        var fileId = $(obj).attr("data-certId");
+        window.location.href = "../electronicscertificate/studentcertificate?fileId=" + fileId;
+    }
 </script>
 </html>
 

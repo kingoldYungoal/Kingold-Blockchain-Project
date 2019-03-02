@@ -1,0 +1,118 @@
+
+.studentinfo-head {
+    height: 2rem;
+    text-align: center;
+}
+
+.head-logo{
+    margin:0 0 0 0.1rem;
+    width: 35%;
+    float:left;
+}
+
+.icon {
+    left: 0;
+    top: 0;
+    height: 1rem;
+}
+
+.head-title{
+    width: 65%;
+    margin-right: 35%;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.panel-body{
+    padding-left: 0rem;
+    padding-right: 0rem;
+}
+
+.studentinfo{
+    width: 100%;
+    height: 11rem;
+}
+
+.studentinfo-card{
+    height:11rem;
+    background: url(../images/mobilebg.png) no-repeat;
+    background-size: 100% 100%;
+    margin-top: 0rem;
+}
+
+.studentname {
+    width: 100%;
+    height: 5rem;
+    align-content: center;
+    color: #FFFFFF;
+    padding-top: 1.4rem;
+}
+
+#namespan{
+    width: 100%;
+    display: block;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+#phonediv{
+    width: 100%;
+    display: block;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.profile-photo{
+    width: 100%;
+    height: 5rem;
+    text-align: center;
+}
+
+#parentimg {
+    width: 22%;
+}
+
+.studentinfo-list{
+    width: 94%;
+    margin-left: 3%;
+    background:#FFFFFF;
+    border-radius: 1rem;
+}
+
+ul,li{
+    padding:0;
+    margin:0;
+    list-style:none
+}
+
+.list-group{
+    border: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.list{
+    line-height: 2.8rem;
+    border-bottom:1px solid #f2f2f2;
+}
+
+.list:last-child{
+    border: 0;
+}
+.info-left{
+    width: 40%;
+    float: left;
+    color: #0e0e0e;
+    text-align: left;
+}
+
+.info-right{
+    width: 60%;
+    float: right;
+    color: #0e0e0e;
+    text-align: right;
+}

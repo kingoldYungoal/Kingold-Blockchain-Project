@@ -1,5 +1,6 @@
 package com.kingold.educationblockchain.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
@@ -49,19 +50,22 @@ public class StudentController {
             CommonController commonController =new CommonController();
             List<DisplayInfo> displayInfos = new ArrayList<>();
             List<CertInfo> certJson =  commonController.QueryCertByCRMId(id,channel);
-            for (CertInfo cert:certJson){
-                if(cert.getCertType().equals("毕业证书") || cert.getCertType().equals("录取通知书") || cert.getCertType().equals("课程证书")){
-                    DisplayInfo x=new DisplayInfo();
-                    x.setDisplayCertInfo(cert);
-                    try {
-                        x.setInfoDate(new SimpleDateFormat("yyyy-MM-dd").parse(cert.getCertIssueDate()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+            if(certJson != null){
+                for (CertInfo cert:certJson){
+                    if(cert.getCertType().equals("毕业证书") || cert.getCertType().equals("录取通知书") || cert.getCertType().equals("课程证书")){
+                        DisplayInfo x=new DisplayInfo();
+                        x.setDisplayCertInfo(cert);
+                        try {
+                            x.setInfoDate(new SimpleDateFormat("yyyy-MM-dd").parse(cert.getCertIssueDate()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        displayInfos.add(x);
                     }
-                    displayInfos.add(x);
                 }
+                Collections.sort(displayInfos);
             }
-            Collections.sort(displayInfos);
+            map.addAttribute("certCount", displayInfos.size());
             map.addAttribute("json", displayInfos);
         }
         catch (HttpClientErrorException ex)
@@ -76,7 +80,8 @@ public class StudentController {
             model.addObject("roleid", roleid);
         }
         model.addObject("role",role);
-        model.setViewName("studentinfoandcerts");
+        //model.setViewName("studentinfoandcerts");
+        model.setViewName("mobileStudentInfo");
         return model;
     }
 
@@ -106,5 +111,39 @@ public class StudentController {
             }
         }
         return gson.toJson(studentInfoPage);
+    }
+
+    @RequestMapping(value = "/mobilestudentinfo", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView GetStudentInfo(@RequestParam(value = "stuId", required = true)String stuId, ModelMap map) {
+        ModelAndView model = new ModelAndView();
+        try {
+            StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(stuId);
+            model.addObject("studentInfo",studentProfile);
+        }
+        catch (HttpClientErrorException ex)
+        {
+            String s = ex.getResponseBodyAsString();
+        }
+        model.setViewName("mobileStudentDetailInfo");
+        return model;
+    }
+
+    @RequestMapping(value = "/mstudentlist", method = RequestMethod.POST)
+    @ResponseBody
+    public String GetStudentListNoPage(@RequestBody JSONObject params) {
+        gson = new Gson();
+        String className = params.getString("className");
+        int year = params.getInteger("year");
+        String teacherphone = params.getString("teacherphone");
+        TeacherInformation teacherInformation;
+        List<StudentInfo> studentInfoList = new ArrayList<>();
+        if(teacherphone.trim().length() > 0){
+            teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(teacherphone);
+            if(teacherInformation != null){
+                studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), className, year);
+            }
+        }
+        return gson.toJson(studentInfoList);
     }
 }

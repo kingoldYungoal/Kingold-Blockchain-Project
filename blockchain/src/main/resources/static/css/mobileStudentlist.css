@@ -125,10 +125,12 @@ ul,li{
 }
 
 .childinfo{
-    width: 40%;
+    width: 75%;
     float: left;
-    margin-left: 1rem;
+    margin-left: 4rem;
     margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    position: absolute;
 }
 
 .childinfo-name{

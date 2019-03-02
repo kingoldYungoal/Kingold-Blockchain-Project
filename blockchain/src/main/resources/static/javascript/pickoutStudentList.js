@@ -516,8 +516,61 @@ var pickout = (function(){
 	}
 
 	function feedField(select, value){
+        //初始化数据
+        initTable();
 		select.parentElement.querySelector('.pk-field').innerHTML = value;
 	}
+
+	function initTable() {
+        var classname = $("#option1").val();
+        var year = $("#option").val();
+        var phone = $("#phone").val();
+        var datas = {
+            'className' : classname,
+            'year': year,
+            'teacherphone': phone
+        };
+        var listGroup = "";
+        $.ajax({
+            type: 'post',
+            dataType : "json",
+            async: false,
+            url: "../student/mstudentlist",
+            data: JSON.stringify(datas),
+            contentType : 'application/json',
+            success:function(data) { //请求成功后处理函数。
+                $(".list-group").html("");
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var lis = "";
+                        lis += '<li data-id="' + data[i].kg_studentprofileid + '" onclick="GoStudentInfo(this)" class="list-group-item">';
+                        lis += '<div class="childimg"><img src="../images/kidsimg2.png" class="stuimg"></div>';
+                        lis += '<div class="childinfo"><ul><li><span class="childinfo-name">'+ data[i].kg_fullname +'</span>&nbsp;&nbsp;<span class="childinfo-gender">'+ data[i].kg_sex +'</span></li>';
+                        lis += '<li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_fullname +'</span></li>';
+                        lis += '<li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_fullname +'</span></li>';
+                        // 判断学生是否有家长
+                        if(data[i].kg_parentName != ""){
+                            lis += '<li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel"></span><span>(</span><span>'+ data[i].kg_parentPhoneNumber +'</span><span>)</span></li>';
+                        }
+                        lis += '</ul></div>';
+                        lis += '<div class="other-info"><div class="stunumber"><span>学籍号&nbsp;:&nbsp;</span><span>'+ data[i].kg_parentPhoneNumber +'</span></div></div>';
+                        lis += '</li>';
+                        listGroup += lis;
+                    }
+                    listGroup += '<a href="#" class="cd-top">Top</a>';
+                }
+
+                $(".list-group").html(listGroup);
+            },error: function () {//请求失败处理函数
+                M.dialog13 = jqueryAlert({
+                    'icon': '../images/alertimgs/warning.png',
+                    'content': '请求失败',
+                    'closeTime': 2000,
+                })
+                M.dialog13.show();
+            }
+        });
+    }
 
 	/**
 	 * Sets a value (option) default for field select

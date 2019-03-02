@@ -118,52 +118,62 @@ function BatchPrintPDF(){
     classname = $("#classSelect").val();
     year = $("#yearSelect").val();
     teacherid = $("#teacherid").val();
-    var datas = {
-        'className' : classname,
-        'year': year,
-        'teacherId': teacherid
-    };
-    $("#certIframe").html("");
-    var iframes = "";
+    //判断是否有选择年份和班级
+    if(classname != "" && year != 0){
+        var datas = {
+            'className' : classname,
+            'year': year,
+            'teacherId': teacherid
+        };
+        $("#certIframe").html("");
+        var iframes = "";
 
-    $.ajax({
-        type:"post",
-        url:"../electronicscertificate/certificatelist",
-        data: JSON.stringify(datas),
-        contentType : 'application/json',
-        dataType : 'json',
-        async: false,
-        success:function (data) {
-            if (data != null && data.length > 0){
-                $('#loadingModal').modal('show');
-                setInterval(autoMove,8);
-                setInterval(autoTsq,1500);
+        $.ajax({
+            type:"post",
+            url:"../electronicscertificate/certificatelist",
+            data: JSON.stringify(datas),
+            contentType : 'application/json',
+            dataType : 'json',
+            async: false,
+            success:function (data) {
+                if (data != null && data.length > 0){
+                    $('#loadingModal').modal('show');
+                    setInterval(autoMove,8);
+                    setInterval(autoTsq,1500);
 
-                iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe' src='../electronicscertificate/certificate/showPdf'>";
-                iframes += "</iframe>";
-                $("#certIframe").html(iframes);
-                $("#printIframe")[0].contentWindow.print();
-                var iframe = document.getElementById("printIframe");
-                iframe.onload = function(){
-                    $('#loadingModal').modal('hide');
-                };
-            }else{
+                    iframes += "<iframe frameborder='0' style='width: 0px;height: 0px;page-break-after:always;' id='printIframe' src='../electronicscertificate/certificate/showPdf'>";
+                    iframes += "</iframe>";
+                    $("#certIframe").html(iframes);
+                    $("#printIframe")[0].contentWindow.print();
+                    var iframe = document.getElementById("printIframe");
+                    iframe.onload = function(){
+                        setTimeout(function () { $('#loadingModal').modal('hide'); }, 5000);
+                    };
+                }else{
+                    M.dialog13 = jqueryAlert({
+                        'icon': '../images/alertimgs/warning.png',
+                        'content': '暂无可以打印的证书信息',
+                        'closeTime': 2000,
+                    })
+                    M.dialog13.show();
+                }
+            },error: function () {//请求失败处理函数
                 M.dialog13 = jqueryAlert({
                     'icon': '../images/alertimgs/warning.png',
-                    'content': '暂无可以打印的证书信息',
+                    'content': '请求失败',
                     'closeTime': 2000,
                 })
                 M.dialog13.show();
             }
-        },error: function () {//请求失败处理函数
-            M.dialog13 = jqueryAlert({
-                'icon': '../images/alertimgs/warning.png',
-                'content': '请求失败',
-                'closeTime': 2000,
-            })
-            M.dialog13.show();
-        }
-    });
+        });
+    }else{
+        M.dialog13 = jqueryAlert({
+            'icon': '../images/alertimgs/warning.png',
+            'content': '请先选择具体的年份和班级',
+            'closeTime': 2000,
+        })
+        M.dialog13.show();
+    }
 }
 
 function GoStudentInfo(obj) {

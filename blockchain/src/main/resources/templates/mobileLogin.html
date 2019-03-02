@@ -15,6 +15,7 @@
     <script type="text/javascript" th:src="@{/javascript/pickout.js}" src="javascript/pickout.js"></script>
 </head>
 <body style="background:rgb(245,246,252);">
+<input type="hidden" id="device" name="device" th:value="${device}">
 <div class="panel panel-info">
     <div class="panel-form">
         <div class="panel-heading">
@@ -31,7 +32,6 @@
                         <div class="content -bg">
                             <div class="pk-form">
                                 <select name="option" id="option" class="option pickout" placeholder="请选择登录身份">
-                                    <option value=""></option>
                                     <option value="1" selected="selected">家长登录</option>
                                     <option value="2">教师登录</option>
                                 </select>
@@ -42,10 +42,11 @@
                 <div class="form-group">
                     <div class="col-xs-12">
                         <div class="wrap-input">
-                            <input id="phonenumber" class="form-control" type="text" name="phonenumber" placeholder="请输入手机号码" autocomplete="off" maxlength="11" style="background-color: transparent;">
+                            <input id="phonenumber" class="form-control" type="text" name="phonenumber" placeholder="请输入手机号码" autocomplete="off" maxlength="11">
                         </div>
                     </div>
                 </div>
+                <hr>
                 <div class="form-group">
                     <div class="col-xs-10 col-xs-offset-2">
                         <div id="authcodeDiv">

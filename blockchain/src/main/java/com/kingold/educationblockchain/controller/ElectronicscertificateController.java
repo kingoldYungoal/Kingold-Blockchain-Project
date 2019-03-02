@@ -11,23 +11,19 @@ import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Document;
 import com.kingold.educationblockchain.bean.CertInfo;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
 import com.kingold.educationblockchain.service.StudentProfileService;
-import com.kingold.educationblockchain.util.BlockChainPayload;
-import com.kingold.educationblockchain.util.DateHandler;
-import com.kingold.educationblockchain.util.RetResult;
+import com.kingold.educationblockchain.util.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.kingold.educationblockchain.util.StreamCommon;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -68,18 +64,16 @@ public class ElectronicscertificateController {
     @Value("${CECS.CertificateFileParentId}")
     private String mCertificateFileParentId;
 
-//    @Value("${CECS.SignPath}")
-//    private String mSignPath;
-
     @Value("${chainCode.channel}")
     private String mChannel;
-
-    @Value("${Certificate.TemplatePath}")
-    private String mCertificateTemplatePath;
 
     private DateHandler mDateHandler;
     private BlockChainPayload mPayload = new BlockChainPayload();
     private StreamCommon mStreamCommon = new StreamCommon();
+    private StringWriter stringWriter = new StringWriter();
+    private PrintWriter printWriter = new PrintWriter(stringWriter);
+    private LoggerException loggerException = new LoggerException();
+    private RecordErrorLog recordErrorLog = new RecordErrorLog();
 
     /*
      * 证书生成api
@@ -90,22 +84,30 @@ public class ElectronicscertificateController {
         String certid = "";
         try{
             Electronicscertificate cert = JSONObject.parseObject(jsonParam,Electronicscertificate.class);
+            Electronicscertificate existCert = mElectronicscertificateService.GetCertificateByStudentIdAndCertno(cert.getKg_certificateno(),cert.getKg_studentprofileid());
+            if(existCert != null){
+                return makeErrRsp("证书已存在，无法重复添加");
+            }
             if(cert.getKg_studentprofileid().trim().length() > 0) {
                 if (mStudentProfileService.GetStudentProfileById(cert.getKg_studentprofileid()) != null) {
                     // 生成pdf证书:名称为 uuid 随机生成
-                    StringBuffer certificateName = new StringBuffer(UUID.randomUUID().toString())
-                            .append(".pdf");
+//                    StringBuffer certificateName = new StringBuffer(UUID.randomUUID().toString())
+//                            .append(".pdf");
+//                    String filePath = "temp/" + certificateName.toString();
 
-                    String certificateFilePath = new StringBuffer(mCertificateTemplatePath)
-                            .append(certificateName).toString();
+//                    Resource templeResource = new ClassPathResource("static/certificate-template.pdf");
+//                    File templeFile = templeResource.getFile();
+//                    String templePath = templeFile.getPath();
+//                    String tempPath = templePath.split("static")[0];
+//                    String newPaths = "\\temp\\"+certificateName;
+//                    File tempCertFiles = new File(tempPath + newPaths);
+//                    String tempCertpPath = tempCertFiles.getPath();
 
                     Map<String,String> map = new HashMap();
                     map.put("name",cert.getKg_studentname());
                     map.put("certType",cert.getKg_certitype());
                     map.put("schoolName",cert.getKg_schoolname());
 
-                    //Resource schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
-                    //File schoolMasterFile = schoolMasterResource.getFile();
                     Resource schoolMasterResource;
                     switch(cert.getKg_schoolname()) {
                         case "侨鑫汇悦天启幼儿园":
@@ -117,12 +119,11 @@ public class ElectronicscertificateController {
                         default:
                             schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
                     }
+
                     InputStream schoolMasterInputStream = schoolMasterResource.getInputStream();
                     byte[] schoolMasterBytes = mStreamCommon.read(schoolMasterInputStream);
 
-                    //Resource presidentResource = new ClassPathResource("static/president.png");
                     Resource presidentResource = new ClassPathResource("static/事业部总裁孙总.png");
-                    //File presidentFile = presidentResource.getFile();
                     InputStream presidentInputStream = presidentResource.getInputStream();
                     byte[] presidentBytes = mStreamCommon.read(presidentInputStream);
 
@@ -143,12 +144,12 @@ public class ElectronicscertificateController {
 
                         map.put("certId", cert.getKg_certificateno());
 
-                        GeneratePdfCertificate(certificateFilePath, map, schoolMasterBytes, presidentBytes);
+                        GeneratePdfCertificate(map, schoolMasterBytes, presidentBytes);
                     }
                     if(cert.getKg_certitype().equals("课程证书")) {
                         map.put("issueDate", cert.getKg_certificatedate());
                         map.put("certName",cert.getKg_name());
-                        GeneratePdfCertificate(certificateFilePath, map, schoolMasterBytes, presidentBytes);
+                        GeneratePdfCertificate(map, schoolMasterBytes, presidentBytes);
                     }
 
                     if(cert.getKg_certitype().equals("录取通知书")) {
@@ -156,14 +157,29 @@ public class ElectronicscertificateController {
                         map.put("certNo",cert.getKg_certificateno());
                         map.put("nameEn",cert.getKg_studentenglishname());
                         map.put("registrationTime",cert.getKg_starttime());
-                        GeneratePdfCertificate(certificateFilePath, map, schoolMasterBytes, presidentBytes);
+                        try{
+                            GeneratePdfCertificate(map, schoolMasterBytes, presidentBytes);
+                        }catch(Exception ex){
+                            ex.printStackTrace(printWriter);
+                            ex.getMessage();
+                            loggerException.PrintExceptionLog("GeneratePdfCertificate",this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                            recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
+                        }
                     }
 
-                    String fileId = UploadFileToCECS(certificateFilePath, certificateName.toString());
+                    Resource newResource = new ClassPathResource("static/temp.pdf");
+                    File newFile = newResource.getFile();
+                    String fileId = UploadFileToCECS(newFile.getPath(), "temp.pdf");
                     certid = fileId;
                     if(fileId == null){
                         return makeErrRsp("上传证书失败");
                     }
+
+                    // 删除生成的证书
+//                    File certFile = new File(newFile.getPath());
+//                    if(certFile.isFile() && certFile.exists()){
+//                        certFile.delete();
+//                    }
 
                     // 存证书ID到数据库  fileId
                     cert.setKg_electronicscertificateid(fileId);
@@ -191,7 +207,14 @@ public class ElectronicscertificateController {
                         certInfo.setStuClass(cert.getKg_classname());
                         certInfo.setStuTeacher(cert.getKg_teachername());
                         certInfo.setStuStudygrade(cert.getKg_studygrade());
-                        InsertCertinfo(certInfo,mChannel);
+                        try{
+                            InsertCertinfo(certInfo,mChannel);
+                        }catch(Exception e){
+                            e.printStackTrace(printWriter);
+                            e.getMessage();
+                            loggerException.PrintExceptionLog("InsertCertinfo",this.getClass().getName(), jsonParam, e, stringWriter.toString());
+                            recordErrorLog.RecordError(e, jsonParam, "", "", stringWriter.toString());
+                        }
                     }
                 }
             }
@@ -199,8 +222,16 @@ public class ElectronicscertificateController {
         }catch (HttpClientErrorException e1) {
             //删除表中新增的数据
             mElectronicscertificateService.DeleteCertificate(certid);
+            e1.printStackTrace(printWriter);
+            e1.getMessage();
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, e1, stringWriter.toString());
+            recordErrorLog.RecordError(e1, jsonParam, "", "", stringWriter.toString());
             return makeErrRsp("证书上链失败");
         }catch (Exception ex){
+            ex.printStackTrace(printWriter);
+            ex.getMessage();
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+            recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
             return makeErrRsp(ex.getMessage());
         }
     }
@@ -208,8 +239,12 @@ public class ElectronicscertificateController {
     /*
      * 生成证书
      * */
-    public void GeneratePdfCertificate(String certificateFilePath, Map<String,String> fields,byte[] schoolMasterBytes, byte[] presidentBytes) throws Exception{
+    public void GeneratePdfCertificate(Map<String,String> fields,byte[] schoolMasterBytes, byte[] presidentBytes) throws Exception{
+        byte[] result = null;
+        ByteArrayOutputStream baos = null;
+        Document doc = null;
         String logoPath = "static/logo/";
+        //String logoPath = "logo/";
         switch(fields.get("schoolName")){
             case "侨鑫汇景新城实验小学" :
                 logoPath+="logo-01.png";
@@ -232,13 +267,18 @@ public class ElectronicscertificateController {
                 fields.put("schoolNameEn","KINGOLD NURSERY");
                 break;
         }
-        // for weblogic
-        //Resource resource = new ClassPathResource("certificate-template.pdf");
-        // for local
         Resource resource = new ClassPathResource("static/certificate-template.pdf");
         File file = resource.getFile();
         PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
-        PdfWriter pdfWriter=new PdfWriter(certificateFilePath);
+
+        Resource tempResource = new ClassPathResource("static/temp.pdf");
+        File tempFile = tempResource.getFile();
+
+//        PdfWriter pdfWriter = new PdfWriter(certificateFilePath);
+        PdfWriter pdfWriter = new PdfWriter(tempFile.getPath());
+        pdfWriter.write(new byte[0]);
+        pdfWriter.flush();
+
         PdfDocument pdfDocWrite = new PdfDocument(pdfWriter);
         int page=1;
         if(fields.get("certType").equals("录取通知书"))
@@ -268,6 +308,10 @@ public class ElectronicscertificateController {
         PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
         PdfFont fontUtopia = PdfFontFactory.createFont("static/font/Utopia Regular.ttf", IDENTITY_H ,false);
         PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
+
+        //PdfFont fontRuiYun = PdfFontFactory.createFont("font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
+        //PdfFont fontUtopia = PdfFontFactory.createFont("font/Utopia Regular.ttf", IDENTITY_H ,false);
+        //PdfFont fontYuWei = PdfFontFactory.createFont("font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
 
         for(String fieldName: fields.keySet()){
             if(form.getField(fieldName)==null)
@@ -317,8 +361,6 @@ public class ElectronicscertificateController {
             canvas.addImage(teacherSign,75, 170,100,false);
         }
 
-        //Document doc= new Document(pdfDocWrite);
-        //doc.add(sign);
         pdfDocWrite.close();
         pdfDocRead.close();
     }
@@ -364,7 +406,15 @@ public class ElectronicscertificateController {
         try {
             return mPayload.GetPayload("insertCertinfo", getInsertCertJson(certInfo),channelName).toString();
         } catch (HttpClientErrorException ex) {
+            ex.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertCertJson(certInfo), ex, stringWriter.toString());
+            recordErrorLog.RecordError(ex, getInsertCertJson(certInfo), "", "", stringWriter.toString());
             throw ex;
+        } catch(Exception e){
+            e.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertCertJson(certInfo), e, stringWriter.toString());
+            recordErrorLog.RecordError(e, getInsertCertJson(certInfo), "", "", stringWriter.toString());
+            return null;
         }
     }
 
@@ -414,6 +464,9 @@ public class ElectronicscertificateController {
                 return makeOKRsp("证书撤销成功");
             }
         }catch (Exception ex){
+            ex.printStackTrace(printWriter);
+            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+            recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
             return makeErrRsp(ex.getMessage());
         }
     }
