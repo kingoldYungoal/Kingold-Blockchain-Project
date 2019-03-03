@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +38,7 @@ public class StudentController {
 
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
     @ResponseBody
-    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)String id,@RequestParam(value = "roleid", required = true)String roleid,@RequestParam(value = "role", required = true)int role, ModelMap map) {
+    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)String id,@RequestParam(value = "roleid", required = true)String roleid,@RequestParam(value = "role", required = true)int role,@RequestParam(value = "device", required = true)String device, ModelMap map) {
         ModelAndView model = new ModelAndView();
         try {
             StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(id);
@@ -80,8 +78,12 @@ public class StudentController {
             model.addObject("roleid", roleid);
         }
         model.addObject("role",role);
-        //model.setViewName("studentinfoandcerts");
-        model.setViewName("mobileStudentInfo");
+        if(device.trim().equals("mobile")){
+            model.setViewName("mobileStudentInfo");
+        }else{
+            model.setViewName("studentinfoandcerts");
+        }
+
         return model;
     }
 
@@ -113,7 +115,7 @@ public class StudentController {
         return gson.toJson(studentInfoPage);
     }
 
-    @RequestMapping(value = "/mobilestudentinfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/mstudentinfo", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView GetStudentInfo(@RequestParam(value = "stuId", required = true)String stuId, ModelMap map) {
         ModelAndView model = new ModelAndView();

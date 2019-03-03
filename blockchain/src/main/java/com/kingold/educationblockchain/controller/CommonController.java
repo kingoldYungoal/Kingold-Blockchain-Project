@@ -170,7 +170,6 @@ public class CommonController {
             case "kg_parentinformation":
                 try{
                     ParentInformation parentInformation = JSONObject.parseObject(jsonParam,ParentInformation.class);
-                    //parentInformation.setKg_parentinformationid(UUID.randomUUID().toString());
                     // 判断家长信息是否存在
                     if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
                         flag = mParentInfomationService.AddParentInformation(parentInformation);

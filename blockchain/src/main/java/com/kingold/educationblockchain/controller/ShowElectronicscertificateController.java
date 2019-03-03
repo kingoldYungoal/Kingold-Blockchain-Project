@@ -6,9 +6,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
-import com.kingold.educationblockchain.bean.PageBean;
-import com.kingold.educationblockchain.bean.StudentInfo;
-import com.kingold.educationblockchain.bean.TeacherInformation;
 import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
 import org.apache.http.impl.client.HttpClients;
@@ -56,12 +53,14 @@ public class ShowElectronicscertificateController {
     * */
     @RequestMapping(value = "/studentcertificate", method = RequestMethod.GET)
     @ResponseBody
-    public ModelAndView StudentCertificate(@RequestParam(value = "fileId", required = true)String fileId) {
-        //获取证书Id逻辑
+    public ModelAndView StudentCertificate(@RequestParam(value = "fileId", required = true)String fileId,@RequestParam(value = "device", required = true)String device) {
         ModelAndView model = new ModelAndView();
         model.addObject("certificateid",fileId);
-        //model.setViewName("studentcertdetail");
-        model.setViewName("mobileStudentCert");
+        if(device.trim().equals("mobile")){
+            model.setViewName("mobileStudentCert");
+        }else{
+            model.setViewName("studentcertdetail");
+        }
         return model;
     }
 
@@ -72,26 +71,19 @@ public class ShowElectronicscertificateController {
         String className = params.getString("className");
         int year = params.getInteger("year");
         String teacherId = params.getString("teacherId");
-        //ArrayList<String> studentIdList = (ArrayList) params.get("stuIds");
         List<String> certIds = new ArrayList<>();
-        //if(studentIdList.size() > 0){
         List<Electronicscertificate> allCertList = new ArrayList<>();
         CertificateParam param = new CertificateParam();
         param.setClassName(className);
         param.setYear(year);
         param.setTeacherId(teacherId);
-//            for(String stuId: studentIdList){
-//                param.setStudentId(stuId);
-
         List<Electronicscertificate> certList = mElectronicscertificateService.GetCertificatesByParam(param);
         allCertList.addAll(certList);
-//            }
-            List<Electronicscertificate> newCerts = RemoveDuplicateCert(allCertList);
-            for(Electronicscertificate cert : newCerts){
-                certIds.add(cert.getKg_electronicscertificateid());
-            }
-            certIdArray = certIds;
-        //}
+        List<Electronicscertificate> newCerts = RemoveDuplicateCert(allCertList);
+        for(Electronicscertificate cert : newCerts){
+            certIds.add(cert.getKg_electronicscertificateid());
+        }
+        certIdArray = certIds;
 
         return gson.toJson(certIds);
     }

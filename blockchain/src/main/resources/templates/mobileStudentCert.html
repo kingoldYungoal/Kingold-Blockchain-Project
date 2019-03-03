@@ -7,9 +7,10 @@
     <title>侨鑫教育平台</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/mobileStudentCert.css}" href="../static/css/mobileStudentCert.css">
+    <link rel="stylesheet" th:href="@{/css/jquery.mloading.css}" href="../static/css/jquery.mloading.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/jquery.mloading.js}" src="../static/javascript/jquery.mloading.js"></script>
 </head>
-
 
 <body style="background:#fafbfc;font-family: Helvetica; ">
 <div class="panel panel-info">
@@ -36,6 +37,14 @@
 </div>
 </body>
 <script>
+    $(function(){
+        $("body").mLoading("show");
+    });
+
+    window.onload = function(){
+        $("body").mLoading("hide");
+    }
+
     function DownCertPDF(obj) {
         var certId = $(obj).attr("data-certId");
         window.location.href = "../electronicscertificate/certificate/download?fileid=" + certId;

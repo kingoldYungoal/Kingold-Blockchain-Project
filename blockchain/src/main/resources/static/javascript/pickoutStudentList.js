@@ -546,14 +546,14 @@ var pickout = (function(){
                         lis += '<li data-id="' + data[i].kg_studentprofileid + '" onclick="GoStudentInfo(this)" class="list-group-item">';
                         lis += '<div class="childimg"><img src="../images/kidsimg2.png" class="stuimg"></div>';
                         lis += '<div class="childinfo"><ul><li><span class="childinfo-name">'+ data[i].kg_fullname +'</span>&nbsp;&nbsp;<span class="childinfo-gender">'+ data[i].kg_sex +'</span></li>';
-                        lis += '<li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_fullname +'</span></li>';
-                        lis += '<li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_fullname +'</span></li>';
+                        lis += '<li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_classname +'</span></li>';
+                        lis += '<li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_jointime +'</span></li>';
                         // 判断学生是否有家长
                         if(data[i].kg_parentName != ""){
                             lis += '<li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel"></span><span>(</span><span>'+ data[i].kg_parentPhoneNumber +'</span><span>)</span></li>';
                         }
                         lis += '</ul></div>';
-                        lis += '<div class="other-info"><div class="stunumber"><span>学籍号&nbsp;:&nbsp;</span><span>'+ data[i].kg_parentPhoneNumber +'</span></div></div>';
+                        lis += '<div class="other-info"><div class="stunumber"><span>学籍号&nbsp;:&nbsp;</span><span>'+ data[i].kg_educationnumber +'</span></div></div>';
                         lis += '</li>';
                         listGroup += lis;
                     }

@@ -19,7 +19,6 @@ import com.kingold.educationblockchain.service.StudentProfileService;
 import com.kingold.educationblockchain.util.*;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;

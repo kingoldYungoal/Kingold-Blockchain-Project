@@ -11,6 +11,8 @@
 </head>
 
 <body style="background:#fafbfc;font-family: Helvetica;">
+<input id="roleid" type="hidden" name="roleid" th:value="${roleId}">
+<input id="role" type="hidden" name="role" th:value="${role}">
 <div class="panel panel-info">
     <div class="panel-form">
         <div class="panel-heading">
@@ -20,6 +22,9 @@
                 </div>
                 <div class="head-title">
                     侨鑫教育
+                </div>
+                <div class="head-back">
+                    <a href="javascript:history.go(-1)" id="backLast">返回</a>
                 </div>
             </div>
         </div>

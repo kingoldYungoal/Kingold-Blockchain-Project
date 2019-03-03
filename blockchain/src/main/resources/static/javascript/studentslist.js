@@ -179,7 +179,7 @@ function BatchPrintPDF(){
 function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
     var roleid = $("#teacherid").val();
-    window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2";
+    window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2&device=pc";
 }
 
 function autoMove(){

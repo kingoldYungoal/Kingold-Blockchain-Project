@@ -23,6 +23,8 @@
     </style>
 </head>
 <body style="background:#fafbfc;font-family: Helvetica; ">
+<input id="roleid" type="hidden" name="roleid" th:value="${roleid}">
+<input id="role" type="hidden" name="role" th:value="${role}">
 <div class="panel panel-info">
     <div class="panel-form">
         <div class="panel-heading">
@@ -49,7 +51,7 @@
                         <input id="gotoinfopage" class="gotoinfo" type="button" value="个人信息详情 >" th:attr="data-stuId=${studentprofile.getKg_studentprofileid()}" onclick="GoStuDetail(this);">
                     </div>
                     <div class="cert" >
-                        <img src="../static/images/certicon.png" class="certimg">&nbsp;证书信息
+                        <img th:src="@{/images/certicon.png}" src="../static/images/certicon.png" class="certimg">&nbsp;证书信息
                     </div>
                 </div>
             </div>
@@ -87,13 +89,13 @@
 </div>
 </body>
 <script>
-    function  GoStuDetail(obj){
+    function GoStuDetail(obj){
         var stuId = $(obj).attr("data-stuId");
-        window.location.href = "../student/mobilestudentinfo?stuId=" + stuId;
+        window.location.href = "../student/mstudentinfo?stuId=" + stuId;
     }
     function GoCertDetail(obj) {
         var fileId = $(obj).attr("data-certId");
-        window.location.href = "../electronicscertificate/studentcertificate?fileId=" + fileId;
+        window.location.href = "../electronicscertificate/studentcertificate?fileId=" + fileId + "&device=mobile";
     }
 </script>
 </html>
