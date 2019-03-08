@@ -23,6 +23,11 @@
                 <div class="head-title">
                     侨鑫教育
                 </div>
+                <div class="head-back">
+                    <a href="javascript:void(0)" onclick="GoBack();">
+                        <img th:src="@{/images/backLast.png}" src="../static/images/backLast.png" style="height: 1.5rem;margin-left: 2rem">
+                    </a>
+                </div>
             </div>
         </div>
         <div class="panel-body">
@@ -43,6 +48,10 @@
 
     window.onload = function(){
         $("body").mLoading("hide");
+    }
+
+    function GoBack() {
+        window.location.href = "../login/login";
     }
 
     function DownCertPDF(obj) {

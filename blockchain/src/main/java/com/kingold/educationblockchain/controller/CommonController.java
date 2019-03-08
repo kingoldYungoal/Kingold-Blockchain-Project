@@ -34,6 +34,9 @@ public class CommonController {
     private StudentParentService mStudentParentService;
     @Autowired
     private StudentTeacherService mStudentTeacherService;
+    @Autowired
+    private ErrorLogService mErrorLogService;
+
     @Value("${chainCode.channel}")
     private String channel;
     private DateHandler dateHandler;
@@ -99,8 +102,8 @@ public class CommonController {
             case "kg_studentprofile":
                 StudentProfile studentProfile = JSONObject.parseObject(jsonParam,StudentProfile.class);
                 // 判断学号，学籍号 是否已存在
-                List<StudentProfile> studentProfileList = mStudentProfileService.GetStudentProfileByNumber(studentProfile.getKg_educationnumber(),studentProfile.getKg_studentnumber());
-                if(studentProfileList == null || studentProfileList.size() <= 0){
+                StudentProfile student = mStudentProfileService.GetStudentProfileById(studentProfile.getKg_studentprofileid());
+                if(student == null){
                     //将学生信息添加到数据库
                     try{
                         boolean tableflag = mStudentProfileService.AddStudentProfile(studentProfile);
@@ -122,7 +125,7 @@ public class CommonController {
                                 ex.printStackTrace(printWriter);
                                 ex.getMessage();
                                 loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                                recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
+                                mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
                             }
 
                             flag = true;
@@ -134,58 +137,95 @@ public class CommonController {
                         message = e1.getMessage();
                         e1.printStackTrace(printWriter);
                         loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, e1, stringWriter.toString());
-                        recordErrorLog.RecordError(e1, jsonParam, "", "", stringWriter.toString());
+                        mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e1, jsonParam, "", "", stringWriter.toString()));
                     }catch (Exception ex){
                         mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
                         message = ex.getMessage();
                         ex.printStackTrace(printWriter);
                         loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                        recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
+                        mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
+                    }
+                }else{
+                    //更新学生信息
+                    flag = mStudentProfileService.UpdateStudentProfile(studentProfile);
+                    if(flag){
+                        message = "学生信息更新成功";
+                    }else{
+                        message = "学生信息更新失败";
                     }
                 }
                 break;
             case "kg_teacherinformation":
                 try{
                     TeacherInformation teacherInformation = JSONObject.parseObject(jsonParam,TeacherInformation.class);
-                    //teacherInformation.setKg_teacherinformationid(UUID.randomUUID().toString());
-                    // 判断教师信息是否存在
-                    if(mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber()) == null) {
-                        flag = mTeacherInfomationService.AddTeacherInformation(teacherInformation);
-                        if(flag){
-                            message = "教师信息添加成功";
+                    TeacherInformation tInfo = mTeacherInfomationService.FindTeacherInformationById(teacherInformation.getKg_teacherinformationid());
+                    TeacherInformation tInfo2 = mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber());
+                    if(tInfo == null){
+                        if(tInfo2 == null) {
+                            flag = mTeacherInfomationService.AddTeacherInformation(teacherInformation);
+                            if(flag){
+                                message = "教师信息添加成功";
+                            }else{
+                                message = "教师信息添加失败";
+                            }
                         }else{
-                            message = "教师信息添加失败";
+                            message = "该教师手机号已存在，无法再次添加";
                         }
                     }else{
-                        message = "该教师手机号已存在，无法再次添加";
+                        //更新
+                        if(tInfo2 != null && tInfo2.getKg_teacherinformationid() != teacherInformation.getKg_teacherinformationid()) {
+                            message = "该教师手机号已存在，无法更新为此号码";
+                        }else{
+                            flag = mTeacherInfomationService.UpdateTeacherInformation(teacherInformation);
+                            if(flag){
+                                message = "教师信息更新成功";
+                            }else{
+                                message = "教师信息更新失败";
+                            }
+                        }
                     }
                 }catch(Exception ex){
                     message = ex.getMessage();
                     ex.printStackTrace(printWriter);
                     loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                    recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
+                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
                     throw ex;
                 }
                 break;
             case "kg_parentinformation":
                 try{
                     ParentInformation parentInformation = JSONObject.parseObject(jsonParam,ParentInformation.class);
-                    // 判断家长信息是否存在
-                    if(mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber()) == null){
-                        flag = mParentInfomationService.AddParentInformation(parentInformation);
-                        if(flag){
-                            message = "家长信息添加成功";
+                    ParentInformation pInfo = mParentInfomationService.FindParentInformationById(parentInformation.getKg_parentinformationid());
+                    ParentInformation pInfo2 = mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber());
+                    if(pInfo == null){
+                        if(pInfo2 == null) {
+                            flag = mParentInfomationService.AddParentInformation(parentInformation);
+                            if(flag){
+                                message = "家长信息添加成功";
+                            }else{
+                                message = "家长信息添加失败";
+                            }
                         }else{
-                            message = "家长信息添加失败";
+                            message = "该家长手机号已存在，无法再次添加";
                         }
                     }else{
-                        message = "该家长手机号已存在，无法再次添加";
+                        //更新
+                        if(pInfo2 != null && pInfo2.getKg_parentinformationid() != parentInformation.getKg_parentinformationid()) {
+                            message = "该家长手机号已存在，无法更新为此号码";
+                        }else{
+                            flag = mParentInfomationService.UpdateParentInformation(parentInformation);
+                            if(flag){
+                                message = "家长信息更新成功";
+                            }else{
+                                message = "家长信息更新失败";
+                            }
+                        }
                     }
                 }catch(Exception ex){
                     message = ex.getMessage();
                     ex.printStackTrace(printWriter);
                     loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                    recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
+                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
                     throw ex;
                 }
                 break;
@@ -215,7 +255,7 @@ public class CommonController {
                     message = ex.getMessage();
                     ex.printStackTrace(printWriter);
                     loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                    recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
+                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
                     throw ex;
                 }
                 break;
@@ -245,7 +285,7 @@ public class CommonController {
                     message = ex.getMessage();
                     ex.printStackTrace(printWriter);
                     loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                    recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString());
+                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
                     throw ex;
                 }
                 break;
@@ -422,12 +462,12 @@ public class CommonController {
         }catch (HttpClientErrorException e1) {
             e1.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertStudentJson(studentJson), e1, stringWriter.toString());
-            recordErrorLog.RecordError(e1, getInsertStudentJson(studentJson), "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e1, getInsertStudentJson(studentJson), "", "", stringWriter.toString()));
             return e1.getMessage();
         } catch(Exception e){
             e.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertStudentJson(studentJson), e, stringWriter.toString());
-            recordErrorLog.RecordError(e, getInsertStudentJson(studentJson), "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e, getInsertStudentJson(studentJson), "", "", stringWriter.toString()));
             return null;
         }
     }
@@ -441,12 +481,12 @@ public class CommonController {
         } catch (HttpClientErrorException ex) {
             ex.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertEventJson(eventInfo), ex, stringWriter.toString());
-            recordErrorLog.RecordError(ex, getInsertEventJson(eventInfo), "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, getInsertEventJson(eventInfo), "", "", stringWriter.toString()));
             throw ex;
         } catch(Exception e){
             e.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertEventJson(eventInfo), e, stringWriter.toString());
-            recordErrorLog.RecordError(e, getInsertEventJson(eventInfo), "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e, getInsertEventJson(eventInfo), "", "", stringWriter.toString()));
             return null;
         }
     }
@@ -472,12 +512,12 @@ public class CommonController {
         } catch (HttpClientErrorException ex) {
             ex.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), CrmId, ex, stringWriter.toString());
-            recordErrorLog.RecordError(ex, CrmId, "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, CrmId, "", "", stringWriter.toString()));
             throw ex;
         } catch(Exception e){
             e.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), CrmId, e, stringWriter.toString());
-            recordErrorLog.RecordError(e, CrmId, "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e, CrmId, "", "", stringWriter.toString()));
             return null;
         }
     }
@@ -502,12 +542,12 @@ public class CommonController {
         } catch (HttpClientErrorException ex) {
             ex.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), CrmId, ex, stringWriter.toString());
-            recordErrorLog.RecordError(ex, CrmId, "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, CrmId, "", "", stringWriter.toString()));
             throw ex;
         }catch(Exception e){
             e.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), CrmId, e, stringWriter.toString());
-            recordErrorLog.RecordError(e, CrmId, "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e, CrmId, "", "", stringWriter.toString()));
             return null;
         }
     }
@@ -525,12 +565,12 @@ public class CommonController {
         } catch (HttpClientErrorException e1) {
             e1.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), certId, e1, stringWriter.toString());
-            recordErrorLog.RecordError(e1, certId, "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e1, certId, "", "", stringWriter.toString()));
             throw e1;
         } catch (Exception ex) {
             ex.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), certId, ex, stringWriter.toString());
-            recordErrorLog.RecordError(ex, certId, "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, certId, "", "", stringWriter.toString()));
             throw ex;
         }
     }
@@ -548,12 +588,12 @@ public class CommonController {
         } catch (HttpClientErrorException e1) {
             e1.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), evtId, e1, stringWriter.toString());
-            recordErrorLog.RecordError(e1, evtId, "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e1, evtId, "", "", stringWriter.toString()));
             throw e1;
         } catch (Exception ex) {
             ex.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), evtId, ex, stringWriter.toString());
-            recordErrorLog.RecordError(ex, evtId, "", "", stringWriter.toString());
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, evtId, "", "", stringWriter.toString()));
             throw ex;
         }
     }

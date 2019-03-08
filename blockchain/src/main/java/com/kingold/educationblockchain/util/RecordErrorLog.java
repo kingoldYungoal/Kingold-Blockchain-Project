@@ -8,10 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RecordErrorLog {
-    @Autowired
-    private ErrorLogService mErrorLogService;
 
-    public void RecordError(Exception e, String parameter, String url, String response, String traceMessage) {
+
+    public ErrorLog RecordError(Exception e, String parameter, String url, String response, String traceMessage) {
         ErrorLog errorlog = new ErrorLog();
 
         //跟踪模块
@@ -47,6 +46,6 @@ public class RecordErrorLog {
 //        }
         errorlog.setKg_errorlogstacktracemessage(traceMessage);
 
-        mErrorLogService.AddErrorLog(errorlog);
+        return errorlog;
     }
 }

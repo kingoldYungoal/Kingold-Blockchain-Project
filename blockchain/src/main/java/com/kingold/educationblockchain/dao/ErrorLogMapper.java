@@ -41,6 +41,6 @@ public interface ErrorLogMapper {
     /**
      * 错误日志数据新增
      */
-    @Insert("insert into kg_errorlog(OPERATIONMODULE,OPERATIONTIME,URL,METHOD,PARAMETER,RESPONSE,CATCHMESSAGE,STACKTRACEMESSAGE) values ('${kg_errorlogmodule}',to_date('${kg_errorlogtime}','yyyy-mm-dd hh24:mi:ss'),'${kg_errorlogurl}','${kg_errorlogmethod}','${kg_errorlogparameter}','${kg_errorlogresponse}','${kg_errorlogcatchmessage}','${kg_errorlogstacktracemessage}')")
+    @Insert("insert into kg_errorlog(OPERATIONMODULE,OPERATIONTIME,URL,METHOD,PARAMETER,RESPONSE,CATCHMESSAGE,STACKTRACEMESSAGE) values (#{kg_errorlogmodule},to_date(#{kg_errorlogtime},'yyyy-mm-dd hh24:mi:ss'),#{kg_errorlogurl},#{kg_errorlogmethod},#{kg_errorlogparameter},#{kg_errorlogresponse},#{kg_errorlogcatchmessage},#{kg_errorlogstacktracemessage})")
     void AddErrorLog(ErrorLog errorlog);
 }

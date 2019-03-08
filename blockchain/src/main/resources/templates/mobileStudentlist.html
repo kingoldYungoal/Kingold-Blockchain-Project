@@ -26,6 +26,11 @@
                 <div class="head-title">
                     侨鑫教育
                 </div>
+                <div class="head-back">
+                    <a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;">
+                        <img th:src="@{/images/backLast.png}" src="../static/images/backLast.png" style="height: 1.5rem;margin-left: 2rem">
+                    </a>
+                </div>
             </div>
         </div>
         <div class="panel-body">
@@ -43,14 +48,14 @@
                 </div>
             </div>
 
-            <div class="pk-form">
+            <div class="pk-form-year">
                 <select name="option" id="option" class="option pickout" placeholder="年份筛选" onchange="initTable()">
                     <option value="0" selected="selected">--年份筛选--</option>
                     <option th:each="year:${yearList}" th:value="${year}" th:text="${year}"></option>
                 </select>
             </div>
 
-            <div class="pk-form">
+            <div class="pk-form-class">
                 <select name="option1" id="option1" class="option pickout" placeholder="班级筛选" onchange="initTable()">
                     <option value="" selected="selected">--班级筛选--</option>
                     <option th:each="className:${classList}" th:value="${className}" th:text="${className}"></option>
@@ -67,8 +72,7 @@
                             <li><span class="childinfo-name" th:text="${studentInfo.getKg_fullname()}"></span>&nbsp;&nbsp;<span class="childinfo-gender" th:text="${studentInfo.getKg_sex()}"></span></li>
                             <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time" th:text="${studentInfo.getKg_classname()}"></span></li>
                             <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time" th:text="${studentInfo.getKg_jointime()}"></span></li>
-
-                            <li class="parent-name-tel" th:if="${not #strings.isEmpty(studentInfo.getKg_parentName())}">家长&nbsp;:&nbsp;<span class="parent-name-tel" th:text="${studentInfo.getKg_parentName()}"></span><span>(</span><span th:text="${studentInfo.getKg_parentPhoneNumber()}"></span><span>)</span></li>
+                            <li class="parent-name-tel">家长：&nbsp;<span class="parent-name-tel" th:text="${studentInfo.getKg_parentName()}"></span><span th:text="${studentInfo.getKg_parentPhoneNumber()}"></span></li>
                         </ul>
                     </div>
                     <div class="other-info">

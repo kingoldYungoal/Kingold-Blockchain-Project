@@ -4,10 +4,18 @@
 	margin-bottom:1rem;
 }
 
-.pk-form1 {
-	width:65%;
+.pk-form-year {
+	width:30%;
 	float:left;
-	margin-bottom:1rem;
+	margin-bottom:0.5rem;
+	font-size: 0.8rem;
+}
+
+.pk-form-class {
+	width:70%;
+	float:left;
+	margin-bottom:0.5rem;
+	font-size: 0.8rem;
 }
 
 .pk-field {
@@ -29,14 +37,13 @@
 	bottom:0;
 	width:20px;
 	border-radius:0 5px 5px 0;
-	/*float:left;*/
 }
 
 .pk-arrow:before{
-	font-size:12px;
+	font-size:0.7rem;
 	position:relative;
 	content:'\25BC';
-	margin:10px 0 0 0;
+	margin:0.4rem 0 0 0;
 	float:left;
 }
 

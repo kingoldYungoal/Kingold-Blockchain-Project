@@ -19,7 +19,11 @@
             color:#fff;
             font-size:0.8rem;
             border-radius: 0.8rem;
+            text-decoration: none;
+            outline:none;
         }
+
+        a:focus{text-decoration: none}
     </style>
 </head>
 <body style="background:#fafbfc;font-family: Helvetica; ">
@@ -34,6 +38,11 @@
                 </div>
                 <div class="head-title">
                     侨鑫教育
+                </div>
+                <div class="head-back">
+                    <a href="javascript:void(0)" onclick="javascript:history.back(-1);return false;">
+                        <img th:src="@{/images/backLast.png}" src="../static/images/backLast.png" style="height: 1.5rem;margin-left: 2rem">
+                    </a>
                 </div>
             </div>
         </div>
@@ -76,7 +85,7 @@
                             </div>
                         </div><!-- timeline content -->
                     </div><!-- .timeline-post -->
-
+                    <a href="#" class="cd-top">Top</a>
                     <div class="timeline-post" style="margin-top:-30px;">
                         <div class="timeline-icon icon-larger iconbg-turqoise icon-color-white">
                             <div class="icon-placeholder">已到最底部</div>

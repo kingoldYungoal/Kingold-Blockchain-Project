@@ -78,6 +78,7 @@
 }
 
 .login-form-btn {
+    outline: none;
     height:3rem;
     width: 100%;
     font-size: 1.2rem;

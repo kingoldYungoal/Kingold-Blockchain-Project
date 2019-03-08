@@ -152,7 +152,7 @@ $(function () {
          if (device != "mobile"){
              role = $("input[name='option']:checked").val();
          } else{
-             role = $("#optionRole").val();
+             role = $("#option").val();
          }
          if ($.trim(phonenumber) == "") {
              M.dialog13 = jqueryAlert({
@@ -190,72 +190,72 @@ $(function () {
              'phone' : phonenumber,
              'role': role
          };
-         $("#loginform").submit();
+         //$("#loginform").submit();
          // 手机号码是否存在
 
-         // $.ajax({
-         //     type:"post",
-         //     url:"../login/IsExistPhoneByRole",
-         //     data: JSON.stringify(datas),
-         //     contentType : 'application/json',
-         //     dataType : 'json',
-         //     success:function (data) {
-         //         if (data){
-         //             // 验证码是否正确判断
-         //             // 获取验证码
-         //             $.ajax({
-         //                 type:"post",
-         //                 url:"../smscode/getsmscode",
-         //                 data: JSON.stringify(datas),
-         //                 contentType : 'application/json',
-         //                 dataType : 'json',
-         //                 success:function (data) {
-         //                     if (data.success){
-         //                         var verifycodes = data.result.result;
-         //                         if (verifycodes == authcode){
-         //                             M.dialog13 = jqueryAlert({
-         //                                 'icon': '../images/alertimgs/right.png',
-         //                                 'content': '验证码验证成功',
-         //                                 'closeTime': 2000,
-         //                             })
-         //                             M.dialog13.show();
-         //
-         //                             $("#loginform").submit();
-         //                         }else{
-         //                             M.dialog13 = jqueryAlert({
-         //                                 'icon': '../images/alertimgs/warning.png',
-         //                                 'content': '验证码验证失败',
-         //                                 'closeTime': 2000,
-         //                             })
-         //                             M.dialog13.show();
-         //                         }
-         //                     }
-         //                 },error:function (data) {
-         //                     M.dialog13 = jqueryAlert({
-         //                         'icon': '../images/alertimgs/warning.png',
-         //                         'content': '验证码验证失败',
-         //                         'closeTime': 2000,
-         //                     })
-         //                     M.dialog13.show();
-         //                 }
-         //             });
-         //         }else{
-         //             M.dialog13 = jqueryAlert({
-         //                 'icon': '../images/alertimgs/warning.png',
-         //                 'content': '此号码不存在',
-         //                 'closeTime': 2000,
-         //             })
-         //             M.dialog13.show();
-         //         }
-         //     },error:function (data) {
-         //         M.dialog13 = jqueryAlert({
-         //             'icon': '../images/alertimgs/warning.png',
-         //             'content': '验证码验证失败',
-         //             'closeTime': 2000,
-         //         })
-         //         M.dialog13.show();
-         //     }
-         // });
+         $.ajax({
+             type:"post",
+             url:"../login/IsExistPhoneByRole",
+             data: JSON.stringify(datas),
+             contentType : 'application/json',
+             dataType : 'json',
+             success:function (data) {
+                 if (data){
+                     // 验证码是否正确判断
+                     // 获取验证码
+                     $.ajax({
+                         type:"post",
+                         url:"../smscode/getsmscode",
+                         data: JSON.stringify(datas),
+                         contentType : 'application/json',
+                         dataType : 'json',
+                         success:function (data) {
+                             if (data.success){
+                                 var verifycodes = data.result.result;
+                                 if (verifycodes == authcode){
+                                     M.dialog13 = jqueryAlert({
+                                         'icon': '../images/alertimgs/right.png',
+                                         'content': '验证码验证成功',
+                                         'closeTime': 2000,
+                                     })
+                                     M.dialog13.show();
+
+                                     $("#loginform").submit();
+                                 }else{
+                                     M.dialog13 = jqueryAlert({
+                                         'icon': '../images/alertimgs/warning.png',
+                                         'content': '验证码验证失败',
+                                         'closeTime': 2000,
+                                     })
+                                     M.dialog13.show();
+                                 }
+                             }
+                         },error:function (data) {
+                             M.dialog13 = jqueryAlert({
+                                 'icon': '../images/alertimgs/warning.png',
+                                 'content': '验证码验证失败',
+                                 'closeTime': 2000,
+                             })
+                             M.dialog13.show();
+                         }
+                     });
+                 }else{
+                     M.dialog13 = jqueryAlert({
+                         'icon': '../images/alertimgs/warning.png',
+                         'content': '此号码不存在',
+                         'closeTime': 2000,
+                     })
+                     M.dialog13.show();
+                 }
+             },error:function (data) {
+                 M.dialog13 = jqueryAlert({
+                     'icon': '../images/alertimgs/warning.png',
+                     'content': '验证码验证失败',
+                     'closeTime': 2000,
+                 })
+                 M.dialog13.show();
+             }
+         });
      });
 
     function time() {

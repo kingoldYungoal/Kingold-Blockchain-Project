@@ -548,10 +548,7 @@ var pickout = (function(){
                         lis += '<div class="childinfo"><ul><li><span class="childinfo-name">'+ data[i].kg_fullname +'</span>&nbsp;&nbsp;<span class="childinfo-gender">'+ data[i].kg_sex +'</span></li>';
                         lis += '<li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_classname +'</span></li>';
                         lis += '<li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_jointime +'</span></li>';
-                        // 判断学生是否有家长
-                        if(data[i].kg_parentName != ""){
-                            lis += '<li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel"></span><span>(</span><span>'+ data[i].kg_parentPhoneNumber +'</span><span>)</span></li>';
-                        }
+                        lis += '<li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">'+ data[i].kg_parentName +'</span><span class="parent-name-tel"></span><span>'+ data[i].kg_parentPhoneNumber +'</span></li>';
                         lis += '</ul></div>';
                         lis += '<div class="other-info"><div class="stunumber"><span>学籍号&nbsp;:&nbsp;</span><span>'+ data[i].kg_educationnumber +'</span></div></div>';
                         lis += '</li>';

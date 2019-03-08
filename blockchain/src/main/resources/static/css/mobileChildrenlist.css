@@ -17,11 +17,16 @@
 }
 
 .head-title{
-    width: 65%;
-    margin-right: 35%;
-    margin-top: 0.5rem;
+    width: 35%;
     font-size: 1rem;
     text-align: center;
+    float:left;
+}
+
+.head-back{
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    height: 2rem;
 }
 
 .panel-body{
@@ -48,9 +53,9 @@
 }
 
 #parentimg {
-    width: 70%;
     float: right;
     margin: 1.5rem 0rem;
+    height:57%;
 }
 
 .parentname {
@@ -74,7 +79,7 @@ ul,li{
 }
 
 #phonediv{
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     margin-top: 0;
 }
 
@@ -139,7 +144,7 @@ ul,li{
 }
 
 .childinfo-gender{
-    font-size: 0.5rem;
+    font-size: 0.7rem;
     color: #787878;
 }
 
@@ -168,11 +173,13 @@ ul,li{
     color: #ca7702;
     border-top-left-radius: 5rem;
     border-bottom-left-radius: 5rem;
+    border-width: 0.1rem;
     font-size: 0.8rem;
     position: relative;
     float: right;
     margin-right: 0;
-    margin-top: -1rem;
+    margin-top: -3rem;
+    outline:none;
 }
 .cert{
     height: 2rem;
@@ -182,4 +189,56 @@ ul,li{
 }
 .certimg{
     height: 1.5rem;
+}
+
+.cd-top {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    position: fixed;
+    bottom: 40px;
+    right: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    /* image replacement properties */
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+    background: rgba(200, 201, 202, 0.8) url(../images/cd-top-arrow.svg) no-repeat center 50%;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: opacity .3s 0s, visibility 0s .3s;
+    -moz-transition: opacity .3s 0s, visibility 0s .3s;
+    transition: opacity .3s 0s, visibility 0s .3s;
+}
+.cd-top.cd-is-visible, .cd-top.cd-fade-out, .no-touch .cd-top:hover {
+    -webkit-transition: opacity .3s 0s, visibility 0s 0s;
+    -moz-transition: opacity .3s 0s, visibility 0s 0s;
+    transition: opacity .3s 0s, visibility 0s 0s;
+}
+.cd-top.cd-is-visible {
+    /* the button becomes visible */
+    visibility: visible;
+    opacity: 1;
+}
+.cd-top.cd-fade-out {
+    /* if the user keeps scrolling down, the button is out of focus and becomes less visible */
+    opacity: .5;
+}
+.no-touch .cd-top:hover {
+    background-color: #0e90d2;
+    opacity: 1;
+}
+@media only screen and (min-width: 768px) {
+    .cd-top {
+        right: 20px;
+        bottom: 20px;
+    }
+}
+@media only screen and (min-width: 1024px) {
+    .cd-top {
+        height: 60px;
+        width: 60px;
+        right: 30px;
+        bottom: 30px;
+    }
 }
