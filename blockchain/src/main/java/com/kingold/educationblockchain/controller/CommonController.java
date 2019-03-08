@@ -173,7 +173,7 @@ public class CommonController {
                         }
                     }else{
                         //更新
-                        if(tInfo2 != null && tInfo2.getKg_teacherinformationid() != teacherInformation.getKg_teacherinformationid()) {
+                        if(tInfo2 != null && !tInfo2.getKg_teacherinformationid().equals(teacherInformation.getKg_teacherinformationid())) {
                             message = "该教师手机号已存在，无法更新为此号码";
                         }else{
                             flag = mTeacherInfomationService.UpdateTeacherInformation(teacherInformation);
@@ -210,7 +210,7 @@ public class CommonController {
                         }
                     }else{
                         //更新
-                        if(pInfo2 != null && pInfo2.getKg_parentinformationid() != parentInformation.getKg_parentinformationid()) {
+                        if(pInfo2 != null && !pInfo2.getKg_parentinformationid().equals(parentInformation.getKg_parentinformationid())) {
                             message = "该家长手机号已存在，无法更新为此号码";
                         }else{
                             flag = mParentInfomationService.UpdateParentInformation(parentInformation);
@@ -246,7 +246,8 @@ public class CommonController {
                                 message = "家长学生信息添加失败";
                             }
                         }else{
-                            message = "已存在该家长和该学生关系信息，无法添加";
+                            flag = true;
+                            message = "已存在该家长和该学生关系信息";
                         }
                     }else{
                         message = "暂无该家长或该学生信息，无法添加";
@@ -276,7 +277,8 @@ public class CommonController {
                                 message = "教师学生信息添加失败";
                             }
                         }else{
-                            message = "已存在该教师和该学生关系信息，无法添加";
+                            flag = true;
+                            message = "已存在该教师和该学生关系信息";
                         }
                     }else{
                         message = "暂无该教师或该学生信息，无法添加";

@@ -79,6 +79,7 @@ public class ElectronicscertificateController {
     private PrintWriter printWriter = new PrintWriter(stringWriter);
     private LoggerException loggerException = new LoggerException();
     private RecordErrorLog recordErrorLog = new RecordErrorLog();
+    private static Logger logger = Logger.getLogger("ElectronicscertificateController.class");
 
     /*
      * 证书生成api
@@ -93,6 +94,9 @@ public class ElectronicscertificateController {
             Electronicscertificate existCert = mElectronicscertificateService.GetCertificateByStudentIdAndCertno(cert.getKg_certificateno(),cert.getKg_studentprofileid());
             if(existCert != null){
                 return makeErrRsp("证书已存在，无法重复添加");
+            }
+            if(!cert.getKg_certitype().equals("录取通知书") && !cert.getKg_certitype().equals("课程证书") && !cert.getKg_certitype().equals("毕业证书")){
+                return makeErrRsp("新增证书类型有误");
             }
             if(cert.getKg_studentprofileid().trim().length() > 0) {
                 if (mStudentProfileService.GetStudentProfileById(cert.getKg_studentprofileid()) != null) {
@@ -191,10 +195,10 @@ public class ElectronicscertificateController {
                     }
 
                     // 删除生成的证书
-                    File certFile = new File(newPath);
-                    if(certFile.isFile() && certFile.exists()){
-                        certFile.delete();
-                    }
+//                    File certFile = new File(newPath);
+//                    if(certFile.isFile() && certFile.exists()){
+//                        certFile.delete();
+//                    }
 
                     // 存证书ID到数据库  fileId
                     cert.setKg_electronicscertificateid(fileId);
@@ -370,6 +374,12 @@ public class ElectronicscertificateController {
     private String UploadFileToCECS(String filePath, String fileName, HttpServletRequest request) throws ParseException, IOException{
         File file = new File(filePath);
         FileInputStream inStream = new FileInputStream(file);
+
+        PrintStream printStream = new PrintStream(file);
+        System.setOut(printStream);
+        logger.info(printStream.toString());
+        printStream.close();
+
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
         String url = mBaseUrl + "data";
