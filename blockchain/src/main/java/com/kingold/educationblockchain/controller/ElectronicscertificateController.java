@@ -1,5 +1,43 @@
 package com.kingold.educationblockchain.controller;
 
+import static com.itextpdf.io.font.PdfEncodings.IDENTITY_H;
+import static com.kingold.educationblockchain.util.ResultResponse.makeErrRsp;
+import static com.kingold.educationblockchain.util.ResultResponse.makeOKRsp;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
+
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonElement;
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.PdfPageFormCopier;
 import com.itextpdf.io.image.ImageData;
@@ -16,37 +54,12 @@ import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
 import com.kingold.educationblockchain.service.ErrorLogService;
 import com.kingold.educationblockchain.service.StudentProfileService;
-import com.kingold.educationblockchain.util.*;
-
-import java.io.*;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.logging.Logger;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import com.alibaba.fastjson.JSONObject;
-
-import org.apache.http.ParseException;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.springframework.web.client.HttpClientErrorException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import static com.itextpdf.io.font.PdfEncodings.IDENTITY_H;
-import static com.kingold.educationblockchain.util.ResultResponse.makeErrRsp;
-import static com.kingold.educationblockchain.util.ResultResponse.makeOKRsp;
+import com.kingold.educationblockchain.util.BlockChainPayload;
+import com.kingold.educationblockchain.util.DateHandler;
+import com.kingold.educationblockchain.util.LoggerException;
+import com.kingold.educationblockchain.util.RecordErrorLog;
+import com.kingold.educationblockchain.util.RetResult;
+import com.kingold.educationblockchain.util.StreamCommon;
 
 @RestController
 @RequestMapping("/api")
@@ -72,6 +85,12 @@ public class ElectronicscertificateController {
     @Value("${chainCode.channel}")
     private String mChannel;
 
+    @Value("${schoolName.schools}")
+    private String schools;
+
+    @Value("${certType.types}")
+    private String certTypes;
+
     private DateHandler mDateHandler;
     private BlockChainPayload mPayload = new BlockChainPayload();
     private StreamCommon mStreamCommon = new StreamCommon();
@@ -95,30 +114,28 @@ public class ElectronicscertificateController {
             if(existCert != null){
                 return makeErrRsp("证书已存在，无法重复添加");
             }
-            if(!cert.getKg_certitype().equals("录取通知书") && !cert.getKg_certitype().equals("课程证书") && !cert.getKg_certitype().equals("毕业证书")){
-                return makeErrRsp("新增证书类型有误");
+            //获取证书类型list
+            if(certTypes.trim().length() > 0){
+                String[] certitypes = certTypes.split(",");
+                if(!Arrays.asList(certitypes).contains(cert.getKg_certitype().trim())){
+                    return makeErrRsp("新增证书类型有误");
+                }
             }
+
+            if(schools.trim().length() > 0){
+                String[] schoolNames = schools.split(",");
+                if(!Arrays.asList(schoolNames).contains(cert.getKg_schoolname())){
+                    return makeErrRsp("学校名称有误");
+                }
+            }
+
             if(cert.getKg_studentprofileid().trim().length() > 0) {
                 if (mStudentProfileService.GetStudentProfileById(cert.getKg_studentprofileid()) != null) {
                     // 生成pdf证书:名称为 uuid 随机生成
                     StringBuffer certificateName = new StringBuffer(UUID.randomUUID().toString())
                             .append(".pdf");
 
-                    Resource templeResource = new ClassPathResource("/");
-                    File templeFile = templeResource.getFile();
-                    String templePath = templeFile.getPath();
-                    String newPaths = "/temp/"+certificateName.toString();
-                    File tempCertFiles = new File(templePath + newPaths);
-                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(new Exception(), jsonParam, tempCertFiles.getAbsolutePath(), tempCertFiles.getPath(), "test"));
-                    absolutePath = tempCertFiles.getAbsolutePath();
-                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(new Exception(), jsonParam, absolutePath, tempCertFiles.getPath(), "test"));
-                    String tempCertpPath = tempCertFiles.getPath();
-                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(new Exception(), jsonParam, absolutePath, tempCertpPath, "test"));
-
-                    String testPath = request.getSession().getServletContext().getRealPath("/");
-                    String newPath = testPath + certificateName;
-                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(new Exception(), jsonParam, testPath, newPath, "test1"));
-
+                    File tempPDF = new File(System.getProperty("user.dir","") + certificateName.toString());
 
                     Map<String,String> map = new HashMap();
                     map.put("name",cert.getKg_studentname());
@@ -161,12 +178,12 @@ public class ElectronicscertificateController {
 
                         map.put("certId", cert.getKg_certificateno());
 
-                        GeneratePdfCertificate(newPath,absolutePath, map, schoolMasterBytes, presidentBytes);
+                        GeneratePdfCertificate(tempPDF, map, schoolMasterBytes, presidentBytes);
                     }
                     if(cert.getKg_certitype().equals("课程证书")) {
                         map.put("issueDate", cert.getKg_certificatedate());
                         map.put("certName",cert.getKg_name());
-                        GeneratePdfCertificate(newPath,absolutePath, map, schoolMasterBytes, presidentBytes);
+                        GeneratePdfCertificate(tempPDF, map, schoolMasterBytes, presidentBytes);
                     }
 
                     if(cert.getKg_certitype().equals("录取通知书")) {
@@ -175,9 +192,7 @@ public class ElectronicscertificateController {
                         map.put("nameEn",cert.getKg_studentenglishname());
                         map.put("registrationTime",cert.getKg_starttime());
                         try{
-                            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(new Exception(), jsonParam, absolutePath, tempCertpPath, "test"));
-                            GeneratePdfCertificate(newPath,absolutePath, map, schoolMasterBytes, presidentBytes);
-                            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(new Exception(), jsonParam, absolutePath, tempCertpPath, "test"));
+                            GeneratePdfCertificate(tempPDF, map, schoolMasterBytes, presidentBytes);
                         }catch(Exception ex){
                             ex.printStackTrace(printWriter);
                             ex.getMessage();
@@ -186,19 +201,14 @@ public class ElectronicscertificateController {
                         }
                     }
 
-                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(new Exception(), jsonParam, absolutePath, tempCertpPath, "test"));
-
-                    String fileId = UploadFileToCECS(newPath, certificateName.toString(),request);
+                    String fileId = UploadFileToCECS(tempPDF, certificateName.toString(),request);
                     certid = fileId;
                     if(fileId == null){
                         return makeErrRsp("上传证书失败");
                     }
 
                     // 删除生成的证书
-//                    File certFile = new File(newPath);
-//                    if(certFile.isFile() && certFile.exists()){
-//                        certFile.delete();
-//                    }
+                    tempPDF.deleteOnExit();
 
                     // 存证书ID到数据库  fileId
                     cert.setKg_electronicscertificateid(fileId);
@@ -258,7 +268,7 @@ public class ElectronicscertificateController {
     /*
      * 生成证书
      * */
-    public void GeneratePdfCertificate(String tempCertpPath,String absolutePath, Map<String,String> fields,byte[] schoolMasterBytes, byte[] presidentBytes) throws Exception{
+    public void GeneratePdfCertificate(File file, Map<String,String> fields,byte[] schoolMasterBytes, byte[] presidentBytes) throws Exception{
         String logoPath = "static/logo/";
         switch(fields.get("schoolName")){
             case "侨鑫汇景新城实验小学" :
@@ -287,8 +297,7 @@ public class ElectronicscertificateController {
         //PdfDocument pdfDocRead = new PdfDocument(new PdfReader(file.getPath()));
         PdfDocument pdfDocRead = new PdfDocument(new PdfReader(resource.getInputStream()));
 
-        PdfWriter pdfWriter = new PdfWriter(tempCertpPath);
-        mErrorLogService.AddErrorLog(recordErrorLog.RecordError(new Exception(), "", absolutePath, tempCertpPath, "test"));
+        PdfWriter pdfWriter = new PdfWriter(file);
         PdfDocument pdfDocWrite = new PdfDocument(pdfWriter);
         int page=1;
         if(fields.get("certType").equals("录取通知书"))
@@ -314,9 +323,9 @@ public class ElectronicscertificateController {
         pdfDocRead.copyPagesTo(page,page,pdfDocWrite,new PdfPageFormCopier());
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
         form.setGenerateAppearance(true);
-        PdfFont fontRuiYun = PdfFontFactory.createFont("static/font/锐字云字库小标宋体GBK.TTF", IDENTITY_H ,false);
-        PdfFont fontUtopia = PdfFontFactory.createFont("static/font/Utopia Regular.ttf", IDENTITY_H ,false);
-        PdfFont fontYuWei = PdfFontFactory.createFont("static/font/禹卫书法行书繁体（优化版）.ttf", IDENTITY_H ,false);
+        PdfFont fontRuiYun = PdfFontFactory.createFont(new ClassPathResource("static/font/锐字云字库小标宋体GBK.TTF").getPath(), IDENTITY_H ,false);
+        PdfFont fontUtopia = PdfFontFactory.createFont(new ClassPathResource("static/font/Utopia Regular.ttf").getPath(), IDENTITY_H ,false);
+        PdfFont fontYuWei = PdfFontFactory.createFont(new ClassPathResource("static/font/禹卫书法行书繁体（优化版）.ttf").getPath(), IDENTITY_H ,false);
 
         for(String fieldName: fields.keySet()){
             if(form.getField(fieldName)==null)
@@ -343,9 +352,8 @@ public class ElectronicscertificateController {
                 pdfPage.newContentStreamAfter(),
                 pdfPage.getResources(),
                 pdfDocWrite);
-        Resource logoResource = new ClassPathResource(logoPath);
-        File logoFile = logoResource.getFile();
-        ImageData logo = ImageDataFactory.create(logoFile.getPath());
+
+        ImageData logo = ImageDataFactory.createPng(mStreamCommon.read(new ClassPathResource(logoPath).getInputStream()));
         canvas.addImage(logo,225, 650,150,false);
 
         ImageData sign1 = ImageDataFactory.create(schoolMasterBytes);
@@ -371,14 +379,8 @@ public class ElectronicscertificateController {
     /*
      * 上传证书
      * */
-    private String UploadFileToCECS(String filePath, String fileName, HttpServletRequest request) throws ParseException, IOException{
-        File file = new File(filePath);
+    private String UploadFileToCECS(File file, String fileName, HttpServletRequest request) throws ParseException, IOException{
         FileInputStream inStream = new FileInputStream(file);
-
-        PrintStream printStream = new PrintStream(file);
-        System.setOut(printStream);
-        logger.info(printStream.toString());
-        printStream.close();
 
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
@@ -413,7 +415,9 @@ public class ElectronicscertificateController {
     */
     public String InsertCertinfo(CertInfo certInfo,String channelName) {
         try {
-            return mPayload.GetPayload("insertCertinfo", getInsertCertJson(certInfo),channelName).toString();
+            JsonElement json = mPayload.GetPayload("insertCertinfo", getInsertCertJson(certInfo),channelName);
+
+            return json != null? json.toString() : "上链错误";
         } catch (HttpClientErrorException ex) {
             ex.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertCertJson(certInfo), ex, stringWriter.toString());

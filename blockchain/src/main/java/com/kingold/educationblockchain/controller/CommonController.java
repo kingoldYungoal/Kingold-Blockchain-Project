@@ -39,6 +39,10 @@ public class CommonController {
 
     @Value("${chainCode.channel}")
     private String channel;
+
+    @Value("${schoolName.schools}")
+    private String schools;
+
     private DateHandler dateHandler;
     private BlockChainPayload payload = new BlockChainPayload();
     private StringWriter stringWriter = new StringWriter();
@@ -101,57 +105,60 @@ public class CommonController {
         switch(tableName.trim()){
             case "kg_studentprofile":
                 StudentProfile studentProfile = JSONObject.parseObject(jsonParam,StudentProfile.class);
-                // 判断学号，学籍号 是否已存在
-                StudentProfile student = mStudentProfileService.GetStudentProfileById(studentProfile.getKg_studentprofileid());
-                if(student == null){
-                    //将学生信息添加到数据库
-                    try{
-                        boolean tableflag = mStudentProfileService.AddStudentProfile(studentProfile);
-                        if(tableflag){
-                            //将学生信息上链
-                            StudentJson studentJson = new StudentJson();
-                            //敏感信息加密
-                            studentJson.setStudentId(studentProfile.getKg_studentprofileid());
-                            studentJson.setCrmId(studentProfile.getKg_studentprofileid());
-                            studentJson.setStudentEducationNo(Base64.encryptBASE64(studentProfile.getKg_educationnumber().getBytes()).replace("\r\n",""));
-                            studentJson.setStudentIdCardNo(Base64.encryptBASE64(studentProfile.getKg_passportnumberoridnumber().getBytes()).replace("\r\n",""));
-                            studentJson.setStudentNameString(studentProfile.getKg_fullname());
-                            dateHandler = new DateHandler();
-                            studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
-                            //studentJson.setRemark();
-                            try{
-                                InitStudent(studentJson, channel);
-                            }catch (Exception ex){
-                                ex.printStackTrace(printWriter);
-                                ex.getMessage();
-                                loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                                mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
-                            }
+                message = ValidateStudent(studentProfile);
+                if(message.equals("")){
+                    // 判断学生 是否已存在
+                    StudentProfile student = mStudentProfileService.GetStudentProfileById(studentProfile.getKg_studentprofileid());
+                    if(student == null){
+                        //将学生信息添加到数据库
+                        try{
+                            boolean tableflag = mStudentProfileService.AddStudentProfile(studentProfile);
+                            if(tableflag){
+                                //将学生信息上链
+                                StudentJson studentJson = new StudentJson();
+                                //敏感信息加密
+                                studentJson.setStudentId(studentProfile.getKg_studentprofileid());
+                                studentJson.setCrmId(studentProfile.getKg_studentprofileid());
+                                studentJson.setStudentEducationNo(Base64.encryptBASE64(studentProfile.getKg_educationnumber().getBytes()).replace("\r\n",""));
+                                studentJson.setStudentIdCardNo(Base64.encryptBASE64(studentProfile.getKg_passportnumberoridnumber().getBytes()).replace("\r\n",""));
+                                studentJson.setStudentNameString(studentProfile.getKg_fullname());
+                                dateHandler = new DateHandler();
+                                studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
+                                //studentJson.setRemark();
+                                try{
+                                    InitStudent(studentJson, channel);
+                                }catch (Exception ex){
+                                    ex.printStackTrace(printWriter);
+                                    ex.getMessage();
+                                    loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
+                                }
 
-                            flag = true;
-                            message = "学生信息添加成功";
+                                flag = true;
+                                message = "学生信息添加成功";
+                            }
+                        }catch (HttpClientErrorException e1) {
+                            //删除表中新增的数据
+                            mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
+                            message = e1.getMessage();
+                            e1.printStackTrace(printWriter);
+                            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, e1, stringWriter.toString());
+                            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e1, jsonParam, "", "", stringWriter.toString()));
+                        }catch (Exception ex){
+                            mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
+                            message = ex.getMessage();
+                            ex.printStackTrace(printWriter);
+                            loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
+                            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
                         }
-                    }catch (HttpClientErrorException e1) {
-                        //删除表中新增的数据
-                        mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
-                        message = e1.getMessage();
-                        e1.printStackTrace(printWriter);
-                        loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, e1, stringWriter.toString());
-                        mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e1, jsonParam, "", "", stringWriter.toString()));
-                    }catch (Exception ex){
-                        mStudentProfileService.DeleteStudentProfile(studentProfile.getKg_studentprofileid());
-                        message = ex.getMessage();
-                        ex.printStackTrace(printWriter);
-                        loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                        mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
-                    }
-                }else{
-                    //更新学生信息
-                    flag = mStudentProfileService.UpdateStudentProfile(studentProfile);
-                    if(flag){
-                        message = "学生信息更新成功";
                     }else{
-                        message = "学生信息更新失败";
+                        //更新学生信息
+                        flag = mStudentProfileService.UpdateStudentProfile(studentProfile);
+                        if(flag){
+                            message = "学生信息更新成功";
+                        }else{
+                            message = "学生信息更新失败";
+                        }
                     }
                 }
                 break;
@@ -249,8 +256,7 @@ public class CommonController {
                             flag = true;
                             message = "已存在该家长和该学生关系信息";
                         }
-                    }else{
-                        message = "暂无该家长或该学生信息，无法添加";
+                    }else{                        message = "暂无该家长或该学生信息，无法添加";
                     }
                 }catch(Exception ex){
                     message = ex.getMessage();
@@ -305,8 +311,8 @@ public class CommonController {
         switch(tableName.trim()){
             case "kg_studentprofile":
                 StudentProfile studentProfile = JSONObject.parseObject(jsonParam,StudentProfile.class);
-                //判断学生信息是否存在
-                if(studentProfile.getKg_studentprofileid().trim().length() > 0){
+                message = ValidateStudent(studentProfile);
+                if(message.equals("")){
                     if(mStudentProfileService.GetStudentProfileById(studentProfile.getKg_studentprofileid()) != null){
                         flag = mStudentProfileService.UpdateStudentProfile(studentProfile);
                         if(flag){
@@ -317,8 +323,6 @@ public class CommonController {
                     }else{
                         message = "该学生不存在,无法进行更新操作";
                     }
-                }else{
-                    message = "该学生crmid不能为空,无法进行更新操作";
                 }
                 break;
             case "kg_teacherinformation":
@@ -453,6 +457,39 @@ public class CommonController {
         return map;
     }
 
+    public String ValidateStudent(StudentProfile studentProfile){
+        String message = "";
+        if(schools.trim().length() > 0){
+            String[] schoolNames = schools.split(",");
+            if(!Arrays.asList(schoolNames).contains(studentProfile.getKg_schoolname())){
+                message += "学校名称有误;";
+            }
+        }
+        // 对学生数据进行验证
+        if(studentProfile.getKg_studentprofileid() == null || studentProfile.getKg_studentprofileid().trim().length() <= 0){
+            message += "学生crmid有误;";
+        }
+        if(studentProfile.getKg_classname() == null|| studentProfile.getKg_classname().trim().length() <= 0){
+            message += "学生所在班级有误;";
+        }
+        if(studentProfile.getKg_schoolname() == null || studentProfile.getKg_schoolname().trim().length() <= 0){
+            message += "学生所在学校有误;";
+        }
+        if(studentProfile.getKg_name() == null || studentProfile.getKg_name().trim().length() <= 0) {
+            message += "学生档案编号有误;";
+        }
+        if(studentProfile.getKg_fullname() == null || studentProfile.getKg_fullname().trim().length() <= 0){
+            message += "学生姓名有误;";
+        }
+        if(studentProfile.getKg_sex() == null || studentProfile.getKg_sex().trim().length() <= 0){
+            message += "学生性别有误;";
+        }
+        if(studentProfile.getKg_jointime() == null || studentProfile.getKg_jointime().trim().length() <= 0) {
+            message += "学生入学时间有误;";
+        }
+        return message;
+    }
+
     //--------------------blockchain api----------------------------------
 
     /*
@@ -505,7 +542,7 @@ public class CommonController {
             List<CertInfo> certInfoList=new ArrayList<>();
             while(it.hasNext())
             {
-                String str =  it.next().getAsJsonObject().get("valueJson").getAsString();
+                String str = it.next().getAsJsonObject().get("valueJson").getAsString();
                 gson.fromJson(str, CertInfo.class);
                 CertInfo obj= gson.fromJson(str, CertInfo.class);
                 certInfoList.add(obj);

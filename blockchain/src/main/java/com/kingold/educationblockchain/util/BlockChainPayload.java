@@ -66,6 +66,8 @@ public class BlockChainPayload {
                     }
                     return jsonObject.get("returnCode");
                 }
+
+                return jsonObject;
             }
         } catch (IOException e) {
             e.printStackTrace(printWriter);

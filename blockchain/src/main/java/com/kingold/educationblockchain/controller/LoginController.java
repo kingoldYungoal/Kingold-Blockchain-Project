@@ -117,9 +117,11 @@ public class LoginController {
         }else{
             TeacherInformation teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(phonenumber);
             if (teacherInformation != null) {
-                List<StudentTeacher> studentTeachers = mStudentTeacherService.FindStudentTeacherByTeacherId(teacherInformation.getKg_teacherinformationid());
-                if (studentTeachers != null && studentTeachers.size() > 0) {
-                    if(studentTeachers.size() > 1){
+                //此处改为从证书列表获取
+                List<StudentInfo> studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), "", 0);
+
+                if (studentInfoList != null && studentInfoList.size() > 0) {
+                    if(studentInfoList.size() > 1){
                         // 获取所有的year
                         model.addObject("yearList",GetAllYears());
 
@@ -139,7 +141,6 @@ public class LoginController {
 
                         //判断设备，如果是移动端，则需要直接获取所有的学生信息
                         if(isFromMobile) {
-                            List<StudentInfo> studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), "",0);
                             model.addObject("studentList", studentInfoList);
                             model.setViewName("mobileStudentlist");
                         }else{
@@ -147,11 +148,11 @@ public class LoginController {
                         }
                         return model;
                     }else{
-                        StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentTeachers.get(0).getKg_studentprofileid());
+                        StudentProfile studentprofile = mStudentProfileService.GetStudentProfileById(studentInfoList.get(0).getKg_studentprofileid());
                         model.addObject("studentprofile",studentprofile);
                         CommonController commonController =new CommonController();
                         List<DisplayInfo> displayInfos = new ArrayList<>();
-                        List<CertInfo> certJson =  commonController.QueryCertByCRMId(studentprofile.getKg_studentprofileid(),channel);
+                        List<CertInfo> certJson = commonController.QueryCertByCRMId(studentprofile.getKg_studentprofileid(),channel);
                         for (CertInfo cert:certJson){
                             if(cert.getCertType().equals("毕业证书") || cert.getCertType().equals("录取通知书") || cert.getCertType().equals("课程证书")){
                                 DisplayInfo x=new DisplayInfo();

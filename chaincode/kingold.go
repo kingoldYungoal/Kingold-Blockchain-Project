@@ -43,6 +43,10 @@ type cert struct {
 	CertOperationTime string `json:"cert_operation_time"`
 	CertStatus	      string `json:"cert_status"`  	
 	Remark            string `json:"remark"` 
+	StuSchool		  string `json:"stu_school"`
+	StuClass		  string `json:"stu_class"`
+	StuTeacher		  string `json:"stu_teacher"`
+	StuStudyGrade	  string `json:"stu_studygrade"`
 }
 type event struct {
 	ObjectType       string `json:"docType"` //docType is used to distinguish the various types of objects in state database
@@ -187,7 +191,7 @@ func (t *AutoTraceChaincode) initStudent(stub shim.ChaincodeStubInterface, args 
 func (t *AutoTraceChaincode) insertCertinfo(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	var err error
 
-	if len(args) != 14 {
+	if len(args) != 18 {
 		return shim.Error("Incorrect number of arguments. Expecting 14")
 	}
 
@@ -226,6 +230,10 @@ func (t *AutoTraceChaincode) insertCertinfo(stub shim.ChaincodeStubInterface, ar
 	certOperationTime := args[11]
 	certStatus := args[12]
 	remark := args[13]
+	stuSchool := args[14]
+	stuClass := args[15]
+	stuTeacher := args[16]
+	stuStudyGrade := args[17]
 
 	// ==== Check if Cert already exists ====
 	certAsBytes, err := stub.GetState(certId)
@@ -237,7 +245,7 @@ func (t *AutoTraceChaincode) insertCertinfo(stub shim.ChaincodeStubInterface, ar
 
 	// ==== Create cert object and marshal to JSON ====
 	objectType := "cert"
-	cert := &cert{objectType,certId,stuId,certNo,certType,certHolder,certName,certContent,certPdfPath,certHash,certIssuer,certIssueDate,certOperationTime,certStatus,remark}
+	cert := &cert{objectType,certId,stuId,certNo,certType,certHolder,certName,certContent,certPdfPath,certHash,certIssuer,certIssueDate,certOperationTime,certStatus,remark,stuSchool,stuClass,stuTeacher,stuStudyGrade}
 	certJSONasBytes, err := json.Marshal(cert)
 	if err != nil {
 		return shim.Error(err.Error())
