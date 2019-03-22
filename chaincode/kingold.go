@@ -153,11 +153,11 @@ func (t *AutoTraceChaincode) initStudent(stub shim.ChaincodeStubInterface, args 
 	stuIdCardNo := args[3]
 	stuName := args[4]
 	stuOperationTime := args[5]
-
-	if err != nil {
-		return shim.Error("6th argument must be a numeric string")
-	}
 	remark := args[6]
+
+	//if err != nil {
+	//	return shim.Error("6th argument must be a numeric string")
+	//}
 
 	// ==== Check if student already exists ====
 	studentAsBytes, err := stub.GetState(studentId)
@@ -192,7 +192,7 @@ func (t *AutoTraceChaincode) insertCertinfo(stub shim.ChaincodeStubInterface, ar
 	var err error
 
 	if len(args) != 18 {
-		return shim.Error("Incorrect number of arguments. Expecting 14")
+		return shim.Error("Incorrect number of arguments. Expecting 18")
 	}
 
 	// ==== Input sanitation ====

@@ -49,6 +49,7 @@ public class CommonController {
     private PrintWriter printWriter = new PrintWriter(stringWriter);
     private LoggerException loggerException = new LoggerException();
     private RecordErrorLog recordErrorLog = new RecordErrorLog();
+    private MD5Encryp md5Encryp = new MD5Encryp();
     private Gson gson;
 
     @RequestMapping(value = "/Insert", method = RequestMethod.POST)
@@ -110,32 +111,28 @@ public class CommonController {
                     // 判断学生 是否已存在
                     StudentProfile student = mStudentProfileService.GetStudentProfileById(studentProfile.getKg_studentprofileid());
                     if(student == null){
-                        //将学生信息添加到数据库
                         try{
-                            boolean tableflag = mStudentProfileService.AddStudentProfile(studentProfile);
-                            if(tableflag){
-                                //将学生信息上链
-                                StudentJson studentJson = new StudentJson();
-                                //敏感信息加密
-                                studentJson.setStudentId(studentProfile.getKg_studentprofileid());
-                                studentJson.setCrmId(studentProfile.getKg_studentprofileid());
-                                studentJson.setStudentEducationNo(Base64.encryptBASE64(studentProfile.getKg_educationnumber().getBytes()).replace("\r\n",""));
-                                studentJson.setStudentIdCardNo(Base64.encryptBASE64(studentProfile.getKg_passportnumberoridnumber().getBytes()).replace("\r\n",""));
-                                studentJson.setStudentNameString(studentProfile.getKg_fullname());
-                                dateHandler = new DateHandler();
-                                studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
-                                //studentJson.setRemark();
-                                try{
-                                    InitStudent(studentJson, channel);
-                                }catch (Exception ex){
-                                    ex.printStackTrace(printWriter);
-                                    ex.getMessage();
-                                    loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-                                    mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
+                            //将学生信息上链
+                            StudentJson studentJson = new StudentJson();
+                            studentJson.setStudentId(studentProfile.getKg_studentprofileid());
+                            studentJson.setCrmId(studentProfile.getKg_studentprofileid());
+                            studentJson.setStudentEducationNo(md5Encryp.GetMD5(studentProfile.getKg_educationnumber()));
+                            studentJson.setStudentIdCardNo(md5Encryp.GetMD5(studentProfile.getKg_passportnumberoridnumber()));
+                            studentJson.setStudentNameString(studentProfile.getKg_fullname());
+                            dateHandler = new DateHandler();
+                            studentJson.setStudentOperationTime(dateHandler.GetCurrentTime());
+                            //studentJson.setRemark("");
+                            String chainResult = InitStudent(studentJson, channel);
+                            if(chainResult.contains("Success")){
+                                boolean tableflag = mStudentProfileService.AddStudentProfile(studentProfile);
+                                if(tableflag){
+                                    flag = true;
+                                    message = "学生信息添加成功";
+                                }else{
+                                    message = "学生信息添加失败";
                                 }
-
-                                flag = true;
-                                message = "学生信息添加成功";
+                            }else{
+                                message = "学生信息上链失败";
                             }
                         }catch (HttpClientErrorException e1) {
                             //删除表中新增的数据
@@ -497,7 +494,7 @@ public class CommonController {
      */
     public String InitStudent(StudentJson studentJson,String channelName) {
         try {
-            return payload.GetPayload("initStudent", getInsertStudentJson(studentJson),channelName).toString();
+            return payload.GetPayload("initStudent", getInsertStudentJson(studentJson), channelName).toString();
         }catch (HttpClientErrorException e1) {
             e1.printStackTrace(printWriter);
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), getInsertStudentJson(studentJson), e1, stringWriter.toString());

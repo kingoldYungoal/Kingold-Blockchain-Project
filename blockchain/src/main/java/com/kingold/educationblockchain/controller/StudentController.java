@@ -45,9 +45,9 @@ public class StudentController {
             map.addAttribute("studentInfo", studentProfile);
             model.addObject("studentprofile",studentProfile);
 
-            CommonController commonController =new CommonController();
+            CommonController commonController = new CommonController();
             List<DisplayInfo> displayInfos = new ArrayList<>();
-            List<CertInfo> certJson =  commonController.QueryCertByCRMId(id,channel);
+            List<CertInfo> certJson = commonController.QueryCertByCRMId(id,channel);
             if(certJson != null){
                 for (CertInfo cert:certJson){
                     if(cert.getCertType().equals("毕业证书") || cert.getCertType().equals("录取通知书") || cert.getCertType().equals("课程证书")){
