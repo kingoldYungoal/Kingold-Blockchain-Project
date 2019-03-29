@@ -107,7 +107,6 @@ public class ElectronicscertificateController {
     public RetResult IssueCertificate (
             @RequestBody String jsonParam, HttpServletRequest request){
         String certid = "";
-        String absolutePath = "";
         try{
             Electronicscertificate cert = JSONObject.parseObject(jsonParam,Electronicscertificate.class);
             Electronicscertificate existCert = mElectronicscertificateService.GetCertificateByStudentIdAndCertno(cert.getKg_certificateno(),cert.getKg_studentprofileid());
@@ -147,11 +146,15 @@ public class ElectronicscertificateController {
                         case "侨鑫汇悦天启幼儿园":
                             schoolMasterResource = new ClassPathResource("static/天启幼儿园园长.png");
                             break;
+                        case "KIDS KING":
+                            schoolMasterResource = new ClassPathResource("static/天启幼儿园园长.png");
+                            break;
                         case "侨鑫汇景新城幼儿园":
                             schoolMasterResource = new ClassPathResource("static/汇景幼儿园园长.png");
                             break;
                         default:
-                            schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
+                            return makeErrRsp("园长签名不存在");
+                            //schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
                     }
 
                     InputStream schoolMasterInputStream = schoolMasterResource.getInputStream();
@@ -242,9 +245,11 @@ public class ElectronicscertificateController {
                             e.printStackTrace(printWriter);
                             e.getMessage();
                             loggerException.PrintExceptionLog("InsertCertinfo",this.getClass().getName(), jsonParam, e, stringWriter.toString());
-                            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e, jsonParam, absolutePath, "", stringWriter.toString()));
+                            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e, jsonParam, "", "", stringWriter.toString()));
                         }
                     }
+                }else{
+                    return makeErrRsp("该学生不存在");
                 }
             }
             return makeOKRsp();
@@ -254,13 +259,13 @@ public class ElectronicscertificateController {
             e1.printStackTrace(printWriter);
             e1.getMessage();
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, e1, stringWriter.toString());
-            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e1, jsonParam, absolutePath, "", stringWriter.toString()));
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(e1, jsonParam, "", "", stringWriter.toString()));
             return makeErrRsp("证书上链失败");
         }catch (Exception ex){
             ex.printStackTrace(printWriter);
             ex.getMessage();
             loggerException.PrintExceptionLog(Thread.currentThread().getStackTrace()[1].getMethodName(),this.getClass().getName(), jsonParam, ex, stringWriter.toString());
-            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, absolutePath, "", stringWriter.toString()));
+            mErrorLogService.AddErrorLog(recordErrorLog.RecordError(ex, jsonParam, "", "", stringWriter.toString()));
             return makeErrRsp(ex.getMessage());
         }
     }

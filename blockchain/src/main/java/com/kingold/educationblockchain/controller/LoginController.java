@@ -125,6 +125,14 @@ public class LoginController {
                         // 获取所有的year
                         model.addObject("yearList",GetAllYears());
 
+                        // 获取所有的证书类型
+                        List<String> certTypeList = new ArrayList<>();
+                        certTypeList.add("录取通知书");
+                        certTypeList.add("课程证书");
+                        certTypeList.add("毕业证书");
+
+                        model.addObject("certTypeList", certTypeList);
+
                         // 根据教师id获取证书表中的所有的classname
                         List<Electronicscertificate> electronicscertificateList = GetAllCertificates(teacherInformation.getKg_teacherinformationid());
                         List<String> classes = new ArrayList<>();
