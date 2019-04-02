@@ -49,16 +49,17 @@
             </div>
 
             <div class="pk-form-year">
-                <select name="option" id="option" class="option pickout" placeholder="年份筛选" onchange="initTable()">
-                    <option value="0" selected="selected">--年份筛选--</option>
-                    <option th:each="year:${yearList}" th:value="${year}" th:text="${year}"></option>
+                <select name="option" id="option" class="option pickout" placeholder="学校筛选" onchange="selectSchool()">
+                    <option th:each="schoolInfo:${schoolInfoList}"
+							th:value="${schoolInfo.kg_schoolid}"
+							th:text="${schoolInfo.kg_name}"></option>
                 </select>
             </div>
 
             <div class="pk-form-class">
                 <select name="option1" id="option1" class="option pickout" placeholder="班级筛选" onchange="initTable()">
-                    <option value="" selected="selected">--班级筛选--</option>
-                    <option th:each="className:${classList}" th:value="${className}" th:text="${className}"></option>
+                   <option th:each="classInfo:${classList}"
+							th:value="${classInfo.kg_classid}" th:text="${classInfo.kg_name}"></option>
                 </select>
             </div>
 
