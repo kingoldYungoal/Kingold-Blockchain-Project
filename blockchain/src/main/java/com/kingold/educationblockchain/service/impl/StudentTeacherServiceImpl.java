@@ -87,4 +87,43 @@ public class StudentTeacherServiceImpl implements StudentTeacherService {
         }
         return flag;
     }
+
+	@Override
+	public boolean UpdateStudentTeacher(StudentTeacher studentTeacher) {
+		boolean flag = false;
+        try{
+            mStudentTeacherMapper.UpdateStudentTeacher(studentTeacher);
+            flag = true;
+        }catch(Exception e){
+            System.out.println("學生教師關係新增失败!");
+            e.printStackTrace();
+        }
+        return flag;
+	}
+
+	@Override
+	public boolean deleteByStudentId(String studentId) {
+		boolean flag = false;
+        try{
+            mStudentTeacherMapper.deleteByStudentId(studentId);
+            flag = true;
+        }catch(Exception e){
+            System.out.println("學生教師關係信息失败!");
+            e.printStackTrace();
+        }
+        return flag;
+	}
+
+	@Override
+	public boolean deleteByTeacherId(String teacherId) {
+		boolean flag = false;
+        try{
+            mStudentTeacherMapper.deleteByTeacherId(teacherId);
+            flag = true;
+        }catch(Exception e){
+            System.out.println("學生教師關係信息失败!");
+            e.printStackTrace();
+        }
+        return flag;
+	}
 }

@@ -1,18 +1,28 @@
 package com.kingold.educationblockchain.service.impl;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageHelper;
-import com.kingold.educationblockchain.bean.*;
-import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
+import com.kingold.educationblockchain.bean.Electronicscertificate;
+import com.kingold.educationblockchain.bean.PageBean;
+import com.kingold.educationblockchain.bean.ParentInformation;
+import com.kingold.educationblockchain.bean.StudentInfo;
+import com.kingold.educationblockchain.bean.StudentParent;
+import com.kingold.educationblockchain.bean.StudentProfile;
 import com.kingold.educationblockchain.dao.StudentProfileMapper;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
 import com.kingold.educationblockchain.service.ParentInformationService;
 import com.kingold.educationblockchain.service.StudentParentService;
 import com.kingold.educationblockchain.service.StudentProfileService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.*;
 
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService {
@@ -47,22 +57,6 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         return mStudentProfileMapper.GetStudentProfileByNumber(eduNumber,stuNumber);
     }
 
-    /**
-     * 根据教師信息id查询
-     */
-    @Override
-    public PageBean<StudentInfo> GetStudentsByTeacherId(String teacherId, int currentPage, int pageSize){
-        //设置分页信息，分别是当前页数和每页显示的总记录数
-        List<StudentProfile> allItems = mStudentProfileMapper.GetStudentsByTeacherId(teacherId);
-        PageHelper.startPage(currentPage, pageSize);
-        List<StudentProfile> pageItems = mStudentProfileMapper.GetStudentsByTeacherId(teacherId);
-        //studentinfo封装
-        List<StudentInfo> infoList = GetStudentInfoList(pageItems);
-        int countNums = allItems.size();            //总记录数
-        PageBean<StudentInfo> pageData = new PageBean<>(currentPage, pageSize, countNums);
-        pageData.setItems(infoList);
-        return pageData;
-    }
 
     /**
      * 根据教師信息id，学生班级查询
@@ -193,16 +187,16 @@ public class StudentProfileServiceImpl implements StudentProfileService {
                 if(parents != null && parents.size() > 0){
                     ParentInformation parentInformation = mParentInfomationService.FindParentInformationById(parents.get(0).getKg_parentinformationid());
                     if(parentInformation != null){
-                        info.setKg_parentName(parentInformation.getKg_name());
-                        info.setKg_parentPhoneNumber(parentInformation.getKg_phonenumber());
+                        info.setKg_parentname(parentInformation.getKg_name());
+                        info.setKg_parentphonenumber(parentInformation.getKg_phonenumber());
                     }else{
-                        info.setKg_parentName("");
-                        info.setKg_parentPhoneNumber("");
+                        info.setKg_parentname("");
+                        info.setKg_parentphonenumber("");
                     }
                 }
                 else{
-                    info.setKg_parentName("");
-                    info.setKg_parentPhoneNumber("");
+                    info.setKg_parentname("");
+                    info.setKg_parentphonenumber("");
                 }
                 infoList.add(info);
             }
@@ -222,4 +216,23 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         set.addAll(certs);
         return new ArrayList<Electronicscertificate>(set);
     }
+
+    @Override
+    public PageBean<StudentInfo> queryStudentsByClassId(String classId, int currentPage,int pageSize){
+        // 设置分页信息，分别是当前页数和每页显示的总记录数
+        PageHelper.startPage(currentPage, pageSize);
+        List<StudentInfo> pageItems = mStudentProfileMapper.queryStudentsByClassId(classId);
+
+        int countNums = pageItems.size();            //总记录数
+        PageBean<StudentInfo> pageData = new PageBean<>(currentPage, pageSize, countNums);
+        pageData.setItems(pageItems);
+        return pageData;
+    }
+
+	@Override
+	public List<StudentInfo> queryStudentsByClassIdNoPage(String classId) {
+		// TODO Auto-generated method stub
+		return mStudentProfileMapper.queryStudentsByClassId(classId);
+	}
+
 }

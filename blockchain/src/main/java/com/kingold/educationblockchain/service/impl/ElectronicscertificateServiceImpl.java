@@ -1,5 +1,6 @@
 package com.kingold.educationblockchain.service.impl;
 
+import com.kingold.educationblockchain.bean.CertificationType;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
 import com.kingold.educationblockchain.dao.ElectronicscertificateMapper;
@@ -101,5 +102,17 @@ public class ElectronicscertificateServiceImpl implements Electronicscertificate
         }
         return flag;
     }
+
+	@Override
+	public List<CertificationType> getCertificationTypeByClassId(String classId) {
+		// TODO Auto-generated method stub
+		return mElectronicscertificateMapper.getCertificationTypeByClassId(classId);
+	}
+
+	@Override
+	public List<String> GetCertificateIdsByCertiTypeAndClassId(String certiType, String classId) {
+		// TODO Auto-generated method stub
+		return mElectronicscertificateMapper.GetCertificateByCertiTypeAndClassId(certiType, classId);
+	}
 }
 
