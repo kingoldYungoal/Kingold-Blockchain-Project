@@ -1,5 +1,6 @@
 package com.kingold.educationblockchain.service;
 
+import com.kingold.educationblockchain.bean.CertificationType;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
 import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
 
@@ -41,4 +42,8 @@ public interface ElectronicscertificateService {
      * 刪除电子证书数据
      */
     boolean DeleteCertificate(String id);
+    
+    List<CertificationType> getCertificationTypeByClassId(String classId);
+    
+    List<String> GetCertificateIdsByCertiTypeAndClassId(String certiType, String classId);
 }

@@ -32,7 +32,16 @@ public interface StudentTeacherService {
     boolean AddStudentTeacher(StudentTeacher studentTeacher);
 
     /**
+     * 學生教師關係更新
+     */
+    boolean UpdateStudentTeacher(StudentTeacher studentTeacher);
+    
+    /**
      * 狀態更新
      */
     boolean DeleteStudentTeacher(String teacherId, String studentId);
+    
+    boolean deleteByStudentId(String studentId);
+    
+    boolean deleteByTeacherId(String teacherId);
 }

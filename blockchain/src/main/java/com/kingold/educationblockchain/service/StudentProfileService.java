@@ -1,13 +1,10 @@
 package com.kingold.educationblockchain.service;
 
+import java.util.List;
+
 import com.kingold.educationblockchain.bean.PageBean;
 import com.kingold.educationblockchain.bean.StudentInfo;
 import com.kingold.educationblockchain.bean.StudentProfile;
-import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
-import com.kingold.educationblockchain.util.SqlProvider;
-import org.apache.ibatis.annotations.SelectProvider;
-
-import java.util.List;
 
 public interface StudentProfileService {
 
@@ -20,11 +17,6 @@ public interface StudentProfileService {
      * 根據学籍号或者学号查詢學生信息
      */
     List<StudentProfile> GetStudentProfileByNumber(String eduNumber, String stuNumber);
-
-    /**
-     * 根据教師信息id查询
-     */
-    PageBean<StudentInfo> GetStudentsByTeacherId(String teacherId, int currentPage, int pageSize);
 
     /**
      * 根据教師信息id，学生班级查询
@@ -61,4 +53,8 @@ public interface StudentProfileService {
      * 學生信息从表中刪除
      */
     boolean RelDeleteStudentProfile(String id);
+    
+    PageBean<StudentInfo> queryStudentsByClassId(String classId, int currentPage,int pageSize);
+    
+    List<StudentInfo> queryStudentsByClassIdNoPage(String classId);
 }

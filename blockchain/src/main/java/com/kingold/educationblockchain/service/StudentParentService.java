@@ -25,9 +25,15 @@ public interface StudentParentService {
      * 學生家長關係新增
      */
     boolean AddStudentParent(StudentParent studentParent);
+    
+    boolean UpdateStudentParent(StudentParent studentParent);
 
     /**
      * 學生家長關係刪除
      */
     boolean DeleteStudentParent(String parentId, String studentId);
+    
+    boolean deleteByStudentId(String studentId);
+    
+    boolean deleteByParentId(String parentId);
 }
