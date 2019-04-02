@@ -2,6 +2,8 @@ var pageNum = 1;
 var pageSize = 10;
 var classname;
 var year;
+var certType;
+var schoolName;
 var teacherid;
 var phone;
 var M = {};
@@ -36,13 +38,14 @@ $(document).ready(function(){
 function initTable() {
     classname = $("#classSelect").val();
     year = $("#yearSelect").val();
+    certType = $("#certTypeSelect").val();
     var tbody="";
     $.ajax({
         type: 'get',
         dataType : "json",
         async: false,
         url: "../student/studentlist",
-        data:{"teacherphone":phone, "classname":classname, "year": year, "pageNum":pageNum,"pageSize":pageSize},
+        data:{"teacherphone":phone, "classname":classname, "year": year, "certType": certType, "pageNum":pageNum,"pageSize":pageSize},
         error: function () {//请求失败处理函数
             M.dialog13 = jqueryAlert({
                 'icon': '../images/alertimgs/warning.png',
@@ -92,7 +95,7 @@ function initTable() {
                             url: "../student/studentlist",
                             type: "get",
                             dataType : "json",
-                            data:{"teacherphone":phone,"classname":classname,"year": year, "pageNum":page,"pageSize":pageSize},
+                            data:{"teacherphone":phone,"classname":classname,"year": year, "certType": certType, "pageNum":page,"pageSize":pageSize},
                             success: function (data) {
                                 if (data.items.length > 0){
                                     for (var i = 0;i <data.items.length;i++){
@@ -118,11 +121,13 @@ function BatchPrintPDF(){
     classname = $("#classSelect").val();
     year = $("#yearSelect").val();
     teacherid = $("#teacherid").val();
+    certType = $("#certTypeSelect").val();
     //判断是否有选择年份和班级
     if(classname != "" && year != 0){
         var datas = {
             'className' : classname,
             'year': year,
+            'certType': certType,
             'teacherId': teacherid
         };
         $("#certIframe").html("");

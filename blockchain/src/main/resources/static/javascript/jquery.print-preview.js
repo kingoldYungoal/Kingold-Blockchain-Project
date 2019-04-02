@@ -11,6 +11,7 @@
                 $('#print-modal').html('');
                 var classname = $("#classSelect").val();
                 var year = $("#yearSelect").val();
+                var certType = $("#certTypeSelect").val();
                 if (classname != "" && year != 0){
                     if(window.ActiveXObject || "ActiveXObject" in window) {
                     }else{
@@ -27,7 +28,6 @@
                     })
                     M.dialog13.show();
                 }
-
             });
         });
         return this;
@@ -173,6 +173,7 @@
             var datas = {
                 'className' : classname,
                 'year': year,
+                'certType': certType,
                 'teacherId': teacherid
             };
             $.ajax({

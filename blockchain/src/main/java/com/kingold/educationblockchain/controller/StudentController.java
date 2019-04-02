@@ -102,14 +102,14 @@ public class StudentController {
 
     @RequestMapping(value = "/studentlist", method = RequestMethod.GET)
     @ResponseBody
-    public String GetStudentList(@RequestParam(value = "teacherphone", required = true)String teacherphone,@RequestParam(value = "classname", required = true)String classname,@RequestParam(value = "year", required = true)int year,@RequestParam(value = "pageNum", required = true)int pageNum,@RequestParam(value = "pageSize", required = true)int pageSize) {
+    public String GetStudentList(@RequestParam(value = "teacherphone", required = true)String teacherphone,@RequestParam(value = "classname", required = true)String classname,@RequestParam(value = "year", required = true)int year,@RequestParam(value = "certType", required = true)String certType, @RequestParam(value = "pageNum", required = true)int pageNum,@RequestParam(value = "pageSize", required = true)int pageSize) {
         gson = new Gson();
         TeacherInformation teacherInformation;
         PageBean<StudentInfo> studentInfoPage = new PageBean<StudentInfo>();
         if(teacherphone.trim().length() > 0){
             teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(teacherphone);
             if(teacherInformation != null){
-                studentInfoPage = mStudentProfileService.GetStudentsByParam(teacherInformation.getKg_teacherinformationid(),classname,year,pageNum,pageSize);
+                studentInfoPage = mStudentProfileService.GetStudentsByParam(teacherInformation.getKg_teacherinformationid(),classname,year,certType,pageNum,pageSize);
             }
         }
         return gson.toJson(studentInfoPage);
@@ -137,13 +137,14 @@ public class StudentController {
         gson = new Gson();
         String className = params.getString("className");
         int year = params.getInteger("year");
+        String certType = params.getString("certType");
         String teacherphone = params.getString("teacherphone");
         TeacherInformation teacherInformation;
         List<StudentInfo> studentInfoList = new ArrayList<>();
         if(teacherphone.trim().length() > 0){
             teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(teacherphone);
             if(teacherInformation != null){
-                studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), className, year);
+                studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), className, year, certType);
             }
         }
         return gson.toJson(studentInfoList);

@@ -34,13 +34,13 @@ public interface StudentProfileService {
     /**
      * 根据教師信息id，从证书表取出学生id，获取学生信息
      */
-    PageBean<StudentInfo> GetStudentsByParam(String teacherId, String classname, int year, int currentPage, int pageSize);
+    PageBean<StudentInfo> GetStudentsByParam(String teacherId, String classname, int year, String certType, int currentPage, int pageSize);
 
     /**
      * 根据教師信息id，班级，年份，从证书表取出学生id，获取学生信息，不分页
      * @return 学生信息列表
      */
-    List<StudentInfo> GetStudentsByParamNoPage(String teacherId, String classname, int year);
+    List<StudentInfo> GetStudentsByParamNoPage(String teacherId, String classname, int year, String certType);
 
     /**
      * 學生信息新增

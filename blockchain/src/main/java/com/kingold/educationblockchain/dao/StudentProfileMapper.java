@@ -104,9 +104,12 @@ public interface StudentProfileMapper {
             + "<if test='year>0'>"
             + " and to_number(to_char(kg_certificatedate,'yyyy'))=#{year}"
             + "</if>"
+            + "<if test='certType!=\"\" and certType != null'>"
+            + " and KG_CERTITYPE=#{certType}"
+            + "</if>"
             + " and kg_state=0) and kg_state=0"
             + "</script>")
-    List<StudentProfile> GetStudentsByParam(String teacherId, String className, int year);
+    List<StudentProfile> GetStudentsByParam(String teacherId, String className, int year, String certType);
 
     /**
      * 新增學生信息

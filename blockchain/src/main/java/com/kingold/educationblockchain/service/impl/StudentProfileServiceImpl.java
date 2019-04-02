@@ -84,12 +84,12 @@ public class StudentProfileServiceImpl implements StudentProfileService {
      * 根据教師信息id，从证书表取出学生id，获取学生信息
      */
     @Override
-    public PageBean<StudentInfo> GetStudentsByParam(String teacherId, String classname,int year, int currentPage, int pageSize){
-        List<StudentProfile> stus = mStudentProfileMapper.GetStudentsByParam(teacherId,classname,year);
+    public PageBean<StudentInfo> GetStudentsByParam(String teacherId, String classname,int year, String certType, int currentPage, int pageSize){
+        List<StudentProfile> stus = mStudentProfileMapper.GetStudentsByParam(teacherId,classname,year, certType);
 
         // 设置分页信息，分别是当前页数和每页显示的总记录数
         PageHelper.startPage(currentPage, pageSize);
-        List<StudentProfile> pageItems = mStudentProfileMapper.GetStudentsByParam(teacherId,classname,year);
+        List<StudentProfile> pageItems = mStudentProfileMapper.GetStudentsByParam(teacherId,classname,year,certType);
 
         // studentinfo封装
         List<StudentInfo> infoList = GetStudentInfoList(pageItems);
@@ -104,8 +104,8 @@ public class StudentProfileServiceImpl implements StudentProfileService {
      * @return 学生信息列表
      */
     @Override
-    public List<StudentInfo> GetStudentsByParamNoPage(String teacherId, String classname, int year){
-        List<StudentProfile> stus = mStudentProfileMapper.GetStudentsByParam(teacherId,classname,year);
+    public List<StudentInfo> GetStudentsByParamNoPage(String teacherId, String classname, int year, String certType){
+        List<StudentProfile> stus = mStudentProfileMapper.GetStudentsByParam(teacherId, classname, year, certType);
         return GetStudentInfoList(stus);
     }
 

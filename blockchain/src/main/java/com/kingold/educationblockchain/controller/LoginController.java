@@ -118,7 +118,7 @@ public class LoginController {
             TeacherInformation teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(phonenumber);
             if (teacherInformation != null) {
                 //此处改为从证书列表获取
-                List<StudentInfo> studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), "", 0);
+                List<StudentInfo> studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), "", 0, "录取通知书");
 
                 if (studentInfoList != null && studentInfoList.size() > 0) {
                     if(studentInfoList.size() > 1){
@@ -130,7 +130,6 @@ public class LoginController {
                         certTypeList.add("录取通知书");
                         certTypeList.add("课程证书");
                         certTypeList.add("毕业证书");
-
                         model.addObject("certTypeList", certTypeList);
 
                         // 根据教师id获取证书表中的所有的classname
@@ -241,6 +240,13 @@ public class LoginController {
             List<StudentTeacher> studentTeachers = mStudentTeacherService.FindStudentTeacherByTeacherId(roleid);
             // 获取所有的year
             model.addObject("yearList",GetAllYears());
+
+            // 获取所有的证书类型
+            List<String> certTypeList = new ArrayList<>();
+            certTypeList.add("录取通知书");
+            certTypeList.add("课程证书");
+            certTypeList.add("毕业证书");
+            model.addObject("certTypeList", certTypeList);
 
             // 根据教师id获取证书表中的所有的classname
             List<Electronicscertificate> electronicscertificateList = GetAllCertificates(teacherInformation.getKg_teacherinformationid());

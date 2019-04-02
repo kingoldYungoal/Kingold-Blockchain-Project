@@ -67,6 +67,12 @@
                 </select>
             </div>
 
+            <div class="classdiv">
+                <select onchange="initTable()" id="certTypeSelect" name="select">
+                    <option th:each="certType:${certTypeList}" th:value="${certType}" th:text="${certType}"></option>
+                </select>
+            </div>
+
             <div id="printdiv">
             </div>
         </div>
