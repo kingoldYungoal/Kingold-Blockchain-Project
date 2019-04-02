@@ -52,6 +52,7 @@ public class BlockChainPayload {
                 JsonObject jsonObject = new JsonObject();
                 try{
                     String content = EntityUtils.toString(resp.getEntity(), "UTF-8");
+                    logger.info("Payload result: " + content);
                     jsonObject= (JsonObject) parse.parse(content);
                 }catch(UnsupportedEncodingException e){
                     e.printStackTrace(printWriter);
@@ -70,9 +71,11 @@ public class BlockChainPayload {
                 return jsonObject;
             }
         } catch (IOException e) {
+        	e.printStackTrace();
             e.printStackTrace(printWriter);
             PrintExceptionLog(functionName, argJson, channelName, requestStr, e);
         } catch (Exception ex){
+        	ex.printStackTrace();
             ex.printStackTrace(printWriter);
             PrintExceptionLog(functionName, argJson, channelName, requestStr, ex);
             ex.getMessage();
