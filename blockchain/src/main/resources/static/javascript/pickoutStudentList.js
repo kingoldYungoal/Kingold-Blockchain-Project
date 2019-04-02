@@ -81,6 +81,7 @@ var pickout = (function(){
 	function init(config){
 		setElement(config);
 		prepareElement();
+		initTable($("#option1").val());
 	}
 
 	/**
@@ -132,7 +133,7 @@ var pickout = (function(){
 
 		var parent = select.parentElement;
 		_.attr(parent, 'style', 'position:relative;float:left;');
-		var placeholder = _.attr(select, 'placeholder');
+		var placeholder = select.firstElementChild.label;
 
 		// Visual element simule field input
 		var field = _.create('div');
@@ -512,23 +513,72 @@ var pickout = (function(){
 		});
 		
 		feedField(select, data.txt);		
+		if(select.name == 'option'){
+			selectSchool(select.value);
+			pickout.updated("#option1");
+		}else{
+			initTable(select.value);
+		}
 		closeModal();
 	}
 
 	function feedField(select, value){
         //初始化数据
-        initTable();
+        //initTable();
 		select.parentElement.querySelector('.pk-field').innerHTML = value;
 	}
+	
+	function selectSchool(schoolId){
+		if (schoolId == null || schoolId ==''){
+			M.dialog13 = jqueryAlert({
+                'icon': '../images/alertimgs/warning.png',
+                'content': '请选择学校',
+                'closeTime': 2000,
+            })
+            M.dialog13.show();
+			return;
+		}
+		
+		$("#option1").empty();
+		 $.ajax({
+		        type: 'get',
+		        dataType : "json",
+		        async: false,
+		        url: "../student/classlist",
+		        data:{"schoolId":schoolId},
+		        error: function () {//请求失败处理函数
+		            M.dialog13 = jqueryAlert({
+		                'icon': '../images/alertimgs/warning.png',
+		                'content': '请求失败',
+		                'closeTime': 2000,
+		            })
+		            M.dialog13.show();
+		        },
+		        success:function(data){ //请求成功后处理函数。
+		            if (data.length > 0){
+		                for (var i = 0;i <data.length;i++){
+		                	var option = '<option value="' + data[i].kg_classid + '" >' + data[i].kg_name +'</option>';
+		                	$("#option1").append(option);
+		                }
+		                
+		                initTable($("#option1").val());
+		            }
+		        }
+		    });
+	}
 
-	function initTable() {
-        var classname = $("#option1").val();
-        var year = $("#option").val();
-        var phone = $("#phone").val();
+	function initTable(classId) {
+        if (classId == null || classId ==''){
+			M.dialog13 = jqueryAlert({
+                'icon': '../images/alertimgs/warning.png',
+                'content': '请选择班级',
+                'closeTime': 2000,
+            })
+            M.dialog13.show();
+			return;
+		}
         var datas = {
-            'className' : classname,
-            'year': year,
-            'teacherphone': phone
+            'classId' : classId
         };
         var listGroup = "";
         $.ajax({
@@ -548,7 +598,7 @@ var pickout = (function(){
                         lis += '<div class="childinfo"><ul><li><span class="childinfo-name">'+ data[i].kg_fullname +'</span>&nbsp;&nbsp;<span class="childinfo-gender">'+ data[i].kg_sex +'</span></li>';
                         lis += '<li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_classname +'</span></li>';
                         lis += '<li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_jointime +'</span></li>';
-                        lis += '<li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">'+ data[i].kg_parentName +'</span><span class="parent-name-tel"></span><span>'+ data[i].kg_parentPhoneNumber +'</span></li>';
+                        lis += '<li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">'+ data[i].kg_parentname +'&nbsp;</span><span class="parent-name-tel"></span><span>'+ data[i].kg_parentphonenumber +'</span></li>';
                         lis += '</ul></div>';
                         lis += '<div class="other-info"><div class="stunumber"><span>学籍号&nbsp;:&nbsp;</span><span>'+ data[i].kg_educationnumber +'</span></div></div>';
                         lis += '</li>';

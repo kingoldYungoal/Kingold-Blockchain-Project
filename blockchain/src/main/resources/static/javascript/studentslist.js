@@ -13,36 +13,116 @@ var userAgent = navigator.userAgent;
 
 $(document).ready(function(){
     phone = $("#phone").val();
-    var printA ="";
-    if (userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Edge") <= -1) {
-        printA += "<a class='print-preview' id='printbtn' onclick='BatchPrintPDF()'>证书批量打印</a>";
-    }else{
-        printA += "<a class='print-preview' id='printbtn'>证书批量打印</a>";
-    }
-    $("#printdiv").html(printA);
-    if (userAgent.indexOf("Chrome") <= -1 || userAgent.indexOf("Edge") > -1){
-        $('a.print-preview').printPreview();
-    }
     $('#loadingModal').modal({
         keyboard: false,
         backdrop: false
     });
+    $("#loadCertificationType").modal({
+        keyboard: false,
+        backdrop: false
+    });
+    
     $('#loadingModal').modal('hide');
+    $("#loadCertificationType").modal('hide');
     initTable();
 });
 
+function loadCertificationType(){
+	classId = $("#classSelect").val();
+	if(classId == null || classId == ''){
+		M.dialog13 = jqueryAlert({
+            'icon': '../images/alertimgs/warning.png',
+            'content': '请先选择班级',
+            'closeTime': 2000,
+        })
+        M.dialog13.show();
+		
+		return;
+	}
+	
+	$("#certiTypeContent").empty();
+	$.ajax({
+        type: 'get',
+        dataType : "json",
+        async: false,
+        url: "../electronicscertificate/certificationTypeList",
+        data:{"classId":classId},
+        error: function () {//请求失败处理函数
+            M.dialog13 = jqueryAlert({
+                'icon': '../images/alertimgs/warning.png',
+                'content': '请求失败',
+                'closeTime': 2000,
+            })
+            M.dialog13.show();
+        },
+        success:function(data){ //请求成功后处理函数。
+            if (data.length > 0){
+                for (var i = 0;i <data.length;i++){
+                	var func = "";
+                	if (userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Edge") <= -1){
+                		func += 'onclick="BatchPrintPDF(this)"';
+                	} else {
+                		func += 'onclick="BatchPrintPDFOther(this)"'
+                	}
+                	
+                	var item = '<div class="span4"><a href="javascript:void(0)" class="printPreview" role="button" ' + func + '><span class="certiType">' + data[i].certificationType 
+                	           + '</span><span class="badge badge-info">' + data[i].count + '</span></a></div>'
+                	$("#certiTypeContent").append(item);
+                }
+                $("#loadCertificationType").modal('show');
+                return;
+            }
+            
+            M.dialog13 = jqueryAlert({
+                'icon': '../images/alertimgs/warning.png',
+                'content': '暂无可打印的证书',
+                'closeTime': 2000,
+            });
+            M.dialog13.show();
+        }
+    });
+}
+
+function selectSchool(){
+	schoolId = $("#schoolSelect").val();
+	$("#classSelect").empty();
+	 $.ajax({
+	        type: 'get',
+	        dataType : "json",
+	        async: false,
+	        url: "../student/classlist",
+	        data:{"schoolId":schoolId},
+	        error: function () {//请求失败处理函数
+	            M.dialog13 = jqueryAlert({
+	                'icon': '../images/alertimgs/warning.png',
+	                'content': '请求失败',
+	                'closeTime': 2000,
+	            })
+	            M.dialog13.show();
+	        },
+	        success:function(data){ //请求成功后处理函数。
+	            if (data.length > 0){
+	                for (var i = 0;i <data.length;i++){
+	                	var option = '<option value="' + data[i].kg_classid + '" >' + data[i].kg_name +'</option>';
+	                	$("#classSelect").append(option);
+	                }
+	                
+	                initTable();
+	            }
+	        }
+	    });
+}
 
 //ajax获取后台数据
 function initTable() {
-    classname = $("#classSelect").val();
-    year = $("#yearSelect").val();
+    classId = $("#classSelect").val();
     var tbody="";
     $.ajax({
         type: 'get',
         dataType : "json",
         async: false,
         url: "../student/studentlist",
-        data:{"teacherphone":phone, "classname":classname, "year": year, "pageNum":pageNum,"pageSize":pageSize},
+        data:{"classId":classId,"pageNum":pageNum,"pageSize":pageSize},
         error: function () {//请求失败处理函数
             M.dialog13 = jqueryAlert({
                 'icon': '../images/alertimgs/warning.png',
@@ -55,7 +135,7 @@ function initTable() {
             if (data.items.length > 0){
                 for (var i = 0;i <data.items.length;i++){
                     var trs = "";
-                    trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td></td><td style='padding-left:20px;text-align: left;'>" + data.items[i].kg_fullname + "</td><td>"+data.items[i].kg_educationnumber + "</td><td>"+data.items[i].kg_jointime+"</td><td>"+data.items[i].kg_sex+"</td><td>"+data.items[i].kg_parentName+"</td><td style='padding-right:20px;text-align: right;'>"+data.items[i].kg_parentPhoneNumber+"</td><td></td></tr>";
+                    trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td></td><td style='padding-left:20px;text-align: left;'>" + data.items[i].kg_fullname + "</td><td>"+data.items[i].kg_educationnumber + "</td><td>"+data.items[i].kg_jointime+"</td><td>"+data.items[i].kg_sex+"</td><td>"+data.items[i].kg_parentname+"</td><td style='padding-right:20px;text-align: right;'>"+data.items[i].kg_parentphonenumber+"</td><td></td></tr>";
                     tbody+=trs;
                 }
             }
@@ -97,7 +177,7 @@ function initTable() {
                                 if (data.items.length > 0){
                                     for (var i = 0;i <data.items.length;i++){
                                         var trs = "";
-                                        trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td></td><td style='padding-left:20px;text-align: left;'>" + data.items[i].kg_fullname + "</td><td>"+data.items[i].kg_educationnumber + "</td><td>"+data.items[i].kg_jointime+"</td><td>"+data.items[i].kg_sex+"</td><td>"+data.items[i].kg_parentName+"</td><td style='padding-right:20px;text-align: right;'>"+data.items[i].kg_parentPhoneNumber+"</td><td></td></tr>";
+                                        trs += "<tr data-id='"+ data.items[i].kg_studentprofileid +"' onclick='GoStudentInfo(this)'><td></td><td style='padding-left:20px;text-align: left;'>" + data.items[i].kg_fullname + "</td><td>"+data.items[i].kg_educationnumber + "</td><td>"+data.items[i].kg_jointime+"</td><td>"+data.items[i].kg_sex+"</td><td>"+data.items[i].kg_parentname+"</td><td style='padding-right:20px;text-align: right;'>"+data.items[i].kg_parentphonenumber+"</td><td></td></tr>";
                                         tbodys+=trs;
                                     }
                                 }
@@ -114,16 +194,14 @@ function initTable() {
     });
 }
 
-function BatchPrintPDF(){
-    classname = $("#classSelect").val();
-    year = $("#yearSelect").val();
-    teacherid = $("#teacherid").val();
+function BatchPrintPDF(a){
+	certiType = $(a).find(".certiType").text().trim();
+	classId = $("#classSelect").val();
     //判断是否有选择年份和班级
-    if(classname != "" && year != 0){
+    if(certiType != "" && classId != 0){
         var datas = {
-            'className' : classname,
-            'year': year,
-            'teacherId': teacherid
+            'classId' : classId,
+            'certiType': certiType
         };
         $("#certIframe").html("");
         var iframes = "";
@@ -169,7 +247,7 @@ function BatchPrintPDF(){
     }else{
         M.dialog13 = jqueryAlert({
             'icon': '../images/alertimgs/warning.png',
-            'content': '请先选择具体的年份和班级',
+            'content': '请先选择具体的班级和证书类型',
             'closeTime': 2000,
         })
         M.dialog13.show();
@@ -195,4 +273,15 @@ function autoTsq(){
     setTimeout(function(){$(".mvSq").eq(0).css("color","#29B6FF")},0);
     setTimeout(function(){$(".mvSq").eq(1).css("color","#29B6FF")},500);
     setTimeout(function(){$(".mvSq").eq(2).css("color","#29B6FF")},1000);
+}
+
+function BatchPrintPDFOther(a){
+	certiType = $(a).find(".certiType").text().trim();
+	classId = $("#classSelect").val();
+	if(certiType != "" && classId != 0){
+		$('#print-modal').html('');
+		$.printPreview.GetIframeHtml();
+		$.printPreview.loadPrintPreview();
+	}
+	
 }

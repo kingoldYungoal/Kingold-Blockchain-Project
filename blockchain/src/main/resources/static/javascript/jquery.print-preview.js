@@ -4,34 +4,6 @@
 
 (function($) {
     var iframeHtml = "";
-    $.fn.printPreview = function() {
-        this.each(function() {
-            $(this).bind('click', function(e) {
-                e.preventDefault();
-                $('#print-modal').html('');
-                var classname = $("#classSelect").val();
-                var year = $("#yearSelect").val();
-                if (classname != "" && year != 0){
-                    if(window.ActiveXObject || "ActiveXObject" in window) {
-                    }else{
-                        // 判断是否有查询到的值
-                        $.printPreview.GetIframeHtml();
-                    }
-
-                    $.printPreview.loadPrintPreview();
-                } else{
-                    M.dialog13 = jqueryAlert({
-                        'icon': '../images/alertimgs/warning.png',
-                        'content': '请先选择具体的年份和班级',
-                        'closeTime': 2000,
-                    })
-                    M.dialog13.show();
-                }
-
-            });
-        });
-        return this;
-    };
 
     // Private functions
     var mask, size, print_modal, print_controls;
@@ -169,11 +141,9 @@
         },
 
         GetIframeHtml: function (){
-            var teacherid = $("#teacherid").val();
             var datas = {
-                'className' : classname,
-                'year': year,
-                'teacherId': teacherid
+                    'classId' : classId,
+                    'certiType': certiType
             };
             $.ajax({
                 type:"post",
