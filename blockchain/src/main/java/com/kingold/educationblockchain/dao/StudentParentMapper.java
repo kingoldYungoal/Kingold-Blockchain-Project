@@ -45,10 +45,27 @@ public interface StudentParentMapper {
      */
     @Insert("insert into kg_student_parent(kg_studentprofileid,kg_parentinformationid,kg_state) values (#{kg_studentprofileid},#{kg_parentinformationid},0)")
     void AddStudentParent(StudentParent studentParent);
+    
+    /**
+     * 學生家長關係更新
+     */
+    @Update("update kg_student_parent set kg_state=#{kg_state} where kg_parentinformationid=#{kg_parentinformationid} and kg_studentprofileid=#{kg_studentprofileid})")
+    void UpdateStudentParent(StudentParent studentParent);
 
     /**
      * 學生家長關係刪除
      */
     @Update("update kg_student_parent set kg_state=1 where kg_parentinformationid=#{parentId} and kg_studentprofileid=#{studentId}")
     void DeleteStudentParent(String parentId, String studentId);
+    
+    /**
+     * 學生家長關係刪除
+     */
+    @Update("update kg_student_parent set kg_state=1 where kg_studentprofileid=#{studentId}")
+    public void deleteByStudentId(String studentId);
+    
+    /** 學生家長關係刪除
+    */
+   @Update("update kg_student_parent set kg_state=1 where kg_parentinformationid=#{parentId}")
+   void deleteByParentId(String parentId);
 }

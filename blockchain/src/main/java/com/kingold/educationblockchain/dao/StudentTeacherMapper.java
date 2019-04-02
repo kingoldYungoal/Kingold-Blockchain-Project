@@ -45,10 +45,29 @@ public interface StudentTeacherMapper {
      */
     @Insert("insert into kg_student_teacher(kg_studentprofileid,kg_teacherinformationid,kg_state) values (#{kg_studentprofileid},#{kg_teacherinformationid},0)")
     void AddStudentTeacher(StudentTeacher studentTeacher);
+    
+    
+    /**
+     * 學生教師關係更新
+     */
+    @Update("update  kg_student_teacher set kg_state=#{kg_state} where kg_teacherinformationid=#{kg_teacherinformationid} and kg_studentprofileid=#{kg_studentprofileid}")
+    void UpdateStudentTeacher(StudentTeacher studentTeacher);
 
     /**
      * 學生教師關係刪除
      */
     @Update("update kg_student_teacher set kg_state=1 where kg_teacherinformationid=#{teacherId} and kg_studentprofileid=#{studentId}")
     void DeleteStudentTeacher(String teacherId, String studentId);
+    
+    /**
+     * 學生教師關係刪除
+     */
+    @Update("update kg_student_teacher set kg_state=1 where kg_studentprofileid=#{studentId}")
+    void deleteByStudentId(String studentId);
+    
+    /**
+     * 學生教師關係刪除
+     */
+    @Update("update kg_student_teacher set kg_state=1 where kg_teacherinformationid=#{teacherId}")
+    void deleteByTeacherId(String teacherId);
 }
