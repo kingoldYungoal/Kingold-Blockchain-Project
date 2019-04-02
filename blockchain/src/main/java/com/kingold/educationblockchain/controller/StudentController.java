@@ -2,8 +2,11 @@ package com.kingold.educationblockchain.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kingold.educationblockchain.bean.*;
 import com.kingold.educationblockchain.service.*;
+import com.kingold.educationblockchain.util.NullStringToEmptyAdapterFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -30,6 +33,8 @@ public class StudentController {
     private TeacherInformationService mTeacherInfomationService;
     @Autowired
     private StudentParentService mStudentParentService;
+    @Autowired
+    private ClassInfoService classInfoService;
     @Autowired
     private Gson gson;
 
@@ -90,7 +95,7 @@ public class StudentController {
     @RequestMapping(value = "/childrenList", method = RequestMethod.GET)
     @ResponseBody
     public String GetChildrenList(@RequestParam(value = "phonenumber", required = true)String phonenumber) {
-        gson = new Gson();
+    	gson = new GsonBuilder().registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory()).create();
         ParentInformation parentInformation = mParentInfomationService.FindParentInformationByPhone(phonenumber);
         List<StudentParent> studentParents = mStudentParentService.FindStudentParentByParentId(parentInformation.getKg_parentinformationid());
         List<StudentProfile> StudentProfileList = new ArrayList<>();
@@ -102,17 +107,18 @@ public class StudentController {
 
     @RequestMapping(value = "/studentlist", method = RequestMethod.GET)
     @ResponseBody
-    public String GetStudentList(@RequestParam(value = "teacherphone", required = true)String teacherphone,@RequestParam(value = "classname", required = true)String classname,@RequestParam(value = "year", required = true)int year,@RequestParam(value = "pageNum", required = true)int pageNum,@RequestParam(value = "pageSize", required = true)int pageSize) {
-        gson = new Gson();
-        TeacherInformation teacherInformation;
-        PageBean<StudentInfo> studentInfoPage = new PageBean<StudentInfo>();
-        if(teacherphone.trim().length() > 0){
-            teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(teacherphone);
-            if(teacherInformation != null){
-                studentInfoPage = mStudentProfileService.GetStudentsByParam(teacherInformation.getKg_teacherinformationid(),classname,year,pageNum,pageSize);
-            }
-        }
+    public String GetStudentList(@RequestParam(value = "classId", required = true)String classId,@RequestParam(value = "pageNum", required = true)int pageNum,@RequestParam(value = "pageSize", required = true)int pageSize) {
+    	gson = new GsonBuilder().registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory()).create();
+        PageBean<StudentInfo> studentInfoPage = mStudentProfileService.queryStudentsByClassId(classId, pageNum, pageSize);
         return gson.toJson(studentInfoPage);
+    }
+    
+    @RequestMapping(value = "/classlist", method = RequestMethod.GET)
+    @ResponseBody
+    public String GetClassList(@RequestParam(value = "schoolId", required = true)String schoolId) {
+        gson = new Gson();
+        List<ClassInfo> classInfoList = classInfoService.getClassesBySchoolId(schoolId);
+        return gson.toJson(classInfoList);
     }
 
     @RequestMapping(value = "/mstudentinfo", method = RequestMethod.GET)
@@ -134,18 +140,9 @@ public class StudentController {
     @RequestMapping(value = "/mstudentlist", method = RequestMethod.POST)
     @ResponseBody
     public String GetStudentListNoPage(@RequestBody JSONObject params) {
-        gson = new Gson();
-        String className = params.getString("className");
-        int year = params.getInteger("year");
-        String teacherphone = params.getString("teacherphone");
-        TeacherInformation teacherInformation;
-        List<StudentInfo> studentInfoList = new ArrayList<>();
-        if(teacherphone.trim().length() > 0){
-            teacherInformation = mTeacherInfomationService.FindTeacherInformationByPhone(teacherphone);
-            if(teacherInformation != null){
-                studentInfoList = mStudentProfileService.GetStudentsByParamNoPage(teacherInformation.getKg_teacherinformationid(), className, year);
-            }
-        }
-        return gson.toJson(studentInfoList);
+    	gson = new GsonBuilder().registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory()).create();
+        String classId = params.getString("classId");
+        List<StudentInfo> list = mStudentProfileService.queryStudentsByClassIdNoPage(classId);
+        return gson.toJson(list);
     }
 }

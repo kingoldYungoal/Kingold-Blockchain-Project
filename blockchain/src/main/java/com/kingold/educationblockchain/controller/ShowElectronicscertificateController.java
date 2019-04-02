@@ -1,33 +1,45 @@
 package com.kingold.educationblockchain.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.kingold.educationblockchain.bean.CertificationType;
 import com.kingold.educationblockchain.bean.Electronicscertificate;
-import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
 import com.kingold.educationblockchain.service.ElectronicscertificateService;
-import org.apache.http.impl.client.HttpClients;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.awt.image.BufferedImage;
-import java.util.*;
-import javax.imageio.ImageIO;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPageTree;
-import org.apache.pdfbox.rendering.PDFRenderer;
 
 @Controller
 @RequestMapping("/electronicscertificate")
@@ -47,6 +59,14 @@ public class ShowElectronicscertificateController {
     private Gson gson;
 
     private List<String> certIdArray = new ArrayList<>();
+    
+    @RequestMapping(value = "/certificationTypeList", method = RequestMethod.GET)
+    @ResponseBody
+    public String GetCertificationTypeList(@RequestParam(value = "classId", required = true)String classId) {
+        gson = new Gson();
+        List<CertificationType> list = mElectronicscertificateService.getCertificationTypeByClassId(classId);
+        return gson.toJson(list);
+    }
 
     /*
     * 学生证书页面
@@ -68,24 +88,11 @@ public class ShowElectronicscertificateController {
     @ResponseBody
     public String GetCertificateList(@RequestBody JSONObject params){
         gson = new Gson();
-        String className = params.getString("className");
-        int year = params.getInteger("year");
-        String teacherId = params.getString("teacherId");
-        List<String> certIds = new ArrayList<>();
-        List<Electronicscertificate> allCertList = new ArrayList<>();
-        CertificateParam param = new CertificateParam();
-        param.setClassName(className);
-        param.setYear(year);
-        param.setTeacherId(teacherId);
-        List<Electronicscertificate> certList = mElectronicscertificateService.GetCertificatesByParam(param);
-        allCertList.addAll(certList);
-        List<Electronicscertificate> newCerts = RemoveDuplicateCert(allCertList);
-        for(Electronicscertificate cert : newCerts){
-            certIds.add(cert.getKg_electronicscertificateid());
-        }
-        certIdArray = certIds;
-
-        return gson.toJson(certIds);
+        String classId = params.getString("classId");
+        String certiType = params.getString("certiType");
+        List<String> certIdList = mElectronicscertificateService.GetCertificateIdsByCertiTypeAndClassId(certiType, classId);
+        certIdArray = certIdList;
+        return gson.toJson(certIdList);
     }
 
     /*
