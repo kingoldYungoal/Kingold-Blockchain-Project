@@ -141,10 +141,14 @@ public class Electronicscertificate {
     private String kg_sex;
 
     private String kg_certificatedate;
+    
+    private String kg_classid;
 
     private String kg_classname;
 
     private String kg_certitype;
+    
+    private String kg_schoolid;
 
     private String kg_schoolname;
 
@@ -221,7 +225,25 @@ public class Electronicscertificate {
     public void setKg_studygrade(String kg_studygrade) {
         this.kg_studygrade = kg_studygrade;
     }
+    
+    
 
-    public Electronicscertificate(){
+    public String getKg_classid() {
+		return kg_classid;
+	}
+
+	public void setKg_classid(String kg_classid) {
+		this.kg_classid = kg_classid;
+	}
+
+	public String getKg_schoolid() {
+		return kg_schoolid;
+	}
+
+	public void setKg_schoolid(String kg_schoolid) {
+		this.kg_schoolid = kg_schoolid;
+	}
+
+	public Electronicscertificate(){
     }
 }

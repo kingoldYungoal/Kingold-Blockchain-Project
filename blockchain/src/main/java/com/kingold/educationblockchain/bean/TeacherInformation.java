@@ -8,6 +8,8 @@ public class TeacherInformation {
 
     private String kg_phonenumber;
 
+    private String kg_schoolid;
+    
     private String kg_schoolname;
 
     private int kg_state;
@@ -54,4 +56,14 @@ public class TeacherInformation {
 
     public TeacherInformation(){
     }
+
+	public String getKg_schoolid() {
+		return kg_schoolid;
+	}
+
+	public void setKg_schoolid(String kg_schoolid) {
+		this.kg_schoolid = kg_schoolid;
+	}
+    
+    
 }

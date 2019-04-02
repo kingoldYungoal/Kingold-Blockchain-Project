@@ -3,9 +3,13 @@ package com.kingold.educationblockchain.bean;
 public class StudentProfile {
 
     private String kg_studentprofileid;
-
+    
+    private String kg_classid;
+    
     private String kg_classname;
 
+    private String kg_schoolid;
+    
     private String kg_schoolname;
 
     private String kg_educationnumber;
@@ -27,6 +31,13 @@ public class StudentProfile {
     private String kg_registeredresidence;
 
     private String kg_passportnumberoridnumber;
+    
+    private String kg_entrancestate;
+
+    private int kg_state;
+
+    private String kg_jointime;
+
 
     public String getKg_entrancestate() {
         return kg_entrancestate;
@@ -36,11 +47,6 @@ public class StudentProfile {
         this.kg_entrancestate = kg_entrancestate;
     }
 
-    private String kg_entrancestate;
-
-    private int kg_state;
-
-    private String kg_jointime;
 
     public String getKg_jointime() {
         return kg_jointime;
@@ -164,4 +170,22 @@ public class StudentProfile {
 
     public StudentProfile(){
     }
+
+	public String getKg_classid() {
+		return kg_classid;
+	}
+
+	public void setKg_classid(String kg_classid) {
+		this.kg_classid = kg_classid;
+	}
+
+	public String getKg_schoolid() {
+		return kg_schoolid;
+	}
+
+	public void setKg_schoolid(String kg_schoolid) {
+		this.kg_schoolid = kg_schoolid;
+	}
+    
+    
 }
