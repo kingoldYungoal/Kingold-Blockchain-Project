@@ -19,36 +19,33 @@ public interface StudentProfileMapper {
 	 * @param classId
 	 * @return
 	 */
-	@Select("select "
-	        + "a.kg_studentprofileid kg_studentprofileid,"
-	        + "b.kg_name kg_classname,"
-	        + "c.kg_name kg_schoolname,"
-	        + "a.kg_educationnumber kg_educationnumber,"
-	        + "a.kg_studentnumber kg_studentnumber,"
-	        + "a.kg_name kg_name,"
-	        + "a.kg_fullname kg_fullname,"
-	        + "a.kg_sex kg_sex,"
-	        + "a.kg_age kg_age,"
-	        + "a.kg_countryname kg_countryname,"
-	        + "to_char(a.kg_birthday,'yyyy-mm-dd') kg_birthday,"
-	        + "a.kg_registeredresidence kg_registeredresidence,"
-	        + "a.kg_passportnumberoridnumber kg_passportnumberoridnumber,"
-	        + "a.kg_entrancestate kg_entrancestate,"
-	        + "to_char(a.kg_jointime,'yyyy-mm-dd') kg_jointime,"
-	        + "d.kg_parentname,"
-	        + "d.kg_parentphonenumber "
-	        + "from KG_STUDENTPROFILE a "
-	        + "left join kg_class b  on a.kg_classid = b.kg_classid "
-	        + "left join kg_school c on a.kg_schoolid = c.kg_schoolid "
-	        + "left join(select "
-	        + "e.kg_studentprofileid,"
-	        + "listagg(kg_parentrelationship||':'||f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, "
-	        + "listagg(f.kg_phonenumber,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentphonenumber "
-	        + "from kg_student_parent e "
-	        + "inner join kg_parentinformation f on e.kg_parentinformationid = f.kg_parentinformationid "
-	        + "where e.kg_state = 0 and f.kg_state = 0 group by e.kg_studentprofileid"
-	        + ") d on a.kg_studentprofileid = d.kg_studentprofileid "
-	        + "where a.kg_classid=#{classId} and a.kg_state = 0 and b.kg_state = 0 and c.kg_state = 0")
+	@Select("select " + 
+			"a.kg_studentprofileid kg_studentprofileid," + 
+			"a.kg_educationnumber kg_educationnumber," + 
+			"a.kg_studentnumber kg_studentnumber," + 
+			"a.kg_name kg_name," + 
+			"a.kg_fullname kg_fullname," + 
+			"a.kg_sex kg_sex," + 
+			"a.kg_age kg_age," + 
+			"a.kg_countryname kg_countryname," + 
+			"to_char(a.kg_birthday,'yyyy-mm-dd') kg_birthday," + 
+			"a.kg_registeredresidence kg_registeredresidence," + 
+			"a.kg_passportnumberoridnumber kg_passportnumberoridnumber," + 
+			"a.kg_entrancestate kg_entrancestate," + 
+			"to_char(a.kg_jointime,'yyyy-mm-dd') kg_jointime," + 
+			"d.kg_parentname," + 
+			"d.kg_parentphonenumber " + 
+			"from KG_STUDENTPROFILE a " + 
+			"left join kg_studentprofile_class b  on a.kg_studentprofileid = b.kg_studentprofileid " + 
+			"left join(select " + 
+			"e.kg_studentprofileid," + 
+			"listagg(kg_parentrelationship||':'||f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, " + 
+			"listagg(f.kg_phonenumber,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentphonenumber " + 
+			"from kg_student_parent e " + 
+			"left join kg_parentinformation f on e.kg_parentinformationid = f.kg_parentinformationid " + 
+			"where e.kg_state = 0 and f.kg_state = 0 group by e.kg_studentprofileid" + 
+			") d on a.kg_studentprofileid = d.kg_studentprofileid " + 
+			"where b.kg_classid=#{classId} and a.kg_state = 0 and b.kg_state = 0 ")
    public List<StudentInfo> queryStudentsByClassId(String classId);
 
     /**
@@ -72,7 +69,7 @@ public interface StudentProfileMapper {
 	        + "to_char(a.kg_jointime,'yyyy-mm-dd') kg_jointime "
 	        + "from KG_STUDENTPROFILE a "
 	        + "left join kg_class b on a.kg_classid = b.kg_classid "
-	        + "left join kg_school c on a.kg_schoolid = c.kg_schoolid "
+	        + "left join kg_school c on b.kg_schoolid = c.kg_schoolid "
 	        + "where a.kg_studentprofileid = #{id} and a.kg_state = 0 and b.kg_state = 0 and c.kg_state = 0")
       @Results({
             @Result(property = "kg_studentprofileid", column = "KG_STUDENTPROFILEID"),
@@ -115,7 +112,7 @@ public interface StudentProfileMapper {
 	        + "to_char(a.kg_jointime,'yyyy-mm-dd') kg_jointime "
 	        + "from KG_STUDENTPROFILE a "
 	        + "left join kg_class b on a.kg_classid = b.kg_classid "
-	        + "left join kg_school c on a.kg_schoolid = c.kg_schoolid "
+	        + "left join kg_school c on b.kg_schoolid = c.kg_schoolid "
 	        + "where (a.kg_educationnumber = #{eduNumber} or a.kg_studentnumber = #{stuNumber}) and a.kg_state = 0 and b.kg_state = 0 and c.kg_state = 0")
       @Results({
             @Result(property = "kg_studentprofileid", column = "KG_STUDENTPROFILEID"),
@@ -137,36 +134,6 @@ public interface StudentProfileMapper {
     })
     List<StudentProfile> GetStudentProfileByNumber(String eduNumber, String stuNumber);
     
-    
-    /**
-                 * 根据老师和班级查询学生
-     * @param teacherId
-     * @param classId
-     * @return
-     */
-	@Select("select "
-	        + "a.kg_studentprofileid kg_studentprofileid,"
-	        + "b.kg_name kg_classname,"
-	        + "c.kg_name kg_schoolname,"
-	        + "a.kg_educationnumber kg_educationnumber,"
-	        + "a.kg_studentnumber kg_studentnumber,"
-	        + "a.kg_name kg_name,"
-	        + "a.kg_fullname kg_fullname,"
-	        + "a.kg_sex kg_sex,"
-	        + "a.kg_age kg_age,"
-	        + "a.kg_countryname kg_countryname,"
-	        + "to_char(a.kg_birthday,'yyyy-mm-dd') kg_birthday,"
-	        + "a.kg_registeredresidence kg_registeredresidence,"
-	        + "a.kg_passportnumberoridnumber kg_passportnumberoridnumber,"
-	        + "a.kg_entrancestate kg_entrancestate,"
-	        + "to_char(a.kg_jointime,'yyyy-mm-dd') kg_jointime "
-	        + "from KG_STUDENTPROFILE a "
-	        + "inner join kg_class b  on a.kg_classid = b.kg_classid "
-	        + "inner join kg_class_teacherinformation c on b.kg_classid = c.kg_classid "
-	        + "inner join kg_school d on a.kg_schoolid = d.kg_schoolid "
-	        + "where a.kg_classid=#{classId} and c.kg_teacherinformationid=#{teacherId} and a.kg_state = 0 and b.kg_state = 0 and c.kg_state = 0 and d.kg_state = 0")
-      List<StudentProfile> GetStudentsByClassAndTeacher(String teacherId, String classId);
-
     /**
      * 根據多个参数查詢多个学生信息
      */

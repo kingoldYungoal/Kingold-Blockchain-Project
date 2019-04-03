@@ -116,10 +116,10 @@ public interface ElectronicscertificateMapper {
     		+ "kg_certitype certificationType, "
     		+ "count(0) as count "
     		+ "FROM kg_electronicscertificate "
-    		+ "where kg_classid=#{classId} and kg_state='0' and  (kg_certificatedate between ADD_MONTHS(sysdate, -2) and sysdate) "
-    		+ "group by kg_certitype")
+    		+ "where kg_classid=#{classId} and kg_state='0' "
+    		+ "group by kg_certitype") // and  (kg_certificatedate between ADD_MONTHS(sysdate, -2) and sysdate) 
     List<CertificationType> getCertificationTypeByClassId(String classId);
     
-    @Select("select distinct a.kg_electronicscertificateid from KG_ELECTRONICSCERTIFICATE a where a.kg_certitype=#{certiType} and a.kg_classid=#{classId} and a.kg_state = 0 and (a.kg_certificatedate between ADD_MONTHS(sysdate, -2) and sysdate)")
+    @Select("select distinct a.kg_electronicscertificateid from KG_ELECTRONICSCERTIFICATE a where a.kg_certitype=#{certiType} and a.kg_classid=#{classId} and a.kg_state = 0") //and (a.kg_certificatedate between ADD_MONTHS(sysdate, -2) and sysdate)
     List<String> GetCertificateByCertiTypeAndClassId(String certiType, String classId);
 }
