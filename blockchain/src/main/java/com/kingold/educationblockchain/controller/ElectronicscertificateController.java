@@ -316,10 +316,10 @@ public class ElectronicscertificateController {
 			logoPath += "logo-04.png";
 			fields.put("schoolNameEn", "WINNER ZENGCHENG KINGOLD INTERNATIONAL KINDERGARTEN");
 			break;
-		/*case "KIDS KING":
+		case "托育馆Kids King":
 			logoPath += "logo-05.png";
 			fields.put("schoolNameEn", "KINGOLD NURSERY");
-			break;*/
+			break;
 		}
 		Resource resource = new ClassPathResource("static/certificate-template.pdf");
 		// File file = resource.getFile();
