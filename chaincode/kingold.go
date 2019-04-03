@@ -160,13 +160,13 @@ func (t *AutoTraceChaincode) initStudent(stub shim.ChaincodeStubInterface, args 
 	//}
 
 	// ==== Check if student already exists ====
-	studentAsBytes, err := stub.GetState(studentId)
+	/*studentAsBytes, err := stub.GetState(studentId)
 	if err != nil {
 		return shim.Error("Failed to get student: " + err.Error())
 	} else if studentAsBytes != nil {
 		fmt.Println("This student already exists: " + studentId)
 		return shim.Error("This student already exists: " + studentId)
-	}
+	}*/
 
 	// ==== Create student object and marshal to JSON ====
 	objectType := "student"
