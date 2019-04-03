@@ -84,13 +84,11 @@ public class CommonController {
 	@Value("${schoolName.schools}")
 	private String schools;
 
-	private DateHandler dateHandler;
 	private BlockChainPayload payload = new BlockChainPayload();
 	private StringWriter stringWriter = new StringWriter();
 	private PrintWriter printWriter = new PrintWriter(stringWriter);
 	private LoggerException loggerException = new LoggerException();
 	private RecordErrorLog recordErrorLog = new RecordErrorLog();
-	private MD5Encryp md5Encryp = new MD5Encryp();
 	private Gson gson;
 	private SynData synData = new SynData();
 

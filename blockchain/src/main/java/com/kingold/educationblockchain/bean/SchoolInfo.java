@@ -1,7 +1,7 @@
 package com.kingold.educationblockchain.bean;
 
 /**
- * 学生信息表
+ * 学校信息表
  * 
  * @author Bob Tang
  *

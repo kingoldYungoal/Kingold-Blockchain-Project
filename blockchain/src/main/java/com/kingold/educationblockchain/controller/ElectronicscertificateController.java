@@ -179,7 +179,6 @@ public class ElectronicscertificateController {
 				break;
 			default:
 				return makeErrRsp("园长/校长签名不存在");
-			// schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
 			}
 
 			InputStream schoolMasterInputStream = schoolMasterResource.getInputStream();
@@ -314,10 +313,10 @@ public class ElectronicscertificateController {
 			logoPath += "logo-04.png";
 			fields.put("schoolNameEn", "WINNER ZENGCHENG KINGOLD INTERNATIONAL KINDERGARTEN");
 			break;
-		/*case "KIDS KING":
+		case "KIDS KING":
 			logoPath += "logo-05.png";
 			fields.put("schoolNameEn", "KINGOLD NURSERY");
-			break;*/
+			break;
 		}
 		Resource resource = new ClassPathResource("static/certificate-template.pdf");
 		// File file = resource.getFile();
