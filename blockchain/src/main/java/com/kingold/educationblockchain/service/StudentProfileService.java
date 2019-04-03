@@ -19,11 +19,6 @@ public interface StudentProfileService {
     List<StudentProfile> GetStudentProfileByNumber(String eduNumber, String stuNumber);
 
     /**
-     * 根据教師信息id，学生班级查询
-     */
-    PageBean<StudentInfo> GetStudentsByClassAndTeacher(String teacherId, String classname, int currentPage, int pageSize);
-
-    /**
      * 根据教師信息id，从证书表取出学生id，获取学生信息
      */
     PageBean<StudentInfo> GetStudentsByParam(String teacherId, String classname, int year, int currentPage, int pageSize);
