@@ -155,6 +155,8 @@ public class ElectronicscertificateController {
 			if (classInfo == null) {
 				return makeErrRsp("班级信息不存在");
 			}
+			
+			cert.setKg_classname(classInfo.getKg_name());
 
 			// 生成pdf证书:名称为 uuid 随机生成
 			StringBuffer certificateName = new StringBuffer(UUID.randomUUID().toString()).append(".pdf");
