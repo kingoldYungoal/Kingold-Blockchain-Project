@@ -156,6 +156,8 @@ public class ElectronicscertificateController {
 				return makeErrRsp("班级信息不存在");
 			}
 			cert.setKg_classname(classInfo.getKg_name());
+			
+			cert.setKg_classname(classInfo.getKg_name());
 
 			// 生成pdf证书:名称为 uuid 随机生成
 			StringBuffer certificateName = new StringBuffer(UUID.randomUUID().toString()).append(".pdf");
@@ -177,6 +179,9 @@ public class ElectronicscertificateController {
 				break;
 			case "托育馆Kids King":
 				schoolMasterResource = new ClassPathResource("static/天启幼儿园园长.png");
+				break;
+			case "侨鑫汇景新城实验小学":
+				schoolMasterResource = new ClassPathResource("static/侨鑫汇景新城实验小学.png");
 				break;
 			default:
 				return makeErrRsp("园长/校长签名不存在");

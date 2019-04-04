@@ -59,22 +59,6 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
 
     /**
-     * 根据教師信息id，学生班级查询
-     */
-    @Override
-    public PageBean<StudentInfo> GetStudentsByClassAndTeacher(String teacherId, String classname,int currentPage,int pageSize){
-        // 设置分页信息，分别是当前页数和每页显示的总记录数
-        PageHelper.startPage(currentPage, pageSize);
-        List<StudentProfile> pageItems = mStudentProfileMapper.GetStudentsByClassAndTeacher(teacherId,classname);
-        // studentinfo封装
-        List<StudentInfo> infoList = GetStudentInfoList(pageItems);
-        int countNums = pageItems.size();            //总记录数
-        PageBean<StudentInfo> pageData = new PageBean<>(currentPage, pageSize, countNums);
-        pageData.setItems(infoList);
-        return pageData;
-    }
-
-    /**
      * 根据教師信息id，从证书表取出学生id，获取学生信息
      */
     @Override
