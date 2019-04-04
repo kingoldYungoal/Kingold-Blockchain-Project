@@ -42,7 +42,7 @@ public interface StudentProfileMapper {
 			"listagg(f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, " + 
 			"listagg(f.kg_phonenumber,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentphonenumber " + 
 			"from kg_student_parent e " + 
-	        + "listagg(f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, "
+	        "listagg(f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, " +
 			"where e.kg_state = 0 and f.kg_state = 0 group by e.kg_studentprofileid" + 
 			") d on a.kg_studentprofileid = d.kg_studentprofileid " + 
 			"where b.kg_classid=#{classId} and a.kg_state = 0 and b.kg_state = 0 ")
