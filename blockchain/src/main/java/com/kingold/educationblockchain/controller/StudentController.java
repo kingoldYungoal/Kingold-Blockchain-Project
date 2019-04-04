@@ -43,7 +43,7 @@ public class StudentController {
 
     @RequestMapping(value = "/studentinfo", method = RequestMethod.GET)
     @ResponseBody
-    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)String id,@RequestParam(value = "roleid", required = true)String roleid,@RequestParam(value = "role", required = true)int role,@RequestParam(value = "device", required = true)String device, ModelMap map) {
+    public ModelAndView GetStudentProfile(@RequestParam(value = "id", required = true)String id,@RequestParam(value = "roleid", required = true)String roleid,@RequestParam(value = "classid", required = true)String classid,@RequestParam(value = "schoolid", required = true)String schoolid,@RequestParam(value = "role", required = true)int role,@RequestParam(value = "device", required = true)String device, ModelMap map) {
         ModelAndView model = new ModelAndView();
         try {
             StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(id);
@@ -82,7 +82,9 @@ public class StudentController {
         if(roleid.trim().length() > 0){
             model.addObject("roleid", roleid);
         }
-        model.addObject("role",role);
+        model.addObject("classid", classid);
+        model.addObject("schoolid", schoolid);
+        model.addObject("role", role);
         if(device.trim().equals("mobile")){
             model.setViewName("mobileStudentInfo");
         }else{
@@ -103,6 +105,7 @@ public class StudentController {
             StudentProfileList.add(mStudentProfileService.GetStudentProfileById(sp.getKg_studentprofileid()));
         }
         return gson.toJson(StudentProfileList);
+
     }
 
     @RequestMapping(value = "/studentlist", method = RequestMethod.GET)

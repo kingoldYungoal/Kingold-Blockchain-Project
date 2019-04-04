@@ -4,16 +4,18 @@
 	margin-bottom:1rem;
 }
 
-.pk-form-year {
-	width:30%;
+.pk-form-school {
+	width:50%;
 	float:left;
+	margin-top:0.5rem;
 	margin-bottom:0.5rem;
 	font-size: 0.8rem;
 }
 
 .pk-form-class {
-	width:70%;
+	width:50%;
 	float:left;
+	margin-top:0.5rem;
 	margin-bottom:0.5rem;
 	font-size: 0.8rem;
 }

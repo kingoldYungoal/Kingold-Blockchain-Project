@@ -588,7 +588,7 @@ var pickout = (function(){
             url: "../student/mstudentlist",
             data: JSON.stringify(datas),
             contentType : 'application/json',
-            success:function(data) { //请求成功后处理函数。
+            success:function(data) {
                 $(".list-group").html("");
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
@@ -598,9 +598,10 @@ var pickout = (function(){
                         lis += '<div class="childinfo"><ul><li><span class="childinfo-name">'+ data[i].kg_fullname +'</span>&nbsp;&nbsp;<span class="childinfo-gender">'+ data[i].kg_sex +'</span></li>';
                         lis += '<li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_classname +'</span></li>';
                         lis += '<li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_jointime +'</span></li>';
-                        lis += '<li class="parent-name-tel">家长&nbsp;:&nbsp;<span class="parent-name-tel">'+ data[i].kg_parentname +'&nbsp;</span><span class="parent-name-tel"></span><span>'+ data[i].kg_parentphonenumber +'</span></li>';
+                        lis += '<li class="parent-name-tel">家长：&nbsp;<span class="parent-name-tel">'+ data[i].kg_parentname +'&nbsp;</span></li>';
+                        lis += '<li class="parent-name-tel">电话：&nbsp;<span class="parent-name-tel"></span><span>'+ data[i].kg_parentphonenumber +'</span></li>';
                         lis += '</ul></div>';
-                        lis += '<div class="other-info"><div class="stunumber"><span>学籍号&nbsp;:&nbsp;</span><span>'+ data[i].kg_educationnumber +'</span></div></div>';
+                        lis += '<div class="other-info"><div class="stunumber"><span>学籍号：&nbsp;</span><span>'+ data[i].kg_educationnumber +'</span></div></div>';
                         lis += '</li>';
                         listGroup += lis;
                     }
@@ -608,7 +609,7 @@ var pickout = (function(){
                 }
 
                 $(".list-group").html(listGroup);
-            },error: function () {//请求失败处理函数
+            },error: function () {
                 M.dialog13 = jqueryAlert({
                     'icon': '../images/alertimgs/warning.png',
                     'content': '请求失败',

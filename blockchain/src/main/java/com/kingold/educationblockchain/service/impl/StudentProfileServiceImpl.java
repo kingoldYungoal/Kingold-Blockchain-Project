@@ -219,11 +219,13 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
     @Override
     public PageBean<StudentInfo> queryStudentsByClassId(String classId, int currentPage,int pageSize){
+        List<StudentInfo> studentList = mStudentProfileMapper.queryStudentsByClassId(classId);
+
         // 设置分页信息，分别是当前页数和每页显示的总记录数
         PageHelper.startPage(currentPage, pageSize);
         List<StudentInfo> pageItems = mStudentProfileMapper.queryStudentsByClassId(classId);
 
-        int countNums = pageItems.size();            //总记录数
+        int countNums = studentList.size();            //总记录数
         PageBean<StudentInfo> pageData = new PageBean<>(currentPage, pageSize, countNums);
         pageData.setItems(pageItems);
         return pageData;

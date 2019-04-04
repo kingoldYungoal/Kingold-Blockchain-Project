@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -63,9 +62,10 @@ public class LoginController {
 
 	@RequestMapping(value = "/loginVerify", method = RequestMethod.POST)
 	@ResponseBody
-	public ModelAndView UserLoginVerify(String phonenumber, int option, ModelMap map) {
+	public ModelAndView UserLoginVerify(String phonenumber, int option, ModelMap map, HttpServletRequest request) {
 		// role 為1，代表家長，為2，代表教師
 		ModelAndView model = new ModelAndView();
+		isFromMobile = CheckLogin(request);
 		if (option == 1) {
 			ParentInformation parentInformation = mParentInfomationService.FindParentInformationByPhone(phonenumber);
 			if (parentInformation != null) {
@@ -74,10 +74,18 @@ public class LoginController {
 					if (studentParents.size() > 1) {
 						List<StudentProfile> StudentProfileList = new ArrayList<>();
 						for (StudentParent sp : studentParents) {
-							StudentProfileList.add(mStudentProfileService.GetStudentProfileById(sp.getKg_studentprofileid()));
+							StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(sp.getKg_studentprofileid());
+							if(studentProfile.getKg_jointime() == null || studentProfile.getKg_jointime() == ""){
+								studentProfile.setKg_jointime("未知");
+							}
+							if(studentProfile.getKg_educationnumber() == null || studentProfile.getKg_educationnumber() == ""){
+								studentProfile.setKg_educationnumber("未知");
+							}
+							StudentProfileList.add(studentProfile);
 						}
 						model.addObject("childrenList", StudentProfileList);
 						model.addObject("parentInformation", parentInformation);
+
 						if (isFromMobile) {
 							model.setViewName("mobileChildrenlist");
 						} else {
@@ -128,6 +136,8 @@ public class LoginController {
 					model.addObject("classList", classInfoList);
 					model.addObject("teacherInformation", teacherInformation);
 					model.addObject("schoolInfoList", schoolInfoList);
+					model.addObject("classid", "");
+					model.addObject("schoolid", "");
 					// 判断设备，如果是移动端，则需要直接获取所有的学生信息
 					if (isFromMobile) {
 						model.setViewName("mobileStudentlist");
@@ -173,8 +183,9 @@ public class LoginController {
 
 	@RequestMapping(value = "/BackListPage", method = RequestMethod.GET)
 	@ResponseBody
-	public ModelAndView BackListPage(String roleid, int role) {
+	public ModelAndView BackListPage(String roleid, int role, String classid, String schoolid, HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
+		isFromMobile = CheckLogin(request);
 		if (role == 1) {
 			ParentInformation parentInformation = mParentInfomationService.FindParentInformationById(roleid);
 			List<StudentParent> studentParents = mStudentParentService.FindStudentParentByParentId(roleid);
@@ -196,6 +207,8 @@ public class LoginController {
 					model.addObject("classList", classInfoList);
 					model.addObject("teacherInformation", teacherInformation);
 					model.addObject("schoolInfoList", schoolInfoList);
+					model.addObject("classid", classid);
+					model.addObject("schoolid", schoolid);
 					// 判断设备，如果是移动端，则需要直接获取所有的学生信息
 					if (isFromMobile) {
 						model.setViewName("mobileStudentlist");
@@ -278,44 +291,18 @@ public class LoginController {
 		return mElectronicscertificateService.GetCertificatesByParam(param);
 	}
 
-	// 获取所有的年份
-	public List<Integer> GetAllYears() {
-		List<Integer> years = new ArrayList<>();
-		for (int i = Integer.parseInt(getDateYear()); i > Integer.parseInt(getDateYear()) - 10; i--) {
-			years.add(i);
-		}
-		return years;
-	}
-
-	// 获取当前年份
-	public String getDateYear() {
-		Calendar date = Calendar.getInstance();
-		String year = String.valueOf(date.get(Calendar.YEAR));
-		return year;
-	}
-
 	// 访问设备验证
 	public boolean CheckLogin(HttpServletRequest request) {
 		boolean isFromMobile = false;
-		HttpSession session = request.getSession();
-		if (session.getAttribute("ua") == null) {
-			try {
-				// 获取ua，用来判断是否为移动端访问
-				String userAgent = request.getHeader("USER-AGENT").toLowerCase();
-				if (userAgent == null) {
-					userAgent = "";
-				}
-				isFromMobile = CheckRequestDevice.check(userAgent);
-				// 判断是否为移动端访问
-				if (isFromMobile) {
-					session.setAttribute("ua", "mobile");
-				} else {
-					session.setAttribute("ua", "pc");
-				}
-			} catch (Exception e) {
+		try{
+			// 获取ua，用来判断是否为移动端访问
+			String userAgent = request.getHeader("USER-AGENT").toLowerCase();
+			if (userAgent == null) {
+				userAgent = "";
 			}
-		} else {
-			isFromMobile = session.getAttribute("ua").equals("mobile");
+			isFromMobile = CheckRequestDevice.check(userAgent);
+		}catch(Exception ex){
+
 		}
 		return isFromMobile;
 	}

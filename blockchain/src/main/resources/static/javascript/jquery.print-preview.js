@@ -4,7 +4,6 @@
 
 (function($) {
     var iframeHtml = "";
-
     // Private functions
     var mask, size, print_modal, print_controls;
     $.printPreview = {

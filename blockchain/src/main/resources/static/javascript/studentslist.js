@@ -1,9 +1,10 @@
 var pageNum = 1;
 var pageSize = 10;
 var classname;
-var year;
 var teacherid;
 var phone;
+var backClassid;
+var backSchoolid;
 var M = {};
 //--loading--
 var delVal=50;
@@ -13,6 +14,8 @@ var userAgent = navigator.userAgent;
 
 $(document).ready(function(){
     phone = $("#phone").val();
+    backClassid = $("#classid").val();
+    backSchoolid = $("#schoolid").val();
     $('#loadingModal').modal({
         keyboard: false,
         backdrop: false
@@ -21,9 +24,14 @@ $(document).ready(function(){
         keyboard: false,
         backdrop: false
     });
-    
+
     $('#loadingModal').modal('hide');
     $("#loadCertificationType").modal('hide');
+
+    if (backSchoolid != "") {
+        $("#schoolSelect").val(backSchoolid);
+        BackSelectSchool();
+    }
     initTable();
 });
 
@@ -65,7 +73,7 @@ function loadCertificationType(){
                 		func += 'onclick="BatchPrintPDFOther(this)"'
                 	}
                 	
-                	var item = '<div class="span4"><a href="javascript:void(0)" class="printPreview" role="button" ' + func + '><span class="certiType">' + data[i].certificationType 
+                	var item = '<div class="span4"><a href="javascript:void(0)" class="print-preview" role="button" ' + func + '><span class="certiType">' + data[i].certificationType
                 	           + '</span><span class="badge badge-info">' + data[i].count + '</span></a></div>'
                 	$("#certiTypeContent").append(item);
                 }
@@ -84,7 +92,8 @@ function loadCertificationType(){
 }
 
 function selectSchool(){
-	schoolId = $("#schoolSelect").val();
+    schoolId = $("#schoolSelect").val();
+
 	$("#classSelect").empty();
 	 $.ajax({
 	        type: 'get',
@@ -106,11 +115,41 @@ function selectSchool(){
 	                	var option = '<option value="' + data[i].kg_classid + '" >' + data[i].kg_name +'</option>';
 	                	$("#classSelect").append(option);
 	                }
-	                
 	                initTable();
 	            }
 	        }
 	    });
+}
+
+function BackSelectSchool(){
+    schoolId = backSchoolid;
+
+    $("#classSelect").empty();
+    $.ajax({
+        type: 'get',
+        dataType : "json",
+        async: false,
+        url: "../student/classlist",
+        data:{"schoolId":schoolId},
+        error: function () {//请求失败处理函数
+            M.dialog13 = jqueryAlert({
+                'icon': '../images/alertimgs/warning.png',
+                'content': '请求失败',
+                'closeTime': 2000,
+            })
+            M.dialog13.show();
+        },
+        success:function(data){ //请求成功后处理函数。
+            if (data.length > 0){
+                for (var i = 0;i <data.length;i++){
+                    var option = '<option value="' + data[i].kg_classid + '" >' + data[i].kg_name +'</option>';
+                    $("#classSelect").append(option);
+                }
+                $("#classSelect").val(backClassid);
+                initTable();
+            }
+        }
+    });
 }
 
 //ajax获取后台数据
@@ -172,7 +211,7 @@ function initTable() {
                             url: "../student/studentlist",
                             type: "get",
                             dataType : "json",
-                            data:{"teacherphone":phone,"classname":classname,"year": year, "pageNum":page,"pageSize":pageSize},
+                            data:{"classId":classId,"pageNum":page,"pageSize":pageSize},
                             success: function (data) {
                                 if (data.items.length > 0){
                                     for (var i = 0;i <data.items.length;i++){
@@ -197,7 +236,6 @@ function initTable() {
 function BatchPrintPDF(a){
 	certiType = $(a).find(".certiType").text().trim();
 	classId = $("#classSelect").val();
-    //判断是否有选择年份和班级
     if(certiType != "" && classId != 0){
         var datas = {
             'classId' : classId,
@@ -235,7 +273,7 @@ function BatchPrintPDF(a){
                     })
                     M.dialog13.show();
                 }
-            },error: function () {//请求失败处理函数
+            },error: function () {
                 M.dialog13 = jqueryAlert({
                     'icon': '../images/alertimgs/warning.png',
                     'content': '请求失败',
@@ -257,7 +295,9 @@ function BatchPrintPDF(a){
 function GoStudentInfo(obj) {
     var id = $(obj).attr("data-id");
     var roleid = $("#teacherid").val();
-    window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2&device=pc";
+    var classId = $("#classSelect").val();
+    var schoolId = $("#schoolSelect").val();
+    window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&classid=" + classId + "&schoolid=" + schoolId + "&role=2&device=pc";
 }
 
 function autoMove(){
@@ -283,5 +323,4 @@ function BatchPrintPDFOther(a){
 		$.printPreview.GetIframeHtml();
 		$.printPreview.loadPrintPreview();
 	}
-	
 }

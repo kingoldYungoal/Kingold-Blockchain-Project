@@ -170,7 +170,8 @@
 #datadiv{
     width: 89%;
     background-color: #fff;
-    margin-left:5.5%
+    margin-left:5.5%;
+    margin-top: 20px;
 }
 
 #datadiv table{

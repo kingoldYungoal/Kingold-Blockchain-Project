@@ -42,7 +42,7 @@ public interface StudentProfileMapper {
 	        + "left join kg_school c on a.kg_schoolid = c.kg_schoolid "
 	        + "left join(select "
 	        + "e.kg_studentprofileid,"
-	        + "listagg(kg_parentrelationship||':'||f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, "
+	        + "listagg(f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, "
 	        + "listagg(f.kg_phonenumber,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentphonenumber "
 	        + "from kg_student_parent e "
 	        + "inner join kg_parentinformation f on e.kg_parentinformationid = f.kg_parentinformationid "

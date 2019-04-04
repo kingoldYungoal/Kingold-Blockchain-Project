@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <div class="pk-form-year">
+            <div class="pk-form-school">
                 <select name="option" id="option" class="option pickout" placeholder="学校筛选" onchange="selectSchool()">
                     <option th:each="schoolInfo:${schoolInfoList}"
 							th:value="${schoolInfo.kg_schoolid}"
@@ -73,7 +73,8 @@
                             <li><span class="childinfo-name" th:text="${studentInfo.getKg_fullname()}"></span>&nbsp;&nbsp;<span class="childinfo-gender" th:text="${studentInfo.getKg_sex()}"></span></li>
                             <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time" th:text="${studentInfo.getKg_classname()}"></span></li>
                             <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time" th:text="${studentInfo.getKg_jointime()}"></span></li>
-                            <li class="parent-name-tel">家长：&nbsp;<span class="parent-name-tel" th:text="${studentInfo.getKg_parentName()}"></span><span th:text="${studentInfo.getKg_parentPhoneNumber()}"></span></li>
+                            <li class="parent-name-tel">家长：&nbsp;<span class="parent-name-tel" th:text="${studentInfo.getKg_parentName()}"></span></li>
+                            <li class="parent-name-tel">电话：&nbsp;<span class="parent-name-tel" th:text="${studentInfo.getKg_parentPhoneNumber()}"></span></li>
                         </ul>
                     </div>
                     <div class="other-info">
@@ -96,7 +97,9 @@
     function GoStudentInfo(obj) {
         var id = $(obj).attr("data-id");
         var roleid = $("#teacherid").val();
-        window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&role=2&device=mobile";
+        var schoolId = $("#option").val();
+        var classId = $("#option1").val();
+        window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&classid=" + classId + "&schoolid=" + schoolId + "&role=2&device=mobile";
     }
 </script>
 </html>
