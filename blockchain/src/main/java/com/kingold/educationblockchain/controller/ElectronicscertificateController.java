@@ -179,6 +179,9 @@ public class ElectronicscertificateController {
 			case "托育馆Kids King":
 				schoolMasterResource = new ClassPathResource("static/天启幼儿园园长.png");
 				break;
+			case "侨鑫汇景新城实验小学":
+				schoolMasterResource = new ClassPathResource("static/侨鑫汇景新城实验小学.png");
+				break;
 			default:
 				return makeErrRsp("园长/校长签名不存在");
 			// schoolMasterResource = new ClassPathResource("static/schoolmaster.png");
