@@ -157,7 +157,6 @@ public class ElectronicscertificateController {
 			}
 			cert.setKg_classname(classInfo.getKg_name());
 			
-			cert.setKg_classname(classInfo.getKg_name());
 
 			// 生成pdf证书:名称为 uuid 随机生成
 			StringBuffer certificateName = new StringBuffer(UUID.randomUUID().toString()).append(".pdf");
@@ -305,15 +304,15 @@ public class ElectronicscertificateController {
 		switch (fields.get("schoolName")) {
 		case "侨鑫汇景新城实验小学":
 			logoPath += "logo-01.png";
-			fields.put("schoolNameEn", "FAVORVIEW PALACE KINGOLD PRIMARY SCHOOL");
+			fields.put("schoolNameEn", "Kingold Primary School - Favorview Palace");
 			break;
 		case "侨鑫汇景新城幼儿园":
 			logoPath += "logo-02.png";
-			fields.put("schoolNameEn", "FAVORVIEW PALACE KINGOLD INTERNATIONAL KINDERGARTEN");
+			fields.put("schoolNameEn", "Kingold International Kindergarten - Favorview Palace");
 			break;
 		case "侨鑫汇悦天启幼儿园":
 			logoPath += "logo-03.png";
-			fields.put("schoolNameEn", "THE BAYVIEW KINGOLD INTERNATIONAL KINDERGARTEN");
+			fields.put("schoolNameEn", "Kingold International Kindergarten - The Bayview");
 			break;
 		case "侨鑫增城温可儿幼儿园":
 			logoPath += "logo-04.png";
@@ -334,12 +333,16 @@ public class ElectronicscertificateController {
 		int page = 1;
 		if (fields.get("certType").equals("录取通知书")) {
 			if (fields.get("schoolName").endsWith("小学")) {
-				page = 5;
+				page = 6;
 			} else {
-				page = 4;
+				page = 5;
 			}
 		} else if (fields.get("certType").equals("课程证书")) {
-			page = 3;
+			if (fields.get("schoolName").endsWith("小学")) {
+				page = 4;
+			} else {
+				page = 3;
+			}
 		} else if (fields.get("certType").equals("毕业证书")) {
 			if (fields.get("schoolName").endsWith("小学")) {
 				page = 1;
