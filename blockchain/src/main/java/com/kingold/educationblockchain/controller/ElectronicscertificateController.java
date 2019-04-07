@@ -215,7 +215,10 @@ public class ElectronicscertificateController {
 			if (cert.getKg_certitype().equals("课程证书")) {
 				map.put("issueDate", cert.getKg_certificatedate());
 				map.put("certName", cert.getKg_name());
-				GeneratePdfCertificate(tempPDF, map, schoolMasterBytes, presidentBytes);
+				ClassPathResource teacherResource = new ClassPathResource("static/侨鑫汇景新城实验小学.png");
+				InputStream teacherInputStream = teacherResource.getInputStream();
+				byte[] teacher = mStreamCommon.read(teacherInputStream);
+				GeneratePdfCertificate(tempPDF, map, schoolMasterBytes, teacher);
 			}
 
 			if (cert.getKg_certitype().equals("录取通知书")) {
