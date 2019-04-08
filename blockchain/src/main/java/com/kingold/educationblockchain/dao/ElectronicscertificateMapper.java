@@ -32,7 +32,7 @@ public interface ElectronicscertificateMapper {
     		+ "a.kg_state "
     		+ "from KG_ELECTRONICSCERTIFICATE a "
     		+ "inner join kg_class b on a.kg_classid = b.kg_classid "
-    		+ "inner join kg_class c on a.kg_schoolid = c.kg_schoolid"
+    		+ "inner join kg_class c on a.kg_schoolid = c.kg_schoolid "
     		+ "where a.kg_electronicscertificateid = #{id} and a.kg_state = 0 and b.kg_state = 0  and c.kg_state = 0")
     Electronicscertificate GetCertificateById(String id);
 
@@ -58,7 +58,7 @@ public interface ElectronicscertificateMapper {
     		+ "a.kg_state "
     		+ "from KG_ELECTRONICSCERTIFICATE a "
     		+ "inner join kg_class b on a.kg_classid = b.kg_classid "
-    		+ "inner join kg_class c on a.kg_schoolid = c.kg_schoolid"
+    		+ "inner join kg_class c on a.kg_schoolid = c.kg_schoolid "
     		+ "where a.kg_studentprofileid=#{studentId} and a.kg_state = 0 and b.kg_state = 0  and c.kg_state = 0")
     List<Electronicscertificate> GetCertificatesByStudentId(String studentId);
 
