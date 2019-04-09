@@ -4,12 +4,7 @@ import static com.itextpdf.io.font.PdfEncodings.IDENTITY_H;
 import static com.kingold.educationblockchain.util.ResultResponse.makeErrRsp;
 import static com.kingold.educationblockchain.util.ResultResponse.makeOKRsp;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -376,6 +371,7 @@ public class ElectronicscertificateController {
 			}
 			form.getField(fieldName).setValue(fields.get(fieldName)).setReadOnly(true);
 		}
+
 		PdfPage pdfPage = pdfDocWrite.getPage(1);
 		PdfCanvas canvas = new PdfCanvas(pdfPage.newContentStreamAfter(), pdfPage.getResources(), pdfDocWrite);
 
