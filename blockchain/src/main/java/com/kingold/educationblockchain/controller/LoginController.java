@@ -31,8 +31,6 @@ public class LoginController {
 	@Autowired
 	private StudentParentService mStudentParentService;
 	@Autowired
-	private StudentTeacherService mStudentTeacherService;
-	@Autowired
 	private ElectronicscertificateService mElectronicscertificateService;
 	@Autowired
 	private Teacher2ClassService teacher2ClassService;

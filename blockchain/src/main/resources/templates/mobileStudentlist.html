@@ -13,7 +13,7 @@
     <script type="text/javascript" th:src="@{/javascript/pickoutStudentList.js}" src="../static/javascript/pickout.js"></script>
     <script type="text/javascript" th:src="@{/javascript/gotop.js}" src="../static/javascript/gotop.js"></script>
 </head>
-<body style="background:#fafbfc;font-family: Helvetica;">
+<body style="background:#fafbfc;font-family: Helvetica;overflow-x: hidden;">
 <input type="hidden" id="phone" name="phone" th:value="${teacherInformation.getKg_phonenumber()}">
 <input type="hidden" id="teacherid" name="teacherid" th:value="${teacherInformation.getKg_teacherinformationid()}">
 <div class="panel panel-info">
