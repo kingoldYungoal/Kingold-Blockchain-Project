@@ -18,7 +18,7 @@ public interface TeacherInformationMapper {
     		+ "b.kg_name kg_schoolname,"
     		+ "a.kg_state  "
     		+ "FROM kg_teacherinformation a "
-    		+ "inner join kg_school b on a.kg_schoolid = b.kg_schoolid  "
+    		+ "left join kg_school b on a.kg_schoolid = b.kg_schoolid  "
     		+ "where a.kg_teacherinformationid=#{id} and a.kg_state = 0 and b.kg_state = 0 ")
     @Results({
             @Result(property = "kg_teacherinformationid", column = "KG_TEACHERINFORMATIONID"),
@@ -39,7 +39,7 @@ public interface TeacherInformationMapper {
     		+ "b.kg_name kg_schoolname,"
     		+ "a.kg_state  "
     		+ "FROM kg_teacherinformation a "
-    		+ "inner join kg_school b on a.kg_schoolid = b.kg_schoolid  "
+    		+ "left join kg_school b on a.kg_schoolid = b.kg_schoolid  "
     		+ "where a.kg_phonenumber=#{phone} and  a.kg_state = 0 and b.kg_state = 0 ")
     @Results({
             @Result(property = "kg_teacherinformationid", column = "KG_TEACHERINFORMATIONID"),
