@@ -11,7 +11,7 @@ public interface ClassInfoService {
 
 	public boolean update(ClassInfo classInfo);
 
-	public List<ClassInfo> getClassesBySchoolId(String schoolId);
+	public List<ClassInfo> getClassesBySchoolId(String teacherinformationid, String schoolId);
 	
 	public ClassInfo getById(String id);
 }

@@ -129,7 +129,7 @@ public class LoginController {
 
 			List<SchoolInfo> schoolInfoList = teacher2ClassService.getSchoolsByTeacherId(teacherInformation.getKg_teacherinformationid());
 			if (schoolInfoList.size() > 0) {
-				List<ClassInfo> classInfoList = classInfoService.getClassesBySchoolId(schoolInfoList.get(0).getKg_schoolid());
+				List<ClassInfo> classInfoList = classInfoService.getClassesBySchoolId(teacherInformation.getKg_teacherinformationid(), schoolInfoList.get(0).getKg_schoolid());
 				if (classInfoList.size() > 0) {
 					model.addObject("classList", classInfoList);
 					model.addObject("teacherInformation", teacherInformation);
@@ -200,7 +200,7 @@ public class LoginController {
 
 			List<SchoolInfo> schoolInfoList = teacher2ClassService.getSchoolsByTeacherId(teacherInformation.getKg_teacherinformationid());
 			if (schoolInfoList.size() > 0) {
-				List<ClassInfo> classInfoList = classInfoService.getClassesBySchoolId(schoolInfoList.get(0).getKg_schoolid());
+				List<ClassInfo> classInfoList = classInfoService.getClassesBySchoolId(teacherInformation.getKg_teacherinformationid(),schoolInfoList.get(0).getKg_schoolid());
 				if (classInfoList.size() > 0) {
 					model.addObject("classList", classInfoList);
 					model.addObject("teacherInformation", teacherInformation);

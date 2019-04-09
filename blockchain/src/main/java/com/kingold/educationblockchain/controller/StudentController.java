@@ -118,9 +118,9 @@ public class StudentController {
     
     @RequestMapping(value = "/classlist", method = RequestMethod.GET)
     @ResponseBody
-    public String GetClassList(@RequestParam(value = "schoolId", required = true)String schoolId) {
+    public String GetClassList(@RequestParam(value = "schoolId", required = true)String schoolId, @RequestParam(value = "teacherId", required = true)String teacherId) {
         gson = new Gson();
-        List<ClassInfo> classInfoList = classInfoService.getClassesBySchoolId(schoolId);
+        List<ClassInfo> classInfoList = classInfoService.getClassesBySchoolId(teacherId, schoolId);
         return gson.toJson(classInfoList);
     }
 

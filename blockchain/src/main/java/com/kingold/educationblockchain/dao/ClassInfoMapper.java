@@ -17,8 +17,8 @@ import com.kingold.educationblockchain.bean.ClassInfo;
 @Mapper
 public interface ClassInfoMapper {
 
-	@Select("select kg_classid,kg_name,kg_schoolid from kg_class where kg_schoolid=#{schoolId} and kg_state = 0 order by kg_name")
-	public List<ClassInfo> getClassesBySchoolId(String schoolId);
+	@Select("select b.kg_classid,b.kg_name,b.kg_schoolid from  KG_CLASS_TEACHERINFORMATION a inner join  kg_class b on a.kg_classid = b.kg_classid where a.kg_teacherinformationid=#{teacherinformationid} and kg_schoolid=#{schoolId} and a.kg_state = 0 and b.kg_state = 0 order by kg_name")
+	public List<ClassInfo> getClassesBySchoolId(String teacherinformationid, String schoolId);
 	
 	@Select("select kg_classid,kg_name,kg_schoolid from kg_class where kg_classid=#{id}")
 	public ClassInfo getById(String id);
