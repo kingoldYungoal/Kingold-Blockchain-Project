@@ -56,8 +56,8 @@ public class ClassInfoServiceImpl implements ClassInfoService {
 
 	@Override
 	public
-	List<ClassInfo> getClassesBySchoolId(String schoolId){
-		return classInfoMapper.getClassesBySchoolId(schoolId);
+	List<ClassInfo> getClassesBySchoolId(String teacherinformationid, String schoolId){
+		return classInfoMapper.getClassesBySchoolId(teacherinformationid, schoolId);
 	}
 
 	@Override

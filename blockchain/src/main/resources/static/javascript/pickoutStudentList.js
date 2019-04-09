@@ -545,7 +545,7 @@ var pickout = (function(){
 		        dataType : "json",
 		        async: false,
 		        url: "../student/classlist",
-		        data:{"schoolId":schoolId},
+		        data:{"schoolId":schoolId,"teacherId":$("#teacherid").val()},
 		        error: function () {//请求失败处理函数
 		            M.dialog13 = jqueryAlert({
 		                'icon': '../images/alertimgs/warning.png',
