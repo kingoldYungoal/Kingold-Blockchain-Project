@@ -14,6 +14,8 @@ var pickout = (function(){
 	// Own configuration of each field select
 	var ownConfig = {};
 
+    var M = {};
+
 	// Default values
 	var defaults = {
 		theme : 'clean',
@@ -81,7 +83,13 @@ var pickout = (function(){
 	function init(config){
 		setElement(config);
 		prepareElement();
-		initTable($("#option1").val());
+		var backClassid = $("#classid").val();
+		if (backClassid != ""){
+            initTable(backClassid);
+            $("#option1").val(backClassid);
+		} else{
+            initTable($("#option1").val());
+		}
 	}
 
 	/**
@@ -506,25 +514,23 @@ var pickout = (function(){
 		_.toArray(select).map(function(option, index){
 			if (index === data.index) {
 				_.attr(option, 'selected', 'selected');
-				return;
 			}
 
-			option.removeAttribute('selected');
+            feedField(select, data.txt);
+            if(select.name == 'option'){
+                selectSchool(select.value);
+                pickout.updated("#option1");
+            }else{
+                initTable($("#option1 option:selected").val());
+            }
+            option.removeAttribute('selected');
 		});
-		
-		feedField(select, data.txt);		
-		if(select.name == 'option'){
-			selectSchool(select.value);
-			pickout.updated("#option1");
-		}else{
-			initTable(select.value);
-		}
+
 		closeModal();
 	}
 
 	function feedField(select, value){
         //初始化数据
-        //initTable();
 		select.parentElement.querySelector('.pk-field').innerHTML = value;
 	}
 	

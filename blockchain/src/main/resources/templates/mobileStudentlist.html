@@ -11,11 +11,14 @@
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="../static/javascript/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" th:src="@{/javascript/bootstrap.min.js}" src="javascript/bootstrap.min.js"></script>
     <script type="text/javascript" th:src="@{/javascript/pickoutStudentList.js}" src="../static/javascript/pickout.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/alert.min.js}" src="javascript/alert.min.js"></script>
     <script type="text/javascript" th:src="@{/javascript/gotop.js}" src="../static/javascript/gotop.js"></script>
 </head>
 <body style="background:#fafbfc;font-family: Helvetica;overflow-x: hidden;">
 <input type="hidden" id="phone" name="phone" th:value="${teacherInformation.getKg_phonenumber()}">
 <input type="hidden" id="teacherid" name="teacherid" th:value="${teacherInformation.getKg_teacherinformationid()}">
+<input type="hidden" id="classid" name="classid" th:value="${classid}">
+<input type="hidden" id="schoolid" name="schoolid" th:value="${schoolid}">
 <div class="panel panel-info">
     <div class="panel-form">
         <div class="panel-heading">
@@ -27,7 +30,7 @@
                     侨鑫教育
                 </div>
                 <div class="head-back">
-                    <a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;">
+                    <a href="javascript:void(0)" onclick="GoBack()">
                         <img th:src="@{/images/backLast.png}" src="../static/images/backLast.png" style="height: 1.5rem;margin-left: 2rem">
                     </a>
                 </div>
@@ -59,7 +62,8 @@
             <div class="pk-form-class">
                 <select name="option1" id="option1" class="option pickout" placeholder="班级筛选" onchange="initTable()">
                    <option th:each="classInfo:${classList}"
-							th:value="${classInfo.kg_classid}" th:text="${classInfo.kg_name}"></option>
+                           th:value="${classInfo.kg_classid}"
+                           th:text="${classInfo.kg_name}"></option>
                 </select>
             </div>
 
@@ -93,6 +97,7 @@
     pickout.to('#option');
 
     pickout.to('#option1');
+    pickout.updated('#option1');
 
     function GoStudentInfo(obj) {
         var id = $(obj).attr("data-id");
@@ -100,6 +105,10 @@
         var schoolId = $("#option").val();
         var classId = $("#option1").val();
         window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&classid=" + classId + "&schoolid=" + schoolId + "&role=2&device=mobile";
+    }
+
+    function GoBack(){
+        window.location.href = "../login/login";
     }
 </script>
 </html>

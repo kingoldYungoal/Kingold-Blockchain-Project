@@ -42,7 +42,7 @@
                     侨鑫教育
                 </div>
                 <div class="head-back">
-                    <a href="javascript:void(0)" onclick="javascript:history.back(-1);return false;">
+                    <a href="javascript:void(0)" onclick="GoBack();">
                         <img th:src="@{/images/backLast.png}" src="../static/images/backLast.png" style="height: 1.5rem;margin-left: 2rem">
                     </a>
                 </div>
@@ -107,6 +107,18 @@
     function GoCertDetail(obj) {
         var fileId = $(obj).attr("data-certId");
         window.location.href = "../electronicscertificate/studentcertificate?fileId=" + fileId + "&device=mobile";
+    }
+
+    function GoBack() {
+        var roleid = $("#roleid").val();
+        var role = $("#role").val();
+        var classid = $("#classid").val();
+        var schoolid = $("#schoolid").val();
+        if (role == 0){
+            window.location.href = "../login/login";
+        }else{
+            window.location.href = "../login/BackListPage?roleid=" + roleid + "&role=" + role + "&classid=" + classid + "&schoolid=" + schoolid;
+        }
     }
 </script>
 </html>
