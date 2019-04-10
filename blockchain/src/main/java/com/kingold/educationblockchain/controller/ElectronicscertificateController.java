@@ -130,7 +130,7 @@ public class ElectronicscertificateController {
 					return makeErrRsp("新增证书类型有误");
 				}
 			}
-			Electronicscertificate existCert = mElectronicscertificateService.GetCertificateByStudentIdAndCertno(cert.getKg_certificateno(), cert.getKg_studentprofileid());
+			Electronicscertificate existCert = mElectronicscertificateService.GetCertificateByStudentIdAndCertno(cert.getKg_certificateno(), cert.getKg_studentprofileid());//GetCertificateById(cert.getKg_electronicscertificateid());
 			if (existCert != null) {
 				return makeErrRsp("证书已存在，无法重复添加");
 			}
