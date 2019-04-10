@@ -236,12 +236,12 @@ func (t *AutoTraceChaincode) insertCertinfo(stub shim.ChaincodeStubInterface, ar
 	stuStudyGrade := args[17]
 
 	// ==== Check if Cert already exists ====
-	certAsBytes, err := stub.GetState(certId)
+	/*certAsBytes, err := stub.GetState(certNo)
 	if err != nil {
 		return shim.Error("Failed to get Cert: " + err.Error())
 	} else if certAsBytes != nil {
 		return shim.Error("This Cert already exists: " + certId)
-	}
+	}*/
 
 	// ==== Create cert object and marshal to JSON ====
 	objectType := "cert"
@@ -252,7 +252,7 @@ func (t *AutoTraceChaincode) insertCertinfo(stub shim.ChaincodeStubInterface, ar
 	}
 
 	// === Save cert to state ===
-	err = stub.PutState(certId, certJSONasBytes)
+	err = stub.PutState(certNo, certJSONasBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
