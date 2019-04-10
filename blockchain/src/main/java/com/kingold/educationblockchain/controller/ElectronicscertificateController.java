@@ -110,6 +110,7 @@ public class ElectronicscertificateController {
 	private LoggerException loggerException = new LoggerException();
 	private RecordErrorLog recordErrorLog = new RecordErrorLog();
 	private static Logger logger = Logger.getLogger("ElectronicscertificateController.class");
+	private static String teacherSigns = "陈晶;陈黎;李梦;孟娟;肖丽;杨胜平;邹畅";
 
 	/*
 	 * 证书生成api
@@ -210,7 +211,16 @@ public class ElectronicscertificateController {
 			if (cert.getKg_certitype().equals("课程证书")) {
 				map.put("issueDate", DateHandler.formatChinese(cert.getKg_certificatedate()));
 				map.put("certName", cert.getKg_name());
-				ClassPathResource teacherResource = new ClassPathResource("static/侨鑫汇景新城实验小学.png");
+				if(Strings.isNullOrEmpty(cert.getKg_teachername())) {
+					return makeErrRsp("培训教练姓名不能为空");
+				}
+				
+				if(teacherSigns.indexOf(cert.getKg_teachername()) == -1) {
+					return makeErrRsp("培训教练签名不能存在");
+				}
+				
+				ClassPathResource teacherResource = new ClassPathResource("static/" + cert.getKg_teachername() + ".png");
+				
 				InputStream teacherInputStream = teacherResource.getInputStream();
 				byte[] teacher = mStreamCommon.read(teacherInputStream);
 				GeneratePdfCertificate(tempPDF, map, schoolMasterBytes, teacher);
