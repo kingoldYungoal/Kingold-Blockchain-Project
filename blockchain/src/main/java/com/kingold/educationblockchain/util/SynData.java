@@ -91,6 +91,9 @@ public class SynData {
 	public RetResult<String> insertOrUpdateParent(String jsonParam, ParentInformationService mParentInfomationService, ErrorLogService mErrorLogService) {
 		try {
 			ParentInformation parentInformation = JSONObject.parseObject(jsonParam, ParentInformation.class);
+			if(Strings.isNullOrEmpty(parentInformation.getKg_phonenumber())) {
+				makeErrRsp("家长电话号码为空");
+			}
 			ParentInformation pInfo = mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber());
 
 			return (pInfo == null ? mParentInfomationService.AddParentInformation(parentInformation) : mParentInfomationService.UpdateParentInformation(parentInformation)) ? makeOKRsp("家长信息添加成功")
