@@ -76,7 +76,7 @@ public class SynData {
 	public RetResult<String> insertOrUpdateTeacher(String jsonParam, TeacherInformationService mTeacherInfomationService, ErrorLogService mErrorLogService) {
 		try {
 			TeacherInformation teacherInformation = JSONObject.parseObject(jsonParam, TeacherInformation.class);
-			TeacherInformation tInfo = mTeacherInfomationService.FindTeacherInformationByPhone(teacherInformation.getKg_phonenumber());
+			TeacherInformation tInfo = mTeacherInfomationService.FindTeacherInformationById(teacherInformation.getKg_teacherinformationid());
 
 			return (tInfo == null ? mTeacherInfomationService.AddTeacherInformation(teacherInformation) : mTeacherInfomationService.UpdateTeacherInformation(teacherInformation)) ? makeOKRsp("教师信息添加成功")
 					: makeErrRsp("教师信息添加失败");
@@ -91,10 +91,7 @@ public class SynData {
 	public RetResult<String> insertOrUpdateParent(String jsonParam, ParentInformationService mParentInfomationService, ErrorLogService mErrorLogService) {
 		try {
 			ParentInformation parentInformation = JSONObject.parseObject(jsonParam, ParentInformation.class);
-			if(Strings.isNullOrEmpty(parentInformation.getKg_phonenumber())) {
-				makeErrRsp("家长电话号码为空");
-			}
-			ParentInformation pInfo = mParentInfomationService.FindParentInformationByPhone(parentInformation.getKg_phonenumber());
+			ParentInformation pInfo = mParentInfomationService.FindParentInformationById(parentInformation.getKg_parentinformationid());
 
 			return (pInfo == null ? mParentInfomationService.AddParentInformation(parentInformation) : mParentInfomationService.UpdateParentInformation(parentInformation)) ? makeOKRsp("家长信息添加成功")
 					: makeErrRsp("家长信息添加失败");
