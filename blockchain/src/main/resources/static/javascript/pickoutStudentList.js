@@ -83,12 +83,18 @@ var pickout = (function(){
 	function init(config){
 		setElement(config);
 		prepareElement();
+		var backSchoolid = $("#schoolid").val();
 		var backClassid = $("#classid").val();
-		if (backClassid != ""){
-            initTable(backClassid);
-            $("#option1").val(backClassid);
-		} else{
-            initTable($("#option1").val());
+		if (backSchoolid != "" && backSchoolid != $('#option option:first').val()){
+            $("#option").val(backSchoolid);
+            selectSchool(backSchoolid);
+		}else{
+            if (backClassid != ""){
+                initTable(backClassid);
+                $("#option1").val(backClassid);
+            } else{
+                initTable($("#option1").val());
+            }
 		}
 	}
 
@@ -517,7 +523,7 @@ var pickout = (function(){
 				_.attr(option, 'selected', 'selected');
 
                 if(select.name == 'option'){
-                    selectSchool(select.value);
+                    selectSchool($("#option [selected=selected]").val());
                     pickout.updated("#option1");
                 }else{
                     initTable($("#option1 [selected=selected]").val());
