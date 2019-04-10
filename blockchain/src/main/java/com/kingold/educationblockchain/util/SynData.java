@@ -76,6 +76,7 @@ public class SynData {
 	public RetResult<String> insertOrUpdateTeacher(String jsonParam, TeacherInformationService mTeacherInfomationService, ErrorLogService mErrorLogService) {
 		try {
 			TeacherInformation teacherInformation = JSONObject.parseObject(jsonParam, TeacherInformation.class);
+			//使用Id查询是否存在
 			TeacherInformation tInfo = mTeacherInfomationService.FindTeacherInformationById(teacherInformation.getKg_teacherinformationid());
 
 			return (tInfo == null ? mTeacherInfomationService.AddTeacherInformation(teacherInformation) : mTeacherInfomationService.UpdateTeacherInformation(teacherInformation)) ? makeOKRsp("教师信息添加成功")
