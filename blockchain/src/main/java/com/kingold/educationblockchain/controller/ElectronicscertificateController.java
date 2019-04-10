@@ -216,7 +216,7 @@ public class ElectronicscertificateController {
 				}
 				
 				if(teacherSigns.indexOf(cert.getKg_teachername()) == -1) {
-					return makeErrRsp("培训教练签名不能存在");
+					return makeErrRsp("培训教练签名不存在");
 				}
 				
 				ClassPathResource teacherResource = new ClassPathResource("static/" + cert.getKg_teachername() + ".png");
