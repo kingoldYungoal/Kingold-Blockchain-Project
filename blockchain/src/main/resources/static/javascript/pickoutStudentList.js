@@ -512,19 +512,21 @@ var pickout = (function(){
 	 */
 	function setOptionSimple(select, data, txt){
 		_.toArray(select).map(function(option, index){
+            option.removeAttribute('selected');
 			if (index === data.index) {
 				_.attr(option, 'selected', 'selected');
-			}
 
-            feedField(select, data.txt);
-            if(select.name == 'option'){
-                selectSchool(select.value);
-                pickout.updated("#option1");
-            }else{
-                initTable($("#option1 option:selected").val());
-            }
-            option.removeAttribute('selected');
+                if(select.name == 'option'){
+                    selectSchool(select.value);
+                    pickout.updated("#option1");
+                }else{
+                    initTable($("#option1 [selected=selected]").val());
+                }
+			}
 		});
+
+        feedField(select, data.txt);
+
 
 		closeModal();
 	}
