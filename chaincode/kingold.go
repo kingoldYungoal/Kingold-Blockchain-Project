@@ -252,7 +252,7 @@ func (t *AutoTraceChaincode) insertCertinfo(stub shim.ChaincodeStubInterface, ar
 	}
 
 	// === Save cert to state ===
-	err = stub.PutState(certNo, certJSONasBytes)
+	err = stub.PutState(certNo + "-" + stuId, certJSONasBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
