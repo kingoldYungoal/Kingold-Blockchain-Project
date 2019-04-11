@@ -132,9 +132,9 @@ public class ElectronicscertificateController {
 				}
 			}
 			Electronicscertificate existCert = mElectronicscertificateService.GetCertificateByStudentIdAndCertno(cert.getKg_certificateno(), cert.getKg_studentprofileid());
-			if (existCert != null) {
+			/*if (existCert != null) {
 				return makeErrRsp("证书已存在，无法重复添加");
-			}
+			}*/
 			
 			StudentProfile studentProfile = mStudentProfileService.GetStudentProfileById(cert.getKg_studentprofileid());			
 			if ( studentProfile == null) {
@@ -253,7 +253,7 @@ public class ElectronicscertificateController {
 			// 存证书ID到数据库 fileId
 			cert.setKg_electronicscertificateid(fileId);
 			cert.setKg_state(0);
-			boolean flag = mElectronicscertificateService.AddCertificate(cert);
+			boolean flag = (existCert == null)? mElectronicscertificateService.AddCertificate(cert):mElectronicscertificateService.UpdateCertificate(cert);
 			if (flag) {
 				// 证书信息上链
 				CertInfo certInfo = new CertInfo();
