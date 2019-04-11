@@ -103,7 +103,7 @@ public interface ElectronicscertificateMapper {
 	/**
 	 * 更新电子证书数据
 	 */
-	@Update("update KG_ELECTRONICSCERTIFICATE set kg_certificateno=#{kg_certificateno},kg_studentprofileid=#{kg_studentprofileid},kg_studentname=#{kg_studentname},kg_sex=#{kg_sex},kg_certificatedate=to_date(#{kg_certificatedate},'yyyy-mm-dd'),kg_classid=#{kg_classid},kg_certitype=#{kg_certitype},kg_schoolid=#{kg_schoolid},kg_teachername=#{kg_teachername},kg_starttime=to_date(#{kg_starttime},'yyyy-mm-dd'),kg_endtime=to_date(#{kg_endtime},'yyyy-mm-dd'),kg_classstype=#{kg_classstype},kg_explain=#{kg_explain},kg_name=#{kg_name},kg_teacherid=#{kg_teacherid} where kg_electronicscertificateid=#{kg_electronicscertificateid} and kg_state=0)")
+	@Update("update KG_ELECTRONICSCERTIFICATE set kg_electronicscertificateid=#{kg_electronicscertificateid},kg_studentname=#{kg_studentname},kg_sex=#{kg_sex},kg_certificatedate=to_date(#{kg_certificatedate},'yyyy-mm-dd'),kg_classid=#{kg_classid},kg_certitype=#{kg_certitype},kg_schoolid=#{kg_schoolid},kg_teachername=#{kg_teachername},kg_starttime=to_date(#{kg_starttime},'yyyy-mm-dd'),kg_endtime=to_date(#{kg_endtime},'yyyy-mm-dd'),kg_classstype=#{kg_classstype},kg_explain=#{kg_explain},kg_name=#{kg_name},kg_teacherid=#{kg_teacherid} where kg_certificateno=#{kg_certificateno} and kg_studentprofileid=#{kg_studentprofileid} and kg_state=0)")
 	void UpdateCertificate(Electronicscertificate certificates);
 
 	/**
