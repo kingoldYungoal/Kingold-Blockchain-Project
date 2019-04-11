@@ -85,16 +85,11 @@ var pickout = (function(){
 		prepareElement();
 		var backSchoolid = $("#schoolid").val();
 		var backClassid = $("#classid").val();
-		if (backSchoolid != "" && backSchoolid != $('#option option:first').val()){
+		if (backSchoolid != ""){
             $("#option").val(backSchoolid);
-            selectSchool(backSchoolid);
+            BackSelectSchool(backSchoolid, backClassid);
 		}else{
-            if (backClassid != ""){
-                initTable(backClassid);
-                $("#option1").val(backClassid);
-            } else{
-                initTable($("#option1").val());
-            }
+			initTable($("#option1").val());
 		}
 	}
 
@@ -580,6 +575,35 @@ var pickout = (function(){
 		        }
 		    });
 	}
+
+    function BackSelectSchool(schoolId, classId){
+        $("#option1").empty();
+        $.ajax({
+            type: 'get',
+            dataType : "json",
+            async: false,
+            url: "../student/classlist",
+            data:{"schoolId":schoolId,"teacherId":$("#teacherid").val()},
+            error: function () {//请求失败处理函数
+                M.dialog13 = jqueryAlert({
+                    'icon': '../images/alertimgs/warning.png',
+                    'content': '请求失败',
+                    'closeTime': 2000,
+                })
+                M.dialog13.show();
+            },
+            success:function(data){ //请求成功后处理函数。
+                if (data.length > 0){
+                    for (var i = 0;i <data.length;i++){
+                        var option = '<option value="' + data[i].kg_classid + '" >' + data[i].kg_name +'</option>';
+                        $("#option1").append(option);
+                    }
+                    $("#option1").val(classId);
+                    initTable($("#option1").val());
+                }
+            }
+        });
+    }
 
 	function initTable(classId) {
         if (classId == null || classId ==''){

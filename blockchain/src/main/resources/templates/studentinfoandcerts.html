@@ -11,97 +11,95 @@
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
 </head>
 <body style="background-color: #f8f6fa;min-width: 1200px;">
-<div class="pagewrap">
     <input id="stuid" type="hidden" name="stuid" th:value="${stuid}">
     <input id="roleid" type="hidden" name="roleid" th:value="${roleid}">
     <input id="classid" type="hidden" name="classid" th:value="${classid}">
     <input id="schoolid" type="hidden" name="schoolid" th:value="${schoolid}">
     <input id="role" type="hidden" name="role" th:value="${role}">
-    <div id="header">
-        <div id="imgbox">
-            <!--<img id="headimg" th:src="@{/images/logo2.png}" src="../static/images/logo2.png">-->
-            <img id="headimg" th:src="@{/images/logo2.png}" src="images/logo2.png">
-        </div>
-        <input type="button" id="headbtn" value="返回" onclick="GoBack();" />
-    </div>
-    <div id="maindiv">
-        <div id="infodiv">
-            <div id="stuimgbox">
-                <img id="stuimg" th:src="@{/images/stuimg.png}" src="images/logo2.png">
+    <div class="pagewrap">
+        <div id="header">
+            <div id="imgbox">
+                <img id="headimg" th:src="@{/images/logo2.png}" src="images/logo2.png">
             </div>
-            <div class="container">
-                <div class="columndiv">
-                    <ul>
-                        <li><span class="columnspan">档案编号</span><span class="showspan" th:text="${studentprofile.getKg_name()}"></span></li>
-                        <li><span class="columnspan">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span><span class="showspan" th:text="${studentprofile.getKg_fullname()}"></span></li>
-                        <li><span class="columnspan">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span><span class="showspan" th:text="${studentprofile.getKg_sex()}"></span></li>
-                    </ul>
+            <input type="button" id="headbtn" value="返回" onclick="GoBack();" />
+        </div>
+        <div id="maindiv">
+            <div id="infodiv" style="min-width:1150px;">
+                <div id="stuimgbox">
+                    <img id="stuimg" th:src="@{/images/stuimg.png}" src="images/stuimg.png">
                 </div>
-                <div style="width:1%;height:90%;float:left;"></div>
-                <div class="columndiv2">
-                    <ul>
-                        <li><span class="columnspan">出生日期</span><span class="showspan" th:text="${studentprofile.getKg_birthday()}"></span></li>
-                        <li><span class="columnspan">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄</span><span class="showspan" th:text="${studentprofile.getKg_age()} + ' 岁'"></span></li>
-                        <li><span class="columnspan">户口所在地</span><span class="showspan" th:text="${studentprofile.getKg_registeredresidence()}"></span></li>
-                    </ul>
-                </div>
-                <div style="width:1%;height:90%;float:left;"></div>
-                <div class="columndiv3">
-                    <ul>
-                        <li><span class="columnspan">护照/身份证号</span><span class="showspan" th:text="${studentprofile.getKg_passportnumberoridnumber()}"></span></li>
-                        <li><span class="columnspan">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span><span class="showspan" th:text="${studentprofile.getKg_studentnumber()}"></span></li>
-                        <li><span class="columnspan2">学籍号</span><span class="showspan" th:text="${studentprofile.getKg_educationnumber()}"></span></li>
-                    </ul>
+                <div class="container">
+                    <div class="columndiv">
+                        <ul>
+                            <li><span class="columnspan">档案编号</span><span class="showspan" th:text="${studentprofile.getKg_name()}"></span></li>
+                            <li><span class="columnspan">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span><span class="showspan" th:text="${studentprofile.getKg_fullname()}"></span></li>
+                            <li><span class="columnspan">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span><span class="showspan" th:text="${studentprofile.getKg_sex()}"></span></li>
+                        </ul>
+                    </div>
+                    <div style="width:1%;height:90%;float:left;"></div>
+                    <div class="columndiv2">
+                        <ul>
+                            <li><span class="columnspan">出生日期</span><span class="showspan" th:text="${studentprofile.getKg_birthday()}"></span></li>
+                            <li><span class="columnspan">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄</span><span class="showspan" th:text="${studentprofile.getKg_age()} + ' 岁'"></span></li>
+                            <li><span class="columnspan">户口所在地</span><span class="showspan" th:text="${studentprofile.getKg_registeredresidence()}"></span></li>
+                        </ul>
+                    </div>
+                    <div style="width:1%;height:90%;float:left;"></div>
+                    <div class="columndiv3">
+                        <ul>
+                            <li><span class="columnspan">护照/身份证号</span><span class="showspan" th:text="${studentprofile.getKg_passportnumberoridnumber()}"></span></li>
+                            <li><span class="columnspan">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span><span class="showspan" th:text="${studentprofile.getKg_studentnumber()}"></span></li>
+                            <li><span class="columnspan2">学籍号</span><span class="showspan" th:text="${studentprofile.getKg_educationnumber()}"></span></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-11" style="margin-top: 1%;min-width: 1500px;">
-            <div class="card col" style="border: 0px;">
-                <div class="certinfo_title">成长信息</div>
-                <hr id="colhr">
-                <div class="certinfo" th:each="cert,index:${json}">
-                    <div class="" th:class="${index.first} and ${!index.last}? 'timelinefirst row' : (${index.last} and ${!index.first}? 'timelinelast row' : 'timeline row' )">
-                    <div  class="col-12 innerdiv" th:if="${cert.DisplayCertInfo}">
-                        <div class="row timelinelastline float-left" th:if="${index.last} and ${!index.first}"></div>
-                        <div class="float-left certicon">&#9673</div>
-                        <div class="col-3 float-left certdate" th:text="${cert.DisplayCertInfo.CertIssueDate}"></div>
-                        <div class="col-3 float-left info-block">
-                            <div class="row">
-                                <div class="col-12 info-block"><div class="col-5 float-left">入读学校</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.StuSchool}" th:text="${cert.DisplayCertInfo.StuSchool}"></div></div>
-                                <div class="col-12 info-block"><div class="col-5 float-left">入读班级</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.StuClass}" th:text="${cert.DisplayCertInfo.StuClass}"></div></div>
-                            </div>
-                        </div>
-                        <div class="col-3 float-left info-block">
-                            <div class="row">
-                                <div class="col-12 info-block"><div class="col-5 float-left">证书名称</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.CertName}" th:text="${cert.DisplayCertInfo.CertName}"></div></div>
-                                <div class="col-12 info-block"><div class="col-5 float-left">证书类别</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.CertType}" th:text="${cert.DisplayCertInfo.CertType}"></div></div>
-                            </div>
-                        </div>
-                        <div class="col-2 float-left info-block">
-                            <div class="row">
-                                <div class="col-12 info-block"><div class="col-5 float-left">老&emsp;&emsp;师</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.StuTeacher}" th:text="${cert.DisplayCertInfo.StuTeacher}"></div></div>
-                                <div class="col-12 info-block"><div class="col-5 float-left">标&emsp;&emsp;签</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.Remark}" th:text="${cert.DisplayCertInfo.Remark}"></div></div>
-                            </div>
-                        </div>
-                        <div class="col-1 float-left cert-detail"><div class="row"><div class="row" th:attr="data-certId=${cert.DisplayCertInfo.CertPdfPath}" onclick="GoCertDetail(this)">
-                            <a class="row text-center" href="#">
-                                <div class="col-12">
-                                    <!--<img class ="search-img" th:src="@{/images/detail.png}" src="../static/images/detail.png">-->
-                                    <img class ="search-img" th:src="@{/images/detail.png}" src="images/detail.png">
+            <div class="col-11" style="margin-top: 1%;width:90%; padding-left:0px;padding-right:0px;min-width:1150px;">
+                <div class="card col" style="border: 0px;">
+                    <div class="certinfo_title">成长信息</div>
+                    <hr id="colhr">
+                    <div class="certinfo" th:each="cert,index:${json}">
+                        <div class="" th:class="${index.first} and ${!index.last}? 'timelinefirst row' : (${index.last} and ${!index.first}? 'timelinelast row' : 'timeline row' )">
+                        <div  class="col-12 innerdiv" th:if="${cert.DisplayCertInfo}">
+                            <div class="row timelinelastline float-left" th:if="${index.last} and ${!index.first}"></div>
+                            <div class="float-left certicon">&#9673</div>
+                            <div class="col-3 float-left certdate" th:text="${cert.DisplayCertInfo.CertIssueDate}"></div>
+                            <div class="col-3 float-left info-block">
+                                <div class="row">
+                                    <div class="col-12 info-block"><div class="col-5 float-left">入读学校</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.StuSchool}" th:text="${cert.DisplayCertInfo.StuSchool}"></div></div>
+                                    <div class="col-12 info-block"><div class="col-5 float-left">入读班级</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.StuClass}" th:text="${cert.DisplayCertInfo.StuClass}"></div></div>
                                 </div>
-                                <div class="text-center">点击查看证书大图</div>
-                            </a>
-                            </div></div>
+                            </div>
+                            <div class="col-3 float-left info-block">
+                                <div class="row">
+                                    <div class="col-12 info-block"><div class="col-5 float-left">证书名称</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.CertName}" th:text="${cert.DisplayCertInfo.CertName}"></div></div>
+                                    <div class="col-12 info-block"><div class="col-5 float-left">证书类别</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.CertType}" th:text="${cert.DisplayCertInfo.CertType}"></div></div>
+                                </div>
+                            </div>
+                            <div class="col-2 float-left info-block">
+                                <div class="row">
+                                    <div class="col-12 info-block"><div class="col-5 float-left">老&nbsp;&nbsp;&nbsp;&nbsp;师</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.StuTeacher}" th:text="${cert.DisplayCertInfo.StuTeacher}"></div></div>
+                                    <div class="col-12 info-block"><div class="col-5 float-left">标&nbsp;&nbsp;&nbsp;&nbsp;签</div><div class="col-7 certtext" th:title="${cert.DisplayCertInfo.Remark}" th:text="${cert.DisplayCertInfo.Remark}"></div></div>
+                                </div>
+                            </div>
+                            <div class="col-1 float-left cert-detail"><div class="row"><div class="row" th:attr="data-certId=${cert.DisplayCertInfo.CertPdfPath}" onclick="GoCertDetail(this)">
+                                <a class="row text-center" href="#">
+                                    <div class="col-12">
+                                        <img class ="search-img" th:src="@{/images/detail.png}" src="images/detail.png">
+                                    </div>
+                                    <div class="text-center">点击查看证书</div>
+                                </a>
+                                </div></div>
+                            </div>
+                        </div>
                         </div>
                     </div>
                     </div>
                 </div>
                 </div>
             </div>
-            </div>
         </div>
     </div>
-</div>
 </body>
 <script>
     function GoCertDetail(obj) {
