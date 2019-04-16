@@ -80,7 +80,6 @@
                                 <p>入读班级：<span th:text="${cert.DisplayCertInfo.StuClass}"></span></p>
                                 <p>证书类别：<span th:text="${cert.DisplayCertInfo.CertType}"></span></p>
                                 <p>老师：<span th:text="${cert.DisplayCertInfo.StuTeacher}"></span></p>
-                                <p>学级：<span th:text="${cert.DisplayCertInfo.StuStudyGrade}"></span></p>
                             </div>
                             <div class="content-details" style="height:1.4rem;margin-top:0.2rem">
                                 <a href="#" class="seeBigImg" th:attr="data-certId=${cert.DisplayCertInfo.CertPdfPath}" onclick="GoCertDetail(this)">查看证书大图</a>

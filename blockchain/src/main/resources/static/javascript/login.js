@@ -7,10 +7,6 @@ $(function () {
 
     $("#authcode").val("");
 
-    if (device != "mobile"){
-        $("input:radio[name='option']").get(0).checked = true ;
-    }
-
     $("#codebtn").click(function () {
         var disabled = $("#codebtn").attr("disabled");
         if(disabled){
@@ -154,6 +150,7 @@ $(function () {
          } else{
              role = $("#option").val();
          }
+
          if ($.trim(phonenumber) == "") {
              M.dialog13 = jqueryAlert({
                  'icon': '../images/alertimgs/warning.png',

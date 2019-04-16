@@ -3,7 +3,6 @@ package com.kingold.educationblockchain.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.kingold.educationblockchain.bean.*;
-import com.kingold.educationblockchain.bean.paramBean.CertificateParam;
 import com.kingold.educationblockchain.service.*;
 
 import com.kingold.educationblockchain.util.CheckRequestDevice;
@@ -30,8 +29,6 @@ public class LoginController {
 	private TeacherInformationService mTeacherInfomationService;
 	@Autowired
 	private StudentParentService mStudentParentService;
-	@Autowired
-	private ElectronicscertificateService mElectronicscertificateService;
 	@Autowired
 	private Teacher2ClassService teacher2ClassService;
 	@Autowired
@@ -109,11 +106,14 @@ public class LoginController {
 							}
 						}
 						Collections.sort(displayInfos);
+						map.addAttribute("certCount", displayInfos.size());
 						map.addAttribute("json", displayInfos);
 
 						model.addObject("stuid", studentprofile.getKg_studentprofileid());
 						model.addObject("roleid", "");
 						model.addObject("role", 0);
+						model.addObject("classid", "");
+						model.addObject("schoolid", "");
 
 						if (isFromMobile) {
 							model.setViewName("mobileStudentInfo");
@@ -150,8 +150,10 @@ public class LoginController {
 		}
 		model.addObject("loginVerify", false);
 		if (isFromMobile) {
+			model.addObject("device", "mobile");
 			model.setViewName("mobileLogin");
 		} else {
+			model.addObject("device", "pc");
 			model.setViewName("login");
 		}
 		return model;
@@ -280,13 +282,6 @@ public class LoginController {
 		}
 
 		return StudentInfoList;
-	}
-
-	// 获取所有的班级
-	public List<Electronicscertificate> GetAllCertificates(String teacherId) {
-		CertificateParam param = new CertificateParam();
-		param.setTeacherId(teacherId);
-		return mElectronicscertificateService.GetCertificatesByParam(param);
 	}
 
 	// 访问设备验证

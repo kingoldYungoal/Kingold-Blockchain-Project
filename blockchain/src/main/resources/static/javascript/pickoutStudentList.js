@@ -16,13 +16,15 @@ var pickout = (function(){
 
     var M = {};
 
+    var globalSchoolId;
+
 	// Default values
 	var defaults = {
 		theme : 'clean',
 		search : false,
 		noResults : 'No Results',
 		multiple : false,
-		txtBtnMultiple : 'CONFIRM SELECTED'
+		txtBtnMultiple : 'CONFIRM SELECTED',
 	};
 
 	/**
@@ -85,11 +87,12 @@ var pickout = (function(){
 		prepareElement();
 		var backSchoolid = $("#schoolid").val();
 		var backClassid = $("#classid").val();
+
 		if (backSchoolid != ""){
-            $("#option").val(backSchoolid);
+            globalSchoolId = backSchoolid;
             BackSelectSchool(backSchoolid, backClassid);
 		}else{
-			initTable($("#option1").val());
+			initTable($("#option1").val(),"");
 		}
 	}
 
@@ -513,15 +516,19 @@ var pickout = (function(){
 	 */
 	function setOptionSimple(select, data, txt){
 		_.toArray(select).map(function(option, index){
-            option.removeAttribute('selected');
+			option.removeAttribute('selected');
 			if (index === data.index) {
 				_.attr(option, 'selected', 'selected');
 
                 if(select.name == 'option'){
-                    selectSchool($("#option [selected=selected]").val());
+                    globalSchoolId = $("#option [selected=selected]").val();
+                    selectSchool(globalSchoolId);
                     pickout.updated("#option1");
                 }else{
-                    initTable($("#option1 [selected=selected]").val());
+                	if (!globalSchoolId){
+                        globalSchoolId = $("#option").val();
+					}
+                    initTable($("#option1 [selected=selected]").val(), globalSchoolId);
                 }
 			}
 		});
@@ -534,7 +541,10 @@ var pickout = (function(){
 
 	function feedField(select, value){
         //初始化数据
-		select.parentElement.querySelector('.pk-field').innerHTML = value;
+		if (value != null
+			&& select.parentElement.querySelector('.pk-field')){
+            select.parentElement.querySelector('.pk-field').innerHTML = value;
+		}
 	}
 	
 	function selectSchool(schoolId){
@@ -569,43 +579,50 @@ var pickout = (function(){
 		                	var option = '<option value="' + data[i].kg_classid + '" >' + data[i].kg_name +'</option>';
 		                	$("#option1").append(option);
 		                }
-		                
-		                initTable($("#option1").val());
+		                initTable($("#option1").val(), schoolId);
 		            }
 		        }
 		    });
 	}
 
     function BackSelectSchool(schoolId, classId){
-        $("#option1").empty();
-        $.ajax({
-            type: 'get',
-            dataType : "json",
-            async: false,
-            url: "../student/classlist",
-            data:{"schoolId":schoolId,"teacherId":$("#teacherid").val()},
-            error: function () {//请求失败处理函数
-                M.dialog13 = jqueryAlert({
-                    'icon': '../images/alertimgs/warning.png',
-                    'content': '请求失败',
-                    'closeTime': 2000,
-                })
-                M.dialog13.show();
-            },
-            success:function(data){ //请求成功后处理函数。
-                if (data.length > 0){
-                    for (var i = 0;i <data.length;i++){
-                        var option = '<option value="' + data[i].kg_classid + '" >' + data[i].kg_name +'</option>';
-                        $("#option1").append(option);
+		if (typeof($("#option1")) != 'undefined'){
+            $("#option1").empty();
+            $.ajax({
+                type: 'get',
+                dataType : "json",
+                async: false,
+                url: "../student/classlist",
+                data:{"schoolId":schoolId,"teacherId":$("#teacherid").val()},
+                error: function () {//请求失败处理函数
+                    M.dialog13 = jqueryAlert({
+                        'icon': '../images/alertimgs/warning.png',
+                        'content': '请求失败',
+                        'closeTime': 2000,
+                    })
+                    M.dialog13.show();
+                },
+                success:function(data){
+                    if (data.length > 0){
+                        for (var i = 0;i <data.length;i++){
+                            var option = '<option value="' + data[i].kg_classid + '" >' + data[i].kg_name +'</option>';
+                            $("#option1").append(option);
+                        }
+                        pickout.updated("#option");
+                        pickout.updated("#option1");
+
+                        $("#option1").val(classId);
+                        $("#option").val(schoolId);
+                        pickout.updated("#option");
+                        pickout.updated("#option1");
+                        initTable(classId, schoolId);
                     }
-                    $("#option1").val(classId);
-                    initTable($("#option1").val());
                 }
-            }
-        });
+            });
+		}
     }
 
-	function initTable(classId) {
+	function initTable(classId, schoolId) {
         if (classId == null || classId ==''){
 			M.dialog13 = jqueryAlert({
                 'icon': '../images/alertimgs/warning.png',
@@ -631,7 +648,7 @@ var pickout = (function(){
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var lis = "";
-                        lis += '<li data-id="' + data[i].kg_studentprofileid + '" onclick="GoStudentInfo(this)" class="list-group-item">';
+                        lis += '<li data-id="' + data[i].kg_studentprofileid + '" data-classId="'+ classId +'" data-schoolId="'+ schoolId +'" onclick="GoStudentInfo(this)" class="list-group-item">';
                         lis += '<div class="childimg"><img src="../images/kidsimg2.png" class="stuimg"></div>';
                         lis += '<div class="childinfo"><ul><li><span class="childinfo-name">'+ data[i].kg_fullname +'</span>&nbsp;&nbsp;<span class="childinfo-gender">'+ data[i].kg_sex +'</span></li>';
                         lis += '<li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time">'+ data[i].kg_classname +'</span></li>';

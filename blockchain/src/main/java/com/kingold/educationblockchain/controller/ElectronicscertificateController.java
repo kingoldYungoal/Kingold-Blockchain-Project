@@ -110,7 +110,7 @@ public class ElectronicscertificateController {
 	private LoggerException loggerException = new LoggerException();
 	private RecordErrorLog recordErrorLog = new RecordErrorLog();
 	private static Logger logger = Logger.getLogger("ElectronicscertificateController.class");
-	private static String teacherSigns = "陈晶;陈黎;李梦;孟娟;肖丽;杨胜平;邹畅";
+	private static String teacherSigns = "陈晶;陈黎;李梦;孟娟;肖丽;杨胜平;邹畅;祝从";
 
 	/*
 	 * 证书生成api

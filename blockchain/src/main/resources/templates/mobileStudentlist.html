@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="panel-body">
-            <div class="parent-info">
+            <div class="parent-info" style="height: 11rem">
                 <div class="teacher-info-card">
                     <div class="profile-photo">
                         <img th:src="@{/images/parentimg2.png}" src="../static/images/parentimg2.png" id="parentimg">
@@ -68,7 +68,7 @@
             </div>
 
             <ul class="list-group">
-                <li class="list-group-item" th:each="studentInfo:${studentList}" th:attr="data-id=${studentInfo.getKg_studentprofileid()}" onclick="GoStudentInfo(this)">
+                <li class="list-group-item" th:each="studentInfo:${studentList}" th:attr="data-id=${studentInfo.getKg_studentprofileid()}" onclick="GoStudentInfo(this,'','')">
                     <div class="childimg">
                         <img th:src="@{/images/kidsimg2.png}" src="../static/images/kidsimg2.png" class="stuimg">
                     </div>
@@ -96,17 +96,13 @@
 <script>
     pickout.to('#option');
 
-    pickout.updated("#option");
-
     pickout.to('#option1');
-
-    pickout.updated("#option1");
 
     function GoStudentInfo(obj) {
         var id = $(obj).attr("data-id");
+        var classId = $(obj).attr("data-classId");
+        var schoolId = $(obj).attr("data-schoolId");
         var roleid = $("#teacherid").val();
-        var schoolId = $("#option").val();
-        var classId = $("#option1").val();
         window.location.href = "../student/studentinfo?id=" + id + "&roleid=" + roleid + "&classid=" + classId + "&schoolid=" + schoolId + "&role=2&device=mobile";
     }
 

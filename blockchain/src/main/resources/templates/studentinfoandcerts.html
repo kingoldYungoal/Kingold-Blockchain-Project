@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/studentinfo.css}" href="css/studentinfo.css">
     <script type="text/javascript" th:src="@{/javascript/jquery-3.2.1.min.js}" src="javascript/jquery-3.2.1.min.js"></script>
 </head>
-<body style="background-color: #f8f6fa;min-width: 1200px;">
+<body style="background-color: #f8f6fa;min-width: 1300px;">
     <input id="stuid" type="hidden" name="stuid" th:value="${stuid}">
     <input id="roleid" type="hidden" name="roleid" th:value="${roleid}">
     <input id="classid" type="hidden" name="classid" th:value="${classid}">
@@ -24,7 +24,7 @@
             <input type="button" id="headbtn" value="返回" onclick="GoBack();" />
         </div>
         <div id="maindiv">
-            <div id="infodiv" style="min-width:1150px;">
+            <div id="infodiv" style="min-width:1300px;">
                 <div id="stuimgbox">
                     <img id="stuimg" th:src="@{/images/stuimg.png}" src="images/stuimg.png">
                 </div>
@@ -54,13 +54,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-11" style="margin-top: 1%;width:90%; padding-left:0px;padding-right:0px;min-width:1150px;">
+            <div class="col-11" style="margin-top: 1%;width:90%; padding-left:0px;padding-right:0px;min-width:1300px;">
                 <div class="card col" style="border: 0px;">
                     <div class="certinfo_title">成长信息</div>
                     <hr id="colhr">
                     <div class="certinfo" th:each="cert,index:${json}">
-                        <div class="" th:class="${index.first} and ${!index.last}? 'timelinefirst row' : (${index.last} and ${!index.first}? 'timelinelast row' : 'timeline row' )">
-                        <div  class="col-12 innerdiv" th:if="${cert.DisplayCertInfo}">
+                        <div th:class="${index.first} and ${!index.last}? 'timelinelast row' : (${index.last} and ${!index.first}? 'timelinelast row' : 'timeline row' )">
+                        <div class="col-12 innerdiv" th:if="${cert.DisplayCertInfo}">
+                            <div class="row timelinefirstline float-left" th:if="${index.first} and ${!index.last}"></div>
                             <div class="row timelinelastline float-left" th:if="${index.last} and ${!index.first}"></div>
                             <div class="float-left certicon">&#9673</div>
                             <div class="col-3 float-left certdate" th:text="${cert.DisplayCertInfo.CertIssueDate}"></div>
