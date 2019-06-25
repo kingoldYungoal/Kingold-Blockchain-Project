@@ -341,23 +341,49 @@ public class ElectronicscertificateController {
 		int page = 1;
 		if (fields.get("certType").equals("录取通知书")) {
 			if (fields.get("schoolName").endsWith("小学")) {
-				page = 6;
+				page = 7;
 			} else {
-				page = 5;
+				page = 6;
 			}
 		} else if (fields.get("certType").equals("课程证书")) {
 			if (fields.get("schoolName").endsWith("小学")) {
-				page = 4;
+				page = 5;
 			} else {
-				page = 3;
+				page = 4;
 			}
 		} else if (fields.get("certType").equals("毕业证书")) {
 			if (fields.get("schoolName").endsWith("小学")) {
 				page = 1;
 			} else {
-				page = 2;
+				if (fields.get("schoolName").equals("侨鑫汇景新城幼儿园")){
+					page = 2;
+				}
+				if (fields.get("schoolName").equals("侨鑫汇悦天启幼儿园")){
+					page = 3;
+				}
 			}
 		}
+
+//		int page = 1;
+//		if (fields.get("certType").equals("录取通知书")) {
+//			if (fields.get("schoolName").endsWith("小学")) {
+//				page = 6;
+//			} else {
+//				page = 5;
+//			}
+//		} else if (fields.get("certType").equals("课程证书")) {
+//			if (fields.get("schoolName").endsWith("小学")) {
+//				page = 4;
+//			} else {
+//				page = 3;
+//			}
+//		} else if (fields.get("certType").equals("毕业证书")) {
+//			if (fields.get("schoolName").endsWith("小学")) {
+//				page = 1;
+//			} else {
+//				page = 2;
+//			}
+//		}
 		pdfDocRead.copyPagesTo(page, page, pdfDocWrite, new PdfPageFormCopier());
 		PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDocWrite, true);
 		form.setGenerateAppearance(true);
@@ -391,9 +417,9 @@ public class ElectronicscertificateController {
 		ImageData sign1 = ImageDataFactory.create(schoolMasterBytes);
 
 		if (fields.get("certType").equals("毕业证书")) {
-			canvas.addImage(sign1, 75, 230, 100, false);
-			ImageData teacherSign = ImageDataFactory.create(presidentBytes);
-			canvas.addImage(teacherSign, 400, 230, 100, false);
+			canvas.addImage(sign1, 256, 230, 100, false);
+			//ImageData teacherSign = ImageDataFactory.create(presidentBytes);
+			//canvas.addImage(teacherSign, 400, 230, 100, false);
 		} else if (fields.get("certType").equals("录取通知书")) {
 			canvas.addImage(sign1, 100, 240, 100, false);
 		} else if (fields.get("certType").equals("课程证书")) {

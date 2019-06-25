@@ -195,7 +195,12 @@ public class LoginController {
 			}
 			model.addObject("childrenList", StudentProfileList);
 			model.addObject("parentInformation", parentInformation);
-			model.setViewName("childrenlist");
+			// 判断设备，如果是移动端，则需要直接获取所有的学生信息
+			if (isFromMobile) {
+				model.setViewName("mobileChildrenlist");
+			} else {
+				model.setViewName("childrenlist");
+			}
 			return model;
 		} else {
 			TeacherInformation teacherInformation = mTeacherInfomationService.FindTeacherInformationById(roleid);

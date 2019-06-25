@@ -184,6 +184,14 @@ ul,li{
     margin: 1rem 0rem auto 0rem;
 }
 
+.stunumber2{
+    font-size: 0.6rem;
+    line-height: 1rem;
+    color: #ad6704;
+    height: 1rem;
+    margin: 2.5rem 0rem auto 0rem;
+}
+
 
 .cd-container {
     width: 90%;

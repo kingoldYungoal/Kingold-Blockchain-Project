@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="panel-body">
-            <div class="parent-info" style="height: 11rem">
+            <div class="parent-info">
                 <div class="teacher-info-card">
                     <div class="profile-photo">
                         <img th:src="@{/images/parentimg2.png}" src="../static/images/parentimg2.png" id="parentimg">
@@ -66,7 +66,6 @@
                            th:text="${classInfo.kg_name}"></option>
                 </select>
             </div>
-
             <ul class="list-group">
                 <li class="list-group-item" th:each="studentInfo:${studentList}" th:attr="data-id=${studentInfo.getKg_studentprofileid()}" onclick="GoStudentInfo(this,'','')">
                     <div class="childimg">
@@ -75,14 +74,13 @@
                     <div class="childinfo">
                         <ul>
                             <li><span class="childinfo-name" th:text="${studentInfo.getKg_fullname()}"></span>&nbsp;&nbsp;<span class="childinfo-gender" th:text="${studentInfo.getKg_sex()}"></span></li>
-                            <li class="childinfo-class-time">班级：&nbsp;<span class="childinfo-class-time" th:text="${studentInfo.getKg_classname()}"></span></li>
                             <li class="childinfo-class-time">入学：&nbsp;<span class="childinfo-class-time" th:text="${studentInfo.getKg_jointime()}"></span></li>
                             <li class="parent-name-tel">家长：&nbsp;<span class="parent-name-tel" th:text="${studentInfo.getKg_parentName()}"></span></li>
                             <li class="parent-name-tel">电话：&nbsp;<span class="parent-name-tel" th:text="${studentInfo.getKg_parentPhoneNumber()}"></span></li>
                         </ul>
                     </div>
                     <div class="other-info">
-                        <div class="stunumber">
+                        <div th:class="${#strings.length(studentInfo.getKg_fullname())} > 10 ? 'stunumber' : 'stunumber2'">
                             <span>学籍号&nbsp;:&nbsp;</span><span th:text="${studentInfo.getKg_educationnumber()}"></span>
                         </div>
                     </div>

@@ -19,32 +19,32 @@ public interface StudentProfileMapper {
 	 * @param classId
 	 * @return
 	 */
-	@Select("select " + 
-			"a.kg_studentprofileid kg_studentprofileid," + 
-			"a.kg_educationnumber kg_educationnumber," + 
-			"a.kg_studentnumber kg_studentnumber," + 
-			"a.kg_name kg_name," + 
-			"a.kg_fullname kg_fullname," + 
-			"a.kg_sex kg_sex," + 
-			"a.kg_age kg_age," + 
-			"a.kg_countryname kg_countryname," + 
-			"to_char(a.kg_birthday,'yyyy-mm-dd') kg_birthday," + 
-			"a.kg_registeredresidence kg_registeredresidence," + 
-			"a.kg_passportnumberoridnumber kg_passportnumberoridnumber," + 
-			"a.kg_entrancestate kg_entrancestate," + 
-			"to_char(a.kg_jointime,'yyyy-mm-dd') kg_jointime," + 
-			"d.kg_parentname," + 
-			"d.kg_parentphonenumber " + 
-			"from KG_STUDENTPROFILE a " + 
-			"left join kg_studentprofile_class b  on a.kg_studentprofileid = b.kg_studentprofileid " + 
-			"left join(select " + 
-			"e.kg_studentprofileid," + 
-			"listagg(f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, " + 
-			"listagg(f.kg_phonenumber,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentphonenumber " + 
-			"from kg_student_parent e " + 
+	@Select("select " +
+			"a.kg_studentprofileid kg_studentprofileid," +
+			"a.kg_educationnumber kg_educationnumber," +
+			"a.kg_studentnumber kg_studentnumber," +
+			"a.kg_name kg_name," +
+			"a.kg_fullname kg_fullname," +
+			"a.kg_sex kg_sex," +
+			"a.kg_age kg_age," +
+			"a.kg_countryname kg_countryname," +
+			"to_char(a.kg_birthday,'yyyy-mm-dd') kg_birthday," +
+			"a.kg_registeredresidence kg_registeredresidence," +
+			"a.kg_passportnumberoridnumber kg_passportnumberoridnumber," +
+			"a.kg_entrancestate kg_entrancestate," +
+			"to_char(a.kg_jointime,'yyyy-mm-dd') kg_jointime," +
+			"d.kg_parentname," +
+			"d.kg_parentphonenumber " +
+			"from KG_STUDENTPROFILE a " +
+			"left join kg_studentprofile_class b  on a.kg_studentprofileid = b.kg_studentprofileid " +
+			"left join(select " +
+			"e.kg_studentprofileid," +
+			"listagg(f.kg_name,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentname, " +
+			"listagg(f.kg_phonenumber,';') WITHIN GROUP (ORDER BY e.kg_studentprofileid) as kg_parentphonenumber " +
+			"from kg_student_parent e " +
 	        "left join kg_parentinformation f on e.kg_parentinformationid = f.kg_parentinformationid " +
-			"where e.kg_state = 0 and f.kg_state = 0 group by e.kg_studentprofileid" + 
-			") d on a.kg_studentprofileid = d.kg_studentprofileid " + 
+			"where e.kg_state = 0 and f.kg_state = 0 group by e.kg_studentprofileid" +
+			") d on a.kg_studentprofileid = d.kg_studentprofileid " +
 			"where b.kg_classid=#{classId} and a.kg_state = 0 and b.kg_state = 0 ")
    public List<StudentInfo> queryStudentsByClassId(String classId);
 

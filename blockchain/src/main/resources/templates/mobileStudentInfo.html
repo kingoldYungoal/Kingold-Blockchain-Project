@@ -57,7 +57,7 @@
                     <div class="parentname">
                         <ul>
                             <li><span id="namespan" th:text="${studentprofile.getKg_fullname()}"></span></li>
-                            <li><span id="phonediv" th:text="${studentprofile.getKg_educationnumber()}"></span></li>
+                            <li><span id="phonediv" th:text="'学号：' + ${studentprofile.getKg_studentnumber()}"></span></li>
                         </ul>
                         <input id="gotoinfopage" class="gotoinfo" type="button" value="个人信息详情 >" th:attr="data-stuId=${studentprofile.getKg_studentprofileid()}" onclick="GoStuDetail(this);">
                     </div>
